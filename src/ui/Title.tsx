@@ -36,7 +36,7 @@ const Block = styled.div`
   }
 `
 
-export function Title(props: { children: React.ReactNode }) {
+export default function Title(props: { children: React.ReactNode }) {
     return (
         <TitleContainer>
             <StyledTitle>{props.children}</StyledTitle>
