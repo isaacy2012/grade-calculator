@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import styled from "styled-components";
 
 const Card = styled.section`
@@ -49,7 +49,7 @@ export default function Tabbed(
     const [activeTabName, setActiveTabName] = useState(props.defaultActiveTabName);
 
     return (
-        <section>
+        <Fragment>
             <HeaderContainer>
                 {props.headerNames.map((it, index) => {
                     return <TabButton active={it === activeTabName}
@@ -64,6 +64,6 @@ export default function Tabbed(
                     {props.children}
                 </Card>
             </TabContext.Provider>
-        </section>
+        </Fragment>
     );
 }

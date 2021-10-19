@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import {Instruction} from "./Instruction";
 import Title from "./Title";
 import Table from "./Table";
@@ -87,7 +87,7 @@ export default function MainScreen() {
     }
 
     return (
-        <div>
+        <Fragment>
             <MarginContainer bottom="50px">
             <Title>Grade Calculator</Title>
             <Instruction>Enter your assignment information, then choose whether you want to reach
@@ -119,6 +119,6 @@ export default function MainScreen() {
             </MarginContainer>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
-        </div>
+        </Fragment>
     );
 }
