@@ -9,6 +9,7 @@ import {Score} from "../model/Score";
 import {Container} from "./Container";
 import {StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
+import Tab from "./Tab";
 
 const TableHeader = styled(StyledInput)`
   width: 100%;
@@ -105,10 +106,9 @@ export default function MainScreen() {
                 />)}
             </Table>
             <Container>
-                <Tabbed tab="percentage">
-                    <p>hi</p>
-                    <p>hi</p>
-                    <p>hi</p>
+                <Tabbed defaultActiveTabName="REACH_PERCENTAGE" headers={["REACH_PERCENTAGE", "REACH_GRADE"]}>
+                    <Tab tabName="REACH_PERCENTAGE">REACH_PERCENTAGE</Tab>
+                    <Tab tabName="REACH_GRADE">REACH_GRADE</Tab>
                 </Tabbed>
             </Container>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
