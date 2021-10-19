@@ -1,7 +1,7 @@
 const fractionRegex = /^[0-9]+(?:\.[0-9]+)?\/[0-9]+(?:\.[0-9]+)?$/;
 const numberRegex = /^[0-9]+(?:\.[0-9]+)?$/;
 
-export default abstract class Score {
+export abstract class Score {
     readonly str: string;
 
     constructor(str: string) {

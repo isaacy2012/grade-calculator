@@ -29,11 +29,16 @@ const ContentUnderline = styled.div`
   background: ${({theme}) => theme.color.contentUnderline};
 `
 
-const Input = styled.input`
+const Input = styled.input.attrs((props: {accepted: boolean}) => ({
+    accepted: props.accepted,
+}))`
   font-size: 1em;
+  color: ${({accepted, theme}) => accepted ? theme.color.text : theme.color.outlineReject};
+  font-weight: ${({accepted}) => accepted ? "normal" : "bold"};
   border: none;
   width: 100%;
   box-sizing: border-box;
+
   &:focus {
     outline: none;
     border: none;
@@ -47,14 +52,22 @@ const RightInput = styled(Input)`
 
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>
 
+function orEmptyString(str: string | undefined) {
+    return str ? str : "";
+}
+
 export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void }) {
     const theme: any = useTheme();
-    const [nameStr, setNameStr] = useState<string>(props.assignment.name);
-    const [scoreStr, setScoreStr] = useState<string>(props.assignment.score.toString());
-    const [weightStr, setWeightStr] = useState<string>(props.assignment.weight.toString());
+
+    const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
+    const [scoreStr, setScoreStr] = useState<string>(orEmptyString(props.assignment.score?.toInputString()));
+    const [weightStr, setWeightStr] = useState<string>(orEmptyString(props.assignment.weight?.toString()));
 
     useEffect(() => {
-        props.onChange(Assignment.ofStrings(nameStr, scoreStr, weightStr));
+        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr);
+        if (strAssignment) {
+            props.onChange(strAssignment);
+        }
     }, [nameStr, scoreStr, weightStr, props])
 
     return (
@@ -63,18 +76,21 @@ export default function ContentRow(props: { assignment: Assignment, onChange: (a
                 <FirstContentCol>
                     <Input
                         value={nameStr}
+                        accepted={props.assignment.name !== undefined}
                         onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
                     />
                 </FirstContentCol>
                 <ContentCol>
                     <Input
                         value={scoreStr}
+                        accepted={scoreStr === props.assignment.score?.toInputString()}
                         onChange={(event: InputChangeEvent) => setScoreStr(event.target.value)}
                     />
                 </ContentCol>
                 <LastContentCol>
                     <RightInput
                         value={weightStr}
+                        accepted={weightStr === props.assignment.weight?.toString()}
                         onChange={(event: InputChangeEvent) => setWeightStr(event.target.value)}
                     />
                 </LastContentCol>
