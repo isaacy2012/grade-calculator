@@ -1,6 +1,6 @@
 import {useTheme} from "styled-components";
 import React, {useState} from "react";
-import { Instruction } from "./Instruction";
+import {Instruction} from "./Instruction";
 import Title from "./Title";
 import Table from "./Table";
 import {Assignment} from "../model/Assignment";
@@ -29,14 +29,32 @@ export default function MainScreen() {
         });
     }
 
+    function calculate(thresh: number): string {
+        if (!assignments.every(it => it.accepted())) {
+            return "Incorrect data";
+        }
+        let totalWeight = assignments.map((it: Assignment) => it.weight!)
+            .reduce((prev: number, it: number) => prev + it, 0);
+        let totalAchieved = assignments.reduce((prev: number, it: Assignment) => prev + it.score!.calc()*it.weight!, 0);
+        let totalWeightLeft = 1-totalWeight;
+        let requiredAmount = thresh-totalAchieved;
+        let requiredPercentage = requiredAmount/totalWeightLeft;
+        console.log("totalWeightLeft: " + totalWeightLeft + ", requiredAmount: " + requiredAmount + ", requiredPercentage: " + requiredPercentage);
+        return "You need " + (requiredPercentage*100).toFixed(2) + "% in the last " + (totalWeightLeft*100).toFixed(2) + "% to reach " + (thresh*100) + "%";
+
+    }
+
     return (
         <div>
             <Title>Grade Calculator</Title>
-            <Instruction>Enter your assignment information, then choose whether you want to reach a <b>percentage</b> or <b>grade</b>.</Instruction>
+            <Instruction>Enter your assignment information, then choose whether you want to reach
+                a <b>percentage</b> or <b>grade</b>.</Instruction>
             <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
-                {assignments.map((value, index) => <ContentRow key={index} assignment={value} onChange={(assignment: Assignment) => updateAssignment(assignment, index)}/>)}
+                {assignments.map((value, index) => <ContentRow key={index} assignment={value}
+                                                               onChange={(assignment: Assignment) => updateAssignment(assignment, index)}/>)}
             </Table>
-            {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
+            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
+            {calculate(0.9)}
         </div>
     );
 }

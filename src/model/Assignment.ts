@@ -23,6 +23,13 @@ export class Assignment {
         return new Assignment(undefined, undefined, undefined);
     }
 
+    accepted(): boolean {
+        return this.name !== undefined
+            && this.score !== undefined
+            && this.weight !== undefined;
+
+    }
+
     equals(other: Assignment): boolean {
         return this.name === other.name
             && this.score?.equals(other.score) === true

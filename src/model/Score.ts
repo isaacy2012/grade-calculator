@@ -11,10 +11,9 @@ export abstract class Score {
     static fromString(str: string): Score | undefined {
         if (fractionRegex.test(str)) {
             return FractionScore.fromString(str);
-        } else if(numberRegex.test(str)) {
+        } else if (numberRegex.test(str)) {
             return PercentageScore.fromString(str);
         }
-        return undefined;
     }
 
     abstract calc(): number
@@ -25,7 +24,9 @@ export abstract class Score {
         return this.str;
     }
 
-    abstract equals(other: Score | undefined): boolean
+    equals(other: Score | undefined): boolean {
+        return this.str === other?.str;
+    }
 
 }
 
@@ -51,12 +52,13 @@ class FractionScore extends Score {
     }
 
     calc(): number {
-        return this.achieved/this.outOf;
+        return this.achieved / this.outOf;
     }
 
     equals(other: Score | undefined): boolean {
         if (other instanceof FractionScore) {
-            return this.achieved === other.achieved
+            return super.equals(other)
+                && this.achieved === other.achieved
                 && this.outOf === other.outOf;
         }
         return false;
@@ -89,12 +91,13 @@ class PercentageScore extends Score {
 
     equals(other: Score | undefined): boolean {
         if (other instanceof PercentageScore) {
-            return this.percentage === other.percentage;
+            return super.equals(other)
+                && this.percentage === other.percentage;
         }
         return false;
     }
 
     toString(): string {
-        return (this.percentage*100).toString();
+        return (this.percentage * 100).toString();
     }
 }
