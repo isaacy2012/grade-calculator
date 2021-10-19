@@ -4,7 +4,7 @@ import '../css/App.css';
 import {
     BrowserRouter
 } from "react-router-dom";
-import { theme } from '../theme/Theme';
+import {theme} from '../theme/Theme';
 import {Container} from "./Container";
 import MainScreen from "./MainScreen";
 
@@ -19,11 +19,9 @@ function App() {
     return (
         <div className="App">
             <ThemeProvider theme={theme}>
-                <Container>
-                    <BrowserRouter basename={process.env.PUBLIC_URL}>
-                        <MainScreen/>
-                    </BrowserRouter>
-                </Container>
+                <BrowserRouter basename={process.env.PUBLIC_URL}>
+                    <MainScreen/>
+                </BrowserRouter>
                 <Signature>Made by <a href="https://isaacy.dev">Isaac Young</a></Signature>
             </ThemeProvider>
         </div>

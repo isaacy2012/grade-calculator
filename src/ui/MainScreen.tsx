@@ -21,6 +21,15 @@ const dummyAssignments = [
 export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>(dummyAssignments);
 
+    function deleteAssignment(index: number) {
+        setAssignments((currentAssignments) => {
+            let newArr = [...currentAssignments];
+            newArr.splice(index, 1);
+            console.log(newArr)
+            return newArr;
+        });
+    }
+
     function updateAssignment(assignment: Assignment, index: number) {
         if (assignments[index].equals(assignment)) {
             return;
@@ -76,11 +85,12 @@ export default function MainScreen() {
             </Container>
             <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
-                    key={index}
+                    key={JSON.stringify(value)}
                     assignment={value}
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
                     invalidate={() => invalidateAssignment(index)}
                     onClick={index === assignments.length-1 ? addRow : undefined}
+                    onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}

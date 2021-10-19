@@ -4,7 +4,7 @@ import {Assignment} from "../model/Assignment";
 import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
-import {FlexChild6, FlexDiv } from "./Flex";
+import {FlexChild6, FlexDiv} from "./Flex";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -29,7 +29,7 @@ const DeleteButton = styled.button`
   font-size: 1.6em;
   background: none;
   border: none;
-  // color: ${({theme}) => theme.color.outlineReject};
+    // color: ${({theme}) => theme.color.outlineReject};
   &:hover {
     font-size: 1.3em;
   }
@@ -71,7 +71,15 @@ function orEmptyString(str: string | undefined) {
     return str ? str : "";
 }
 
-export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void, invalidate: () => void, onClick?: () => void }) {
+export default function ContentRow(
+    props: {
+        assignment: Assignment,
+        onChange: (assignment: Assignment) => void,
+        invalidate: () => void,
+        onClick?: () => void
+        onDelete?: () => void
+    }
+) {
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -124,7 +132,7 @@ export default function ContentRow(props: { assignment: Assignment, onChange: (a
             </FlexChild6>
             <SpacerDiv>
                 {props.onClick === undefined &&
-                <DeleteButton>×</DeleteButton>}
+                <DeleteButton onClick={props.onDelete}>×</DeleteButton>}
             </SpacerDiv>
         </FlexDiv>
     );
