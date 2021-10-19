@@ -108,7 +108,7 @@ export default function MainScreen() {
             <MarginContainer top="50px" bottom="50px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
-                        headerElements={[<p>% Reach a <b>percentage</b></p>, <p>A+ Reach a <b>grade</b></p>] }>
+                        headerElements={[<span>% Reach a <b>percentage</b></span>, <span>A+ Reach a <b>grade</b></span>] }>
                     <Tab tabName="REACH_PERCENTAGE">
                         <h3>Desired Percentage</h3>
                     </Tab>

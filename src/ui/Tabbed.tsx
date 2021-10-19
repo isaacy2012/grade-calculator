@@ -18,6 +18,8 @@ const TabButton = styled.button.attrs((props: { active: boolean, index: number, 
     index: props.index,
     length: props.length,
 }))`
+  padding-top: 0;
+  padding-bottom: 0;
   border: solid 1px ${({theme}) => theme.color.outline};
   border-left: ${({index}) => index === 0 ? "" : "none"};
   background: ${({active, theme}) => active ? theme.color.cardActiveBackground : theme.color.cardInactiveBackground};
@@ -29,10 +31,20 @@ const TabButton = styled.button.attrs((props: { active: boolean, index: number, 
   border-bottom-right-radius: 0;
 `
 
+const Heading = styled.h3`
+  font-size: 1.4em;
+  font-weight: 500;
+`
+
 export const TabContext = React.createContext("");
 
 export default function Tabbed(
-    props: { defaultActiveTabName: string, headerNames: string[], headerElements: React.ReactElement[], children?: React.ReactElement[] }
+    props: {
+        defaultActiveTabName: string,
+        headerNames: string[],
+        headerElements: React.ReactElement[],
+        children?: React.ReactElement[]
+    }
 ) {
     const [activeTabName, setActiveTabName] = useState(props.defaultActiveTabName);
 
@@ -44,12 +56,12 @@ export default function Tabbed(
                                       index={index}
                                       length={props.children!.length}
                                       onClick={() => setActiveTabName(it)}
-                    >{props.headerElements[index]}</TabButton>
+                    ><Heading>{props.headerElements[index]}</Heading></TabButton>
                 })}
             </HeaderContainer>
             <TabContext.Provider value={activeTabName}>
                 <Card>
-                {props.children}
+                    {props.children}
                 </Card>
             </TabContext.Provider>
         </section>
