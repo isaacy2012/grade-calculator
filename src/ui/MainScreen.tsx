@@ -17,13 +17,25 @@ const dummyAssignments = [
 export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>(dummyAssignments);
 
+    function updateAssignment(assignment: Assignment, index: number) {
+        if (assignments[index].equals(assignment)) {
+            return;
+        }
+        setAssignments((currentAssignments) => {
+            let newArr = [...currentAssignments];
+            newArr[index] = assignment;
+            return newArr;
+        });
+    }
+
     return (
         <div>
             <Title>Grade Calculator</Title>
             <Instruction>Enter your assignment information, then choose whether you want to reach a <b>percentage</b> or <b>grade</b>.</Instruction>
             <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
-                {assignments.map(value => <ContentRow assignment={value}/>)}
+                {assignments.map((value, index) => <ContentRow assignment={value} onChange={(assignment: Assignment) => updateAssignment(assignment, index)}/>)}
             </Table>
+            {assignments.map((value) => <div>{value.toString()}</div>)}
         </div>
     );
 }

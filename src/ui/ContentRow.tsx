@@ -1,5 +1,5 @@
 import styled, {useTheme} from "styled-components";
-import React, {ReactNode} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {Assignment} from "../model/Assignment";
 
 const FirstContentCol = styled.p`
@@ -28,15 +28,56 @@ const ContentUnderline = styled.div`
   height: 1px;
   background: ${({theme}) => theme.color.contentUnderline};
 `
-export default function ContentRow( props: {assignment: Assignment}) {
-    const theme: any = useTheme();
 
-    return(
+const Input = styled.input`
+  font-size: 1em;
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+    border: none;
+    text-decoration: underline;
+  }
+`
+
+const RightInput = styled(Input)`
+  text-align: right;
+`
+
+type InputChangeEvent = React.ChangeEvent<HTMLInputElement>
+
+export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void }) {
+    const theme: any = useTheme();
+    const [nameStr, setNameStr] = useState<string>(props.assignment.name);
+    const [scoreStr, setScoreStr] = useState<string>(props.assignment.score.toString());
+    const [weightStr, setWeightStr] = useState<string>(props.assignment.weight.toString());
+
+    useEffect(() => {
+        props.onChange(Assignment.ofStrings(nameStr, scoreStr, weightStr));
+    }, [nameStr, scoreStr, weightStr, props])
+
+    return (
         <div>
             <ContentRowContainer>
-                <FirstContentCol>{props.assignment.name}</FirstContentCol>
-                <ContentCol>{props.assignment.score}</ContentCol>
-                <LastContentCol>{props.assignment.weight}</LastContentCol>
+                <FirstContentCol>
+                    <Input
+                        value={nameStr}
+                        onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
+                    />
+                </FirstContentCol>
+                <ContentCol>
+                    <Input
+                        value={scoreStr}
+                        onChange={(event: InputChangeEvent) => setScoreStr(event.target.value)}
+                    />
+                </ContentCol>
+                <LastContentCol>
+                    <RightInput
+                        value={weightStr}
+                        onChange={(event: InputChangeEvent) => setWeightStr(event.target.value)}
+                    />
+                </LastContentCol>
             </ContentRowContainer>
             <ContentUnderline/>
         </div>
