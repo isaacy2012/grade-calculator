@@ -31,11 +31,11 @@ const HeaderUnderline = styled.div`
 const makeHeaderItem = (value: string, index: number, len: number): ReactNode => {
     // first
     if (index === 0) {
-        return <FirstHeaderCol>{value}</FirstHeaderCol>
+        return <FirstHeaderCol key={index}>{value}</FirstHeaderCol>
     } else if (index === len - 1) { // last
-        return <LastHeaderCol>{value}</LastHeaderCol>
+        return <LastHeaderCol key={index}>{value}</LastHeaderCol>
     } else {
-        return <HeaderCol>{value}</HeaderCol>
+        return <HeaderCol key={index}>{value}</HeaderCol>
     }
 }
 export default function HeaderRow(props: {headers: string[]}) {
