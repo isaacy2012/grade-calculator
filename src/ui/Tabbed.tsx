@@ -32,19 +32,19 @@ const TabButton = styled.button.attrs((props: { active: boolean, index: number, 
 export const TabContext = React.createContext("");
 
 export default function Tabbed(
-    props: { defaultActiveTabName: string, headers: string[], children?: React.ReactElement[] }
+    props: { defaultActiveTabName: string, headerNames: string[], headerElements: React.ReactElement[], children?: React.ReactElement[] }
 ) {
     const [activeTabName, setActiveTabName] = useState(props.defaultActiveTabName);
 
     return (
         <section>
             <HeaderContainer>
-                {props.headers.map((it, index) => {
+                {props.headerNames.map((it, index) => {
                     return <TabButton active={it === activeTabName}
                                       index={index}
                                       length={props.children!.length}
                                       onClick={() => setActiveTabName(it)}
-                    >{it}</TabButton>
+                    >{props.headerElements[index]}</TabButton>
                 })}
             </HeaderContainer>
             <TabContext.Provider value={activeTabName}>
