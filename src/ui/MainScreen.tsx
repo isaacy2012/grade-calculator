@@ -88,11 +88,11 @@ export default function MainScreen() {
 
     return (
         <div>
-            <Container>
+            <MarginContainer bottom="50px">
             <Title>Grade Calculator</Title>
             <Instruction>Enter your assignment information, then choose whether you want to reach
                 a <b>percentage</b> or <b>grade</b>.</Instruction>
-            </Container>
+            </MarginContainer>
             <Table title={
                 <TableHeader placeholder="Title"/>
             } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
