@@ -61,6 +61,7 @@ const RightInput = styled(Input)`
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>
 
 function orEmptyString(str: string | undefined) {
+    console.log("change");
     return str ? str : "";
 }
 
@@ -73,6 +74,7 @@ export default function ContentRow(
         onDelete?: () => void
     }
 ) {
+    const {onChange, invalidate} = props;
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -80,13 +82,13 @@ export default function ContentRow(
     const [weightStr, setWeightStr] = useState<string>(orEmptyString(props.assignment.weight?.toString()));
 
     useEffect(() => {
-        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr);
+        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, props.assignment.uuid);
         if (strAssignment) {
-            props.onChange(strAssignment);
+            onChange(strAssignment);
         } else {
-            props.invalidate();
+            invalidate();
         }
-    }, [nameStr, scoreStr, weightStr, props])
+    }, [nameStr, scoreStr, weightStr, onChange, invalidate])
 
     return (
         <FlexDiv>

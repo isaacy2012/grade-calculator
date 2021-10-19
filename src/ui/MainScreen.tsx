@@ -10,6 +10,8 @@ import {Container, MarginContainer} from "./Container";
 import {StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
 import Tab from "./Tab";
+import {v4 as uuidv4} from "uuid";
+
 
 const TableHeader = styled(StyledInput)`
   width: 100%;
@@ -19,12 +21,12 @@ const TableHeader = styled(StyledInput)`
 `
 
 const dummyAssignments = [
-    new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025),
-    new Assignment(true, "Project 1", Score.fromString("98/100")!, 0.15),
-    new Assignment(true, "Assignment 2", Score.fromString("47/50")!, 0.025),
-    new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025),
-    new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15),
-    new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025),
+    new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025, uuidv4()),
+    new Assignment(true, "Project 1", Score.fromString("98/100")!, 0.15, uuidv4()),
+    new Assignment(true, "Assignment 2", Score.fromString("47/50")!, 0.025, uuidv4()),
+    new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025, uuidv4()),
+    new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15, uuidv4()),
+    new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025, uuidv4()),
     Assignment.ofEmpty()
 ]
 
@@ -97,7 +99,7 @@ export default function MainScreen() {
                 <TableHeader placeholder="Title"/>
             } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
-                    key={JSON.stringify(value)}
+                    key={value.uuid}
                     assignment={value}
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
                     invalidate={() => invalidateAssignment(index)}
