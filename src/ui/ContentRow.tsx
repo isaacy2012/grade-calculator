@@ -5,6 +5,7 @@ import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
+import {StyledInput} from "./StyledInput";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -43,22 +44,14 @@ const ContentUnderline = styled.div`
   background: ${({theme}) => theme.color.contentUnderline};
 `
 
-const Input = styled.input.attrs((props: { accepted: boolean, empty: boolean }) => ({
+const Input = styled(StyledInput).attrs((props: { accepted: boolean, empty: boolean }) => ({
     accepted: props.accepted,
     empty: props.empty,
 }))`
   font-size: 1em;
   color: ${({empty, accepted, theme}) => empty || accepted ? theme.color.text : theme.color.outlineReject};
   font-weight: ${({empty, accepted}) => empty || accepted ? "normal" : "bold"};
-  border: none;
   width: 100%;
-  box-sizing: border-box;
-
-  &:focus {
-    outline: none;
-    border: none;
-    text-decoration: underline;
-  }
 `
 
 const RightInput = styled(Input)`

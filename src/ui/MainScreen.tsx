@@ -7,6 +7,14 @@ import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
 import {Container} from "./Container";
+import {StyledInput} from "./StyledInput";
+
+const TableHeader = styled(StyledInput)`
+  width: 100%;
+  font-size: 2em;
+  font-weight: bold;
+  border: none;
+`
 
 const dummyAssignments = [
     new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025),
@@ -83,7 +91,9 @@ export default function MainScreen() {
             <Instruction>Enter your assignment information, then choose whether you want to reach
                 a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
-            <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
+            <Table title={
+                <TableHeader placeholder="Title"/>
+            } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
                     key={JSON.stringify(value)}
                     assignment={value}
