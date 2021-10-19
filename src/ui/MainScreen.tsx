@@ -6,8 +6,10 @@ import Table from "./Table";
 import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
-import {Container} from "./Container";
+import {Container, MarginContainer} from "./Container";
 import {StyledInput} from "./StyledInput";
+import Tabbed from "./Tabbed";
+import Tab from "./Tab";
 
 const TableHeader = styled(StyledInput)`
   width: 100%;
@@ -103,6 +105,18 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
+            <MarginContainer top="50px" bottom="50px">
+                <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
+                        headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
+                        headerElements={[<p>% Reach a <b>percentage</b></p>, <p>A+ Reach a <b>grade</b></p>] }>
+                    <Tab tabName="REACH_PERCENTAGE">
+                        <h3>Desired Percentage</h3>
+                    </Tab>
+                    <Tab tabName="REACH_GRADE">
+                        <h3>Desired Grade</h3>
+                    </Tab>
+                </Tabbed>
+            </MarginContainer>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
         </div>

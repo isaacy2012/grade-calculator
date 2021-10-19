@@ -11,6 +11,8 @@ export const theme = {
         outlineNone: "#D0D0D0",
         outlineAccept: "#13783B",
         outlineReject: "#C51F1F",
-        cardBackground: "#FFFFFF"
+        cardBackground: "#FFFFFF",
+        cardActiveBackground: "#FFFFFF",
+        cardInactiveBackground: "#F2F2F2",
     }
 };
