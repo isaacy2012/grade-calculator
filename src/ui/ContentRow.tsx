@@ -3,6 +3,8 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {Assignment} from "../model/Assignment";
 import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
+import {SpacerDiv} from "./SpacerDiv";
+import {FlexChild6, FlexDiv } from "./Flex";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -23,6 +25,16 @@ const ContentRowContainer = styled.div`
   flex-direction: row;
 `
 
+const DeleteButton = styled.button`
+  font-size: 1.6em;
+  background: none;
+  border: none;
+  // color: ${({theme}) => theme.color.outlineReject};
+  &:hover {
+    font-size: 1.3em;
+  }
+`
+
 const ContentUnderline = styled.div`
   margin: 0;
   padding: 0;
@@ -31,7 +43,7 @@ const ContentUnderline = styled.div`
   background: ${({theme}) => theme.color.contentUnderline};
 `
 
-const Input = styled.input.attrs((props: {accepted: boolean, empty: boolean}) => ({
+const Input = styled.input.attrs((props: { accepted: boolean, empty: boolean }) => ({
     accepted: props.accepted,
     empty: props.empty,
 }))`
@@ -59,7 +71,7 @@ function orEmptyString(str: string | undefined) {
     return str ? str : "";
 }
 
-export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void, invalidate: () => void}) {
+export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void, invalidate: () => void, onClick?: () => void }) {
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -76,37 +88,44 @@ export default function ContentRow(props: { assignment: Assignment, onChange: (a
     }, [nameStr, scoreStr, weightStr, props])
 
     return (
-        <div>
-            <ContentRowContainer>
-                <FirstContentCol>
-                    <Input
-                        value={nameStr}
-                        placeholder="Assignment"
-                        accepted={nameStr !== ""}
-                        empty={nameStr.length === 0}
-                        onChange={(event: InputChangeEvent) => setNameStr(event.target.value.trim())}
-                    />
-                </FirstContentCol>
-                <ContentCol>
-                    <Input
-                        value={scoreStr}
-                        placeholder="Score"
-                        accepted={Score.fromString(scoreStr) !== undefined}
-                        empty={scoreStr.length === 0}
-                        onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
-                    />
-                </ContentCol>
-                <LastContentCol>
-                    <RightInput
-                        value={weightStr}
-                        placeholder="Weight"
-                        accepted={numberRegex.test(weightStr) && parseFloat(weightStr) <= 1}
-                        empty={weightStr.length === 0}
-                        onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
-                    />
-                </LastContentCol>
-            </ContentRowContainer>
-            <ContentUnderline/>
-        </div>
+        <FlexDiv>
+            <SpacerDiv/>
+            <FlexChild6>
+                <ContentRowContainer onClick={props.onClick}>
+                    <FirstContentCol>
+                        <Input
+                            value={nameStr}
+                            placeholder={props.onClick ? "Assignment" : undefined}
+                            accepted={nameStr !== ""}
+                            empty={nameStr.length === 0}
+                            onChange={(event: InputChangeEvent) => setNameStr(event.target.value.trim())}
+                        />
+                    </FirstContentCol>
+                    <ContentCol>
+                        <Input
+                            value={scoreStr}
+                            placeholder={props.onClick ? "Score" : undefined}
+                            accepted={Score.fromString(scoreStr) !== undefined}
+                            empty={scoreStr.length === 0}
+                            onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
+                        />
+                    </ContentCol>
+                    <LastContentCol>
+                        <RightInput
+                            value={weightStr}
+                            placeholder={props.onClick ? "Weight" : undefined}
+                            accepted={numberRegex.test(weightStr) && parseFloat(weightStr) <= 1}
+                            empty={weightStr.length === 0}
+                            onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
+                        />
+                    </LastContentCol>
+                </ContentRowContainer>
+                <ContentUnderline/>
+            </FlexChild6>
+            <SpacerDiv>
+                {props.onClick === undefined &&
+                <DeleteButton>×</DeleteButton>}
+            </SpacerDiv>
+        </FlexDiv>
     );
 }

@@ -6,8 +6,7 @@ import Table from "./Table";
 import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
-
-const AddButton = styled.button``
+import {Container} from "./Container";
 
 const dummyAssignments = [
     new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025),
@@ -16,6 +15,7 @@ const dummyAssignments = [
     new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025),
     new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15),
     new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025),
+    Assignment.ofEmpty()
 ]
 
 export default function MainScreen() {
@@ -69,18 +69,20 @@ export default function MainScreen() {
 
     return (
         <div>
+            <Container>
             <Title>Grade Calculator</Title>
             <Instruction>Enter your assignment information, then choose whether you want to reach
                 a <b>percentage</b> or <b>grade</b>.</Instruction>
+            </Container>
             <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
                     key={index}
                     assignment={value}
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
                     invalidate={() => invalidateAssignment(index)}
+                    onClick={index === assignments.length-1 ? addRow : undefined}
                 />)}
             </Table>
-            <AddButton onClick={addRow}>Add</AddButton>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
         </div>

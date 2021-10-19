@@ -1,5 +1,7 @@
 import styled, {useTheme} from "styled-components";
 import React, {ReactNode} from "react";
+import {SpacerDiv} from "./SpacerDiv";
+import {FlexChild6, FlexDiv } from "./Flex";
 
 const FirstHeaderCol = styled.h3`
   text-align: start;
@@ -38,15 +40,19 @@ const makeHeaderItem = (value: string, index: number, len: number): ReactNode =>
         return <HeaderCol key={index}>{value}</HeaderCol>
     }
 }
-export default function HeaderRow(props: {headers: string[]}) {
+export default function HeaderRow(props: { headers: string[] }) {
     const theme: any = useTheme();
 
-    return(
-        <div>
-            <HeaderRowContainer>
-                {props.headers.map((value, index) => makeHeaderItem(value, index, props.headers.length))}
-            </HeaderRowContainer>
-            <HeaderUnderline/>
-        </div>
+    return (
+        <FlexDiv>
+            <SpacerDiv/>
+            <FlexChild6>
+                <HeaderRowContainer>
+                    {props.headers.map((value, index) => makeHeaderItem(value, index, props.headers.length))}
+                </HeaderRowContainer>
+                <HeaderUnderline/>
+            </FlexChild6>
+            <SpacerDiv/>
+        </FlexDiv>
     );
 }
