@@ -1,4 +1,4 @@
-import {useTheme} from "styled-components";
+import styled from "styled-components";
 import React, {useState} from "react";
 import {Instruction} from "./Instruction";
 import Title from "./Title";
@@ -7,12 +7,15 @@ import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
 
+const AddButton = styled.button``
+
 const dummyAssignments = [
-    new Assignment("Assignment1", Score.fromString("0.77")!, 0.1),
-    new Assignment("Assignment2", Score.fromString("0.89")!, 0.1),
-    new Assignment("Assignment3", Score.fromString("0.94")!, 0.1),
-    new Assignment("Project1", Score.fromString("0.94")!, 0.20),
-    new Assignment("Project2", Score.fromString("0.66")!, 0.20),
+    new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025),
+    new Assignment(true, "Project 1", Score.fromString("98/100")!, 0.15),
+    new Assignment(true, "Assignment 2", Score.fromString("47/50")!, 0.025),
+    new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025),
+    new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15),
+    new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025),
 ]
 
 export default function MainScreen() {
@@ -29,19 +32,39 @@ export default function MainScreen() {
         });
     }
 
+    function invalidateAssignment(index: number) {
+        if (!assignments[index].valid) {
+            return;
+        }
+        setAssignments((currentAssignments) => {
+            let newArr = [...currentAssignments];
+            newArr[index].valid = false;
+            return newArr;
+        });
+
+    }
+
     function calculate(thresh: number): string {
         if (!assignments.every(it => it.accepted())) {
             return "Incorrect data";
         }
         let totalWeight = assignments.map((it: Assignment) => it.weight!)
             .reduce((prev: number, it: number) => prev + it, 0);
-        let totalAchieved = assignments.reduce((prev: number, it: Assignment) => prev + it.score!.calc()*it.weight!, 0);
-        let totalWeightLeft = 1-totalWeight;
-        let requiredAmount = thresh-totalAchieved;
-        let requiredPercentage = requiredAmount/totalWeightLeft;
+        let totalAchieved = assignments.reduce((prev: number, it: Assignment) => prev + it.score!.calc() * it.weight!, 0);
+        let totalWeightLeft = 1 - totalWeight;
+        let requiredAmount = thresh - totalAchieved;
+        let requiredPercentage = requiredAmount / totalWeightLeft;
         console.log("totalWeightLeft: " + totalWeightLeft + ", requiredAmount: " + requiredAmount + ", requiredPercentage: " + requiredPercentage);
-        return "You need " + (requiredPercentage*100).toFixed(2) + "% in the last " + (totalWeightLeft*100).toFixed(2) + "% to reach " + (thresh*100) + "%";
+        return "You need " + (requiredPercentage * 100).toFixed(2) + "% in the last " + (totalWeightLeft * 100).toFixed(2) + "% to reach " + (thresh * 100) + "%";
 
+    }
+
+    function addRow() {
+        setAssignments((currentAssignments) => {
+            let newArr = [...currentAssignments];
+            newArr.push(Assignment.ofEmpty());
+            return newArr;
+        });
     }
 
     return (
@@ -50,10 +73,15 @@ export default function MainScreen() {
             <Instruction>Enter your assignment information, then choose whether you want to reach
                 a <b>percentage</b> or <b>grade</b>.</Instruction>
             <Table headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
-                {assignments.map((value, index) => <ContentRow key={index} assignment={value}
-                                                               onChange={(assignment: Assignment) => updateAssignment(assignment, index)}/>)}
+                {assignments.map((value, index) => <ContentRow
+                    key={index}
+                    assignment={value}
+                    onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
+                    invalidate={() => invalidateAssignment(index)}
+                />)}
             </Table>
-            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
+            <AddButton onClick={addRow}>Add</AddButton>
+            {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
         </div>
     );

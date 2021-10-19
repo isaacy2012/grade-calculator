@@ -1,6 +1,8 @@
 import styled, {useTheme} from "styled-components";
 import React, {ReactNode, useEffect, useState} from "react";
 import {Assignment} from "../model/Assignment";
+import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
+import {Score} from "../model/Score";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -29,12 +31,13 @@ const ContentUnderline = styled.div`
   background: ${({theme}) => theme.color.contentUnderline};
 `
 
-const Input = styled.input.attrs((props: {accepted: boolean}) => ({
+const Input = styled.input.attrs((props: {accepted: boolean, empty: boolean}) => ({
     accepted: props.accepted,
+    empty: props.empty,
 }))`
   font-size: 1em;
-  color: ${({accepted, theme}) => accepted ? theme.color.text : theme.color.outlineReject};
-  font-weight: ${({accepted}) => accepted ? "normal" : "bold"};
+  color: ${({empty, accepted, theme}) => empty || accepted ? theme.color.text : theme.color.outlineReject};
+  font-weight: ${({empty, accepted}) => empty || accepted ? "normal" : "bold"};
   border: none;
   width: 100%;
   box-sizing: border-box;
@@ -56,7 +59,7 @@ function orEmptyString(str: string | undefined) {
     return str ? str : "";
 }
 
-export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void }) {
+export default function ContentRow(props: { assignment: Assignment, onChange: (assignment: Assignment) => void, invalidate: () => void}) {
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -67,6 +70,8 @@ export default function ContentRow(props: { assignment: Assignment, onChange: (a
         let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr);
         if (strAssignment) {
             props.onChange(strAssignment);
+        } else {
+            props.invalidate();
         }
     }, [nameStr, scoreStr, weightStr, props])
 
@@ -76,22 +81,28 @@ export default function ContentRow(props: { assignment: Assignment, onChange: (a
                 <FirstContentCol>
                     <Input
                         value={nameStr}
-                        accepted={props.assignment.name !== undefined}
-                        onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
+                        placeholder="Assignment"
+                        accepted={nameStr !== ""}
+                        empty={nameStr.length === 0}
+                        onChange={(event: InputChangeEvent) => setNameStr(event.target.value.trim())}
                     />
                 </FirstContentCol>
                 <ContentCol>
                     <Input
                         value={scoreStr}
-                        accepted={scoreStr === props.assignment.score?.toInputString()}
-                        onChange={(event: InputChangeEvent) => setScoreStr(event.target.value)}
+                        placeholder="Score"
+                        accepted={Score.fromString(scoreStr) !== undefined}
+                        empty={scoreStr.length === 0}
+                        onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
                     />
                 </ContentCol>
                 <LastContentCol>
                     <RightInput
                         value={weightStr}
-                        accepted={weightStr === props.assignment.weight?.toString()}
-                        onChange={(event: InputChangeEvent) => setWeightStr(event.target.value)}
+                        placeholder="Weight"
+                        accepted={numberRegex.test(weightStr) && parseFloat(weightStr) <= 1}
+                        empty={weightStr.length === 0}
+                        onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
                     />
                 </LastContentCol>
             </ContentRowContainer>

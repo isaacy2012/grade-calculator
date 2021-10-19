@@ -1,5 +1,4 @@
-const fractionRegex = /^[0-9]+(?:\.[0-9]+)?\/[0-9]+(?:\.[0-9]+)?$/;
-const numberRegex = /^[0-9]+(?:\.[0-9]+)?$/;
+import {fractionRegex, percentageRegex} from "./Regex";
 
 export abstract class Score {
     readonly str: string;
@@ -11,7 +10,7 @@ export abstract class Score {
     static fromString(str: string): Score | undefined {
         if (fractionRegex.test(str)) {
             return FractionScore.fromString(str);
-        } else if (numberRegex.test(str)) {
+        } else if (percentageRegex.test(str)) {
             return PercentageScore.fromString(str);
         }
     }
@@ -41,14 +40,18 @@ class FractionScore extends Score {
         this.outOf = outOf;
     }
 
-    static fromString(str: string): FractionScore {
+    static fromString(str: string): FractionScore | undefined {
         let splits: string[] = str.split("/");
         if (splits.length !== 2) {
             throw new Error("Invalid FractionScore string");
         }
         let achieved = parseFloat(splits[0]);
         let outOf = parseFloat(splits[1]);
-        return new FractionScore(str, achieved, outOf);
+        let ret = new FractionScore(str, achieved, outOf);
+        if (ret.calc() > 1) {
+            return undefined;
+        }
+        return ret;
     }
 
     calc(): number {
@@ -81,8 +84,12 @@ class PercentageScore extends Score {
         this.percentage = percentage;
     }
 
-    static fromString(str: string): PercentageScore {
-        return new PercentageScore(str, parseFloat(str));
+    static fromString(str: string): PercentageScore | undefined {
+        let ret = new PercentageScore(str, parseFloat(str));
+        if (ret.calc() > 1) {
+            return undefined;
+        }
+        return ret;
     }
 
     calc(): number {

@@ -1,11 +1,13 @@
 import {Score} from "./Score";
 
 export class Assignment {
-    name: string | undefined;
-    score: Score | undefined;
-    weight: number | undefined;
+    valid: boolean
+    readonly name: string | undefined;
+    readonly score: Score | undefined;
+    readonly weight: number | undefined;
 
-    constructor(name: string | undefined, score: Score | undefined, weight: number | undefined) {
+    constructor(valid: boolean, name: string | undefined, score: Score | undefined, weight: number | undefined) {
+        this.valid = valid;
         this.name = name;
         this.score = score;
         this.weight = weight;
@@ -13,14 +15,14 @@ export class Assignment {
 
     static fromStrings(nameStr: string, scoreStr: string, weightStr: string): Assignment | undefined {
         let score = Score.fromString(scoreStr)
-        if (score) {
-            return new Assignment(nameStr, score, parseFloat(weightStr));
+        if (nameStr.trim().length !== 0 && score && weightStr.trim().length !== 0) {
+            return new Assignment(true, nameStr, score, parseFloat(weightStr));
         }
         return undefined;
     }
 
     static ofEmpty(): Assignment {
-        return new Assignment(undefined, undefined, undefined);
+        return new Assignment(false, undefined, undefined, undefined);
     }
 
     accepted(): boolean {
