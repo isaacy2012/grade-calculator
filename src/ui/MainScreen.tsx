@@ -8,6 +8,7 @@ import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
 import {Container} from "./Container";
 import {StyledInput} from "./StyledInput";
+import Tabbed from "./Tabbed";
 
 const TableHeader = styled(StyledInput)`
   width: 100%;
@@ -103,6 +104,13 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
+            <Container>
+                <Tabbed tab="percentage">
+                    <p>hi</p>
+                    <p>hi</p>
+                    <p>hi</p>
+                </Tabbed>
+            </Container>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
         </div>
