@@ -2,7 +2,7 @@ import React, {Fragment, useState} from "react";
 import styled from "styled-components";
 
 const Card = styled.section`
-  padding: 10px;
+  padding: 1.5rem;
   border: solid 1px ${({theme}) => theme.color.outline};
   border-radius: 0 0 10px 10px;
 `
