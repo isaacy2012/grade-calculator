@@ -52,7 +52,8 @@ export default function Tabbed(
         <Fragment>
             <HeaderContainer>
                 {props.headerNames.map((it, index) => {
-                    return <TabButton active={it === activeTabName}
+                    return <TabButton key={it}
+                                      active={it === activeTabName}
                                       index={index}
                                       length={props.children!.length}
                                       onClick={() => setActiveTabName(it)}
