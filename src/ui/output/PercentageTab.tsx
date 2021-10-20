@@ -32,8 +32,8 @@ type State<T> = [T, React.Dispatch<React.SetStateAction<T>>]
 
 export default function PercentageTab(props: { assignments: Assignment[], threshState: State<string>, outOfState: State<string> }) {
     const assignments = props.assignments;
-    const [threshStr, setThreshStr] = useState("");
-    const [outOfStr, setOutOfStr] = useState("");
+    const [threshStr, setThreshStr] = props.threshState;
+    const [outOfStr, setOutOfStr] = props.outOfState;
 
     let defaultOutOf = 100;
     let outOf = parseFloat(outOfStr);

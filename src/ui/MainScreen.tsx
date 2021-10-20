@@ -34,6 +34,10 @@ const dummyAssignments = [
 
 export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>(dummyAssignments);
+    const percentageThreshState = useState("");
+    const [percentageThresh, setPercentageThresh] = percentageThreshState;
+    const outOfState = useState("");
+    const [outOfThresh, setOutOfThresh] = outOfState;
 
     function deleteAssignment(index: number) {
         setAssignments((currentAssignments) => {
@@ -78,9 +82,9 @@ export default function MainScreen() {
     return (
         <Fragment>
             <Container bottom="50px">
-            <Title>Grade Calculator</Title>
-            <Instruction>Enter your assignment information, then choose whether you want to reach
-                a <b>percentage</b> or <b>grade</b>.</Instruction>
+                <Title>Grade Calculator</Title>
+                <Instruction>Enter your assignment information, then choose whether you want to reach
+                    a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
             <Table title={
                 <TableHeader placeholder="Title"/>
@@ -90,17 +94,21 @@ export default function MainScreen() {
                     assignment={value}
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
                     invalidate={() => invalidateAssignment(index)}
-                    onClick={index === assignments.length-1 ? addRow : undefined}
+                    onClick={index === assignments.length - 1 ? addRow : undefined}
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
             <Container top="50px" bottom="50px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
-                        headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
-                        headerElements={[<span>% Reach a <b>percentage</b></span>, <span>A+ Reach a <b>grade</b></span>] }>
+                        headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
+                        headerElements={[<span>% Reach a <b>percentage</b></span>,
+                            <span>A+ Reach a <b>grade</b></span>]}>
                     <Tab tabName="REACH_PERCENTAGE">
                         {/*remove the last empty assignment (the add button)*/}
-                        <PercentageTab assignments={assignments.slice(0, -1)}/>
+                        <PercentageTab assignments={assignments.slice(0, -1)}
+                                       threshState={percentageThreshState}
+                                       outOfState={outOfState}
+                        />
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}
