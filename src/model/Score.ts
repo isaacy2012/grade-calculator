@@ -7,12 +7,13 @@ export abstract class Score {
         this.str = str;
     }
 
-    static fromString(str: string): Score | undefined {
+    static fromString(str: string): Score | null {
         if (fractionRegex.test(str)) {
             return FractionScore.fromString(str);
         } else if (percentageRegex.test(str)) {
             return PercentageScore.fromString(str);
         }
+        return null;
     }
 
     abstract toJSON(): any
@@ -25,7 +26,7 @@ export abstract class Score {
         return this.str;
     }
 
-    equals(other: Score | undefined): boolean {
+    equals(other: Score | null): boolean {
         return this.str === other?.str;
     }
 
@@ -42,7 +43,7 @@ class FractionScore extends Score {
         this.outOf = outOf;
     }
 
-    static fromString(str: string): FractionScore | undefined {
+    static fromString(str: string): FractionScore | null {
         let splits: string[] = str.split("/");
         if (splits.length !== 2) {
             throw new Error("Invalid FractionScore string");
@@ -51,7 +52,7 @@ class FractionScore extends Score {
         let outOf = parseFloat(splits[1]);
         let ret = new FractionScore(str, achieved, outOf);
         if (ret.calc() > 1) {
-            return undefined;
+            return null;
         }
         return ret;
     }
@@ -60,7 +61,7 @@ class FractionScore extends Score {
         return this.achieved / this.outOf;
     }
 
-    equals(other: Score | undefined): boolean {
+    equals(other: Score | null): boolean {
         if (other instanceof FractionScore) {
             return super.equals(other)
                 && this.achieved === other.achieved
@@ -95,10 +96,10 @@ class PercentageScore extends Score {
         this.percentage = percentage;
     }
 
-    static fromString(str: string): PercentageScore | undefined {
+    static fromString(str: string): PercentageScore | null {
         let ret = new PercentageScore(str, parseFloat(str));
         if (ret.calc() > 1) {
-            return undefined;
+            return null;
         }
         return ret;
     }
@@ -107,7 +108,7 @@ class PercentageScore extends Score {
         return this.percentage;
     }
 
-    equals(other: Score | undefined): boolean {
+    equals(other: Score | null): boolean {
         if (other instanceof PercentageScore) {
             return super.equals(other)
                 && this.percentage === other.percentage;

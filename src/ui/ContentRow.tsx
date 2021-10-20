@@ -58,7 +58,7 @@ const RightInput = styled(Input)`
   text-align: right;
 `
 
-function orEmptyString(str: string | undefined) {
+function orEmptyString(str: string | null | undefined) {
     return str ? str : "";
 }
 
@@ -99,7 +99,7 @@ export default function ContentRow(
                             placeholder={props.onClick ? "Assignment" : undefined}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
-                            onChange={(event: InputChangeEvent) => setNameStr(event.target.value.trim())}
+                            onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
                         />
                     </FirstContentCol>
                     <ContentCol>

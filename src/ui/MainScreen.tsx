@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useCallback, useEffect, useState} from "react";
 import {Instruction} from "./Instruction";
 import Title from "./Title";
 import Table from "./Table";
@@ -13,6 +13,9 @@ import Tab from "./Tab";
 import {v4 as uuidv4} from "uuid";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
+import {encode, decode} from "base-64";
+import { useHistory, useLocation } from "react-router-dom";
+import {parseJSON} from "../util/Deserializer";
 
 
 const TableHeader = styled(StyledInput)`
@@ -33,16 +36,46 @@ const dummyAssignments: Assignment[] = [
 
 const defaultAssignments: Assignment[] = []
 
+/**
+ * getQuery from location for id string
+ */
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofEmpty()]);
     const percentageThreshState = useState("");
     const [percentageThresh, setPercentageThresh] = percentageThreshState;
     const outOfState = useState("");
     const [outOfThresh, setOutOfThresh] = outOfState;
+    const history = useHistory();
 
     function printJSON() {
         console.log(JSON.stringify(assignments));
+        console.log(encode(JSON.stringify(assignments)));
+        console.log(decode(encode(JSON.stringify(assignments))));
+        let params = new URLSearchParams();
+        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1))));
+        history.push({search: params.toString()});
+        // window.location.reload();
     }
+
+    let queryString = useQuery().get("saved");
+    let fillSavedAssignments = useCallback(() => {
+        if (queryString) {
+            let loadedAssignments: Assignment[] = parseJSON(decode(queryString));
+            setAssignments([...defaultAssignments,
+                    ...loadedAssignments,
+                new Assignment(true, "Pranqued!", Score.fromString("43/43")!, 0.15, uuidv4()),
+                Assignment.ofEmpty()
+            ]);
+        }
+    }, [queryString])
+
+    useEffect(() => {
+        fillSavedAssignments();
+    }, [fillSavedAssignments]);
 
     function deleteAssignment(index: number) {
         setAssignments((currentAssignments) => {
