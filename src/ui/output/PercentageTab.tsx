@@ -45,7 +45,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
             <UtilityText>
                 <VariableWidthInput value={threshStr}
                                     type="numeric"
-                                    placeholder="95"
+                                    placeholder="90"
                                     onChange={(event: InputChangeEvent) =>
                                         setThreshStr(event.target.value.trim())
                                     }

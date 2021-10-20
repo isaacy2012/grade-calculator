@@ -22,18 +22,19 @@ const TableHeader = styled(StyledInput)`
   border: none;
 `
 
-const dummyAssignments = [
+const dummyAssignments: Assignment[] = [
     new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025, uuidv4()),
     new Assignment(true, "Project 1", Score.fromString("98/100")!, 0.15, uuidv4()),
     new Assignment(true, "Assignment 2", Score.fromString("47/50")!, 0.025, uuidv4()),
     new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025, uuidv4()),
     new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15, uuidv4()),
     new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025, uuidv4()),
-    Assignment.ofEmpty()
 ]
 
+const defaultAssignments: Assignment[] = []
+
 export default function MainScreen() {
-    const [assignments, setAssignments] = useState<Assignment[]>(dummyAssignments);
+    const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofEmpty()]);
     const percentageThreshState = useState("");
     const [percentageThresh, setPercentageThresh] = percentageThreshState;
     const outOfState = useState("");
@@ -98,7 +99,7 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
-            <Container top="50px" bottom="50px">
+            <Container top="50px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
                         headerElements={[<span>% Reach a <b>percentage</b></span>,
@@ -116,7 +117,7 @@ export default function MainScreen() {
                     </Tab>
                 </Tabbed>
             </Container>
-            {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
+            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
         </Fragment>
     );
 }

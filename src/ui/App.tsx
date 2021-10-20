@@ -14,6 +14,10 @@ const Signature = styled.p`
   bottom: 5px;
 `
 
+const Footer = styled.footer`
+    height: 80px;
+`
+
 function App() {
     return (
         <div className="App">
@@ -21,7 +25,9 @@ function App() {
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <MainScreen/>
                 </BrowserRouter>
+                <Footer>
                 <Signature>Made by <a href="https://isaacy.dev">Isaac Young</a></Signature>
+                </Footer>
             </ThemeProvider>
         </div>
     );
