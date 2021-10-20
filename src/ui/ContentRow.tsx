@@ -5,7 +5,7 @@ import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
-import {StyledInput} from "./StyledInput";
+import {InputChangeEvent, StyledInput} from "./StyledInput";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -57,8 +57,6 @@ const Input = styled(StyledInput).attrs((props: { accepted: boolean, empty: bool
 const RightInput = styled(Input)`
   text-align: right;
 `
-
-type InputChangeEvent = React.ChangeEvent<HTMLInputElement>
 
 function orEmptyString(str: string | undefined) {
     console.log("change");

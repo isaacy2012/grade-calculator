@@ -11,6 +11,8 @@ import {StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
 import Tab from "./Tab";
 import {v4 as uuidv4} from "uuid";
+import PercentageTab from "./output/PercentageTab";
+import GradeTab from "./output/GradeTab";
 
 
 const TableHeader = styled(StyledInput)`
@@ -112,10 +114,10 @@ export default function MainScreen() {
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
                         headerElements={[<span>% Reach a <b>percentage</b></span>, <span>A+ Reach a <b>grade</b></span>] }>
                     <Tab tabName="REACH_PERCENTAGE">
-                        <h3>Desired Percentage</h3>
+                        <PercentageTab assignments={assignments}/>
                     </Tab>
                     <Tab tabName="REACH_GRADE">
-                        <h3>Desired Grade</h3>
+                        <GradeTab assignments={assignments}/>
                     </Tab>
                 </Tabbed>
             </Container>
