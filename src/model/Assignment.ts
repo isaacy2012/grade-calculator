@@ -46,5 +46,15 @@ export class Assignment {
         return "name: " + this.name + ", score: " + this.score + ", weight: " + this.weight;
     }
 
+    toJSON(): any {
+        return {
+            clazz: "Assignment",
+            name: this.name,
+            score: this.score,
+            weight: this.weight,
+            uuid: this.uuid,
+        };
+    }
+
 }
 

@@ -15,6 +15,8 @@ export abstract class Score {
         }
     }
 
+    abstract toJSON(): any
+
     abstract calc(): number
 
     abstract toString(): string
@@ -67,6 +69,15 @@ class FractionScore extends Score {
         return false;
     }
 
+    toJSON(): any {
+        return {
+            clazz: "FractionScore",
+            str: this.str,
+            achieved: this.achieved,
+            outOf: this.outOf
+        };
+    }
+
     toInputString(): string {
         return this.str;
     }
@@ -102,6 +113,14 @@ class PercentageScore extends Score {
                 && this.percentage === other.percentage;
         }
         return false;
+    }
+
+    toJSON(): any {
+        return {
+            clazz: "PercentageScore",
+            str: this.str,
+            percentage: this.percentage,
+        };
     }
 
     toString(): string {

@@ -40,6 +40,10 @@ export default function MainScreen() {
     const outOfState = useState("");
     const [outOfThresh, setOutOfThresh] = outOfState;
 
+    function printJSON() {
+        console.log(JSON.stringify(assignments));
+    }
+
     function deleteAssignment(index: number) {
         setAssignments((currentAssignments) => {
             let newArr = [...currentAssignments];
@@ -110,6 +114,7 @@ export default function MainScreen() {
                                        threshState={percentageThreshState}
                                        outOfState={outOfState}
                         />
+                        <button onClick={printJSON}>Bobobo</button>
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}

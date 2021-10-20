@@ -59,7 +59,6 @@ const RightInput = styled(Input)`
 `
 
 function orEmptyString(str: string | undefined) {
-    console.log("change");
     return str ? str : "";
 }
 
@@ -72,7 +71,8 @@ export default function ContentRow(
         onDelete?: () => void
     }
 ) {
-    const {onChange, invalidate} = props;
+    const {onChange, invalidate, assignment} = props;
+    const assignmentUUID = assignment.uuid;
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -80,13 +80,13 @@ export default function ContentRow(
     const [weightStr, setWeightStr] = useState<string>(orEmptyString(props.assignment.weight?.toString()));
 
     useEffect(() => {
-        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, props.assignment.uuid);
+        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, assignmentUUID);
         if (strAssignment) {
             onChange(strAssignment);
         } else {
             invalidate();
         }
-    }, [nameStr, scoreStr, weightStr, onChange, invalidate])
+    }, [nameStr, scoreStr, weightStr, onChange, invalidate, assignmentUUID])
 
     return (
         <FlexDiv>
