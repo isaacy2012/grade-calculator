@@ -7,6 +7,7 @@ export const theme = {
         headerUnderline: "#000000",
         contentUnderline: "#E5E5E5",
         highlight: "#9134ED",
+        utilityText: "#898989",
         outline: "#D0D0D0",
         outlineNone: "#D0D0D0",
         outlineAccept: "#13783B",
