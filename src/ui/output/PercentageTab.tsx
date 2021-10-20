@@ -8,7 +8,10 @@ import VariableWidthInput from "./VariableWidthInput";
 import {PercentageResult} from "./PercentageResult";
 
 
-const Display = styled.span`
+const Display = styled.span.attrs((props: { marginRight?: string }) => ({
+    marginRight: props.marginRight,
+}))`
+  margin-right: ${({marginRight}) => marginRight ? marginRight : undefined };
   color: ${({theme}) => theme.color.text};
   font-weight: 500;
   font-size: 3rem;
@@ -44,6 +47,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
             <H3First>Desired Percentage</H3First>
             <UtilityText>
                 <VariableWidthInput value={threshStr}
+                                    maxLength={4}
                                     type="numeric"
                                     placeholder="90"
                                     onChange={(event: InputChangeEvent) =>
@@ -55,11 +59,12 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
             <H3>Required Result</H3>
             {result.message()}
             <span>
-                <Display><Hi
+                <Display marginRight="2px"><Hi
                     enabled={result.isValid()}>{result.requiredPercentageStr()}</Hi></Display><UtilityText>%</UtilityText>
                 <Or>  or  </Or>
                 <Display><Hi enabled={result.isValid()}>{result.requiredAchievedStr()}</Hi><UtilityText>/</UtilityText></Display>
                 <VariableWidthInput value={outOfStr}
+                                    maxLength={5}
                                     type="numeric"
                                     placeholder={defaultOutOf.toString()}
                                     onChange={(event: InputChangeEvent) =>
