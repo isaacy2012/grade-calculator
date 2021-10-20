@@ -16,7 +16,7 @@ const Span = styled.span`
   font-size: 3rem;
 `
 
-export default function VariableWidthInput(props: { value: string, placeholder?: string, onChange: (event: InputChangeEvent) => void }) {
+export default function VariableWidthInput(props: { value: string, placeholder: string, type: string, onChange: (event: InputChangeEvent) => void }) {
     const {value, placeholder} = props;
     const [visible, setVisible] = React.useState(false);
     const [width, setWidth] = React.useState<string>("auto");
@@ -37,10 +37,10 @@ export default function VariableWidthInput(props: { value: string, placeholder?:
     return (
         <>
       <Span ref={measurer}>
-        {visible && (placeholder ? value.length > placeholder.length ? value : placeholder : value)}
+        {visible && (value.length > placeholder.length ? value : placeholder)}
       </Span>
             <DisplayInput
-                type="text"
+                type={props.type}
                 placeholder={props.placeholder}
                 value={value}
                 width={width+1}
