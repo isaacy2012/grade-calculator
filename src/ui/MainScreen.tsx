@@ -99,10 +99,12 @@ export default function MainScreen() {
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
                         headerElements={[<span>% Reach a <b>percentage</b></span>, <span>A+ Reach a <b>grade</b></span>] }>
                     <Tab tabName="REACH_PERCENTAGE">
-                        <PercentageTab assignments={assignments}/>
+                        {/*remove the last empty assignment (the add button)*/}
+                        <PercentageTab assignments={assignments.slice(0, -1)}/>
                     </Tab>
                     <Tab tabName="REACH_GRADE">
-                        <GradeTab assignments={assignments}/>
+                        {/*remove the last empty assignment (the add button)*/}
+                        <GradeTab assignments={assignments.slice(0, -1)}/>
                     </Tab>
                 </Tabbed>
             </Container>
