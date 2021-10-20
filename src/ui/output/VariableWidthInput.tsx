@@ -37,7 +37,7 @@ export default function VariableWidthInput(props: { value: string, placeholder: 
     return (
         <>
       <Span ref={measurer}>
-        {visible && (value.length > placeholder.length ? value : placeholder)}
+        {visible && (value.length >= placeholder.length ? value : placeholder)}
       </Span>
             <DisplayInput
                 type={props.type}
