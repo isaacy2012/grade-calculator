@@ -6,7 +6,7 @@ import Table from "./Table";
 import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
-import {Container, MarginContainer} from "./Container";
+import {Container} from "./Container";
 import {StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
 import Tab from "./Tab";
@@ -90,11 +90,11 @@ export default function MainScreen() {
 
     return (
         <Fragment>
-            <MarginContainer bottom="50px">
+            <Container bottom="50px">
             <Title>Grade Calculator</Title>
             <Instruction>Enter your assignment information, then choose whether you want to reach
                 a <b>percentage</b> or <b>grade</b>.</Instruction>
-            </MarginContainer>
+            </Container>
             <Table title={
                 <TableHeader placeholder="Title"/>
             } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
@@ -107,7 +107,7 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
-            <MarginContainer top="50px" bottom="50px">
+            <Container top="50px" bottom="50px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"] }
                         headerElements={[<span>% Reach a <b>percentage</b></span>, <span>A+ Reach a <b>grade</b></span>] }>
@@ -118,7 +118,7 @@ export default function MainScreen() {
                         <h3>Desired Grade</h3>
                     </Tab>
                 </Tabbed>
-            </MarginContainer>
+            </Container>
             {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
             {calculate(0.9)}
         </Fragment>

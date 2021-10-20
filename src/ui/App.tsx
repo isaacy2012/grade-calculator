@@ -5,7 +5,6 @@ import {
     BrowserRouter
 } from "react-router-dom";
 import {theme} from '../theme/Theme';
-import {Container} from "./Container";
 import MainScreen from "./MainScreen";
 
 
