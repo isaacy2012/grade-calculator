@@ -161,7 +161,7 @@ export class StubAssignment extends SerializableAssignment {
     templateJSON(): any {
         return {
             clazz: "StubAssignment",
-            nameStr: this.weightStr,
+            nameStr: this.nameStr,
             weightStr: this.weightStr,
         };
     }
