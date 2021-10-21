@@ -1,11 +1,11 @@
 import {Assignment, SerializableAssignment} from "../model/Assignment";
 import {encode} from "base-64";
 import styled from "styled-components";
-import {Fragment, useMemo, useState} from "react";
-import {H3First, H3} from "./output/H3";
+import {useMemo, useState} from "react";
+import {H3} from "./output/H3";
 import {CardContainer} from "./Card";
 import {HiOutlineClipboardCopy} from "react-icons/hi";
-import {FixedIconButton, IconButton} from "./IconButton";
+import {FixedIconButton} from "./IconButton";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const CopyInput = styled.input`

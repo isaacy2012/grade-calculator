@@ -1,7 +1,6 @@
-import React, {Fragment, ReactElement, useState} from "react";
+import React, {Fragment} from "react";
 import {H3, H3First} from "./H3";
 import {Assignment} from "../../model/Assignment";
-import {StyledInput} from "../StyledInput";
 import styled from "styled-components";
 import {InputChangeEvent} from "../StyledInput";
 import VariableWidthInput from "./VariableWidthInput";

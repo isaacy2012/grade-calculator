@@ -1,7 +1,6 @@
-import styled, {useTheme} from "styled-components";
-import React, {ReactNode, useEffect, useState} from "react";
+import styled from "styled-components";
+import React, {useEffect, useState} from "react";
 import {Assignment, parseNumOrPerc} from "../model/Assignment";
-import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
@@ -50,10 +49,6 @@ const RightInput = styled(Input)`
   text-align: right;
 `
 
-function orEmptyString(str: string | null | undefined) {
-    return str ? str : "";
-}
-
 export default function ContentRow(
     props: {
         assignment: Assignment,
@@ -65,7 +60,6 @@ export default function ContentRow(
 ) {
     const {onChange, assignment} = props;
     const assignmentUUID = assignment.uuid;
-    const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(assignment.getNameStr());
     const [scoreStr, setScoreStr] = useState<string>(assignment.getScoreStr());

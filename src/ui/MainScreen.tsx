@@ -5,7 +5,6 @@ import Title from "./Title";
 import Table from "./Table";
 import {Assignment, SerializableAssignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
-import {Score} from "../model/Score";
 import {Container} from "./Container";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
@@ -47,14 +46,14 @@ const InvisibleButton = styled.button`
     // color: ${({theme}) => theme.color.outlineReject};
 `
 
-const dummyAssignments: Assignment[] = [
-    Assignment.fromStrings("Assignment 1", "49/50", "0.025", uuidv4().toString()),
-    Assignment.fromStrings("Project 1", "98/100", "0.15", uuidv4().toString()),
-    Assignment.fromStrings("Assignment 2", "47/50", "0.025", uuidv4().toString()),
-    Assignment.fromStrings("Assignment 3", "40/40", "0.025", uuidv4().toString()),
-    Assignment.fromStrings("Project 2", "43/43", "0.15", uuidv4().toString()),
-    Assignment.fromStrings("Assignment 4", "24.5/30", "0.025", uuidv4().toString()),
-]
+// const dummyAssignments: Assignment[] = [
+//     Assignment.fromStrings("Assignment 1", "49/50", "0.025", uuidv4().toString()),
+//     Assignment.fromStrings("Project 1", "98/100", "0.15", uuidv4().toString()),
+//     Assignment.fromStrings("Assignment 2", "47/50", "0.025", uuidv4().toString()),
+//     Assignment.fromStrings("Assignment 3", "40/40", "0.025", uuidv4().toString()),
+//     Assignment.fromStrings("Project 2", "43/43", "0.15", uuidv4().toString()),
+//     Assignment.fromStrings("Assignment 4", "24.5/30", "0.025", uuidv4().toString()),
+// ]
 
 const defaultAssignments: Assignment[] = []
 
@@ -66,7 +65,7 @@ function useQuery() {
 }
 
 export default function MainScreen() {
-    const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofAdd()]);
+    const [assignments, setAssignments] = useState<Assignment[]>([...defaultAssignments, Assignment.ofAdd()]);
     const [shareExpanded, setShareExpanded] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
     const percentageThreshState = useState("");
