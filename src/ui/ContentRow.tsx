@@ -58,28 +58,23 @@ export default function ContentRow(
     props: {
         assignment: Assignment,
         onChange: (assignment: Assignment) => void,
-        invalidate: () => void,
         onClick?: () => void
         onDuplicate?: () => void
         onDelete?: () => void
     }
 ) {
-    const {onChange, invalidate, assignment} = props;
+    const {onChange, assignment} = props;
     const assignmentUUID = assignment.uuid;
     const theme: any = useTheme();
 
-    const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
-    const [scoreStr, setScoreStr] = useState<string>(orEmptyString(props.assignment.score?.toInputString()));
-    const [weightStr, setWeightStr] = useState<string>(orEmptyString(props.assignment.weight?.toString()));
+    const [nameStr, setNameStr] = useState<string>(assignment.getNameStr());
+    const [scoreStr, setScoreStr] = useState<string>(assignment.getScoreStr());
+    const [weightStr, setWeightStr] = useState<string>(assignment.getWeightStr());
 
     useEffect(() => {
         let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, assignmentUUID);
-        if (strAssignment) {
-            onChange(strAssignment);
-        } else {
-            invalidate();
-        }
-    }, [nameStr, scoreStr, weightStr, onChange, invalidate, assignmentUUID])
+        onChange(strAssignment);
+    }, [nameStr, scoreStr, weightStr, onChange, assignmentUUID])
 
     return (
         <FlexDiv>

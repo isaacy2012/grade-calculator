@@ -1,4 +1,4 @@
-import {Assignment} from "../model/Assignment";
+import {Assignment, SerializableAssignment} from "../model/Assignment";
 import {encode} from "base-64";
 import styled from "styled-components";
 import {Fragment, useMemo, useState} from "react";
@@ -34,10 +34,20 @@ const CopiedText = styled.p`
   color: ${({theme}) => theme.color.highlight};
 `
 
-function shareUrl(title: string, assignments: Assignment[], deserializer: (assignment: Assignment) => any): string {
-    console.log(JSON.stringify({title: title, assignments: assignments.map(deserializer)}));
+function shareUrl(
+    title: string,
+    assignments: Assignment[],
+    deserializer: (assignment: SerializableAssignment) => any
+): string {
     let params = new URLSearchParams();
-    params.append("saved", encode(JSON.stringify({title: title, assignments: assignments.map(deserializer)})));
+    params.append("saved", encode(
+        JSON.stringify(
+            {
+                title: title, assignments: assignments
+                    .filter(it => it instanceof SerializableAssignment)
+                    .map((it) => deserializer(it as SerializableAssignment))
+            })
+    ));
     return process.env.PUBLIC_URL + "/?" + params.toString();
 }
 
