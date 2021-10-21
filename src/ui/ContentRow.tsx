@@ -6,6 +6,8 @@ import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
+import { IconButton } from "./IconButton";
+import { IoCloseOutline } from "react-icons/io5";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -24,16 +26,6 @@ const LastContentCol = styled.p`
 const ContentRowContainer = styled.div`
   display: flex;
   flex-direction: row;
-`
-
-const DeleteButton = styled.button`
-  font-size: 1.6em;
-  background: none;
-  border: none;
-    // color: ${({theme}) => theme.color.outlineReject};
-  &:hover {
-    font-size: 1.3em;
-  }
 `
 
 const ContentUnderline = styled.div`
@@ -58,8 +50,7 @@ const RightInput = styled(Input)`
   text-align: right;
 `
 
-function orEmptyString(str: string | undefined) {
-    console.log("change");
+function orEmptyString(str: string | null | undefined) {
     return str ? str : "";
 }
 
@@ -72,7 +63,8 @@ export default function ContentRow(
         onDelete?: () => void
     }
 ) {
-    const {onChange, invalidate} = props;
+    const {onChange, invalidate, assignment} = props;
+    const assignmentUUID = assignment.uuid;
     const theme: any = useTheme();
 
     const [nameStr, setNameStr] = useState<string>(orEmptyString(props.assignment.name));
@@ -80,13 +72,13 @@ export default function ContentRow(
     const [weightStr, setWeightStr] = useState<string>(orEmptyString(props.assignment.weight?.toString()));
 
     useEffect(() => {
-        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, props.assignment.uuid);
+        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, assignmentUUID);
         if (strAssignment) {
             onChange(strAssignment);
         } else {
             invalidate();
         }
-    }, [nameStr, scoreStr, weightStr, onChange, invalidate])
+    }, [nameStr, scoreStr, weightStr, onChange, invalidate, assignmentUUID])
 
     return (
         <FlexDiv>
@@ -99,7 +91,7 @@ export default function ContentRow(
                             placeholder={props.onClick ? "Assignment" : undefined}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
-                            onChange={(event: InputChangeEvent) => setNameStr(event.target.value.trim())}
+                            onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
                         />
                     </FirstContentCol>
                     <ContentCol>
@@ -125,7 +117,8 @@ export default function ContentRow(
             </FlexChild6>
             <SpacerDiv>
                 {props.onClick === undefined &&
-                <DeleteButton onClick={props.onDelete}>×</DeleteButton>}
+                // ×
+                <IconButton onClick={props.onDelete}><IoCloseOutline/></IconButton>}
             </SpacerDiv>
         </FlexDiv>
     );

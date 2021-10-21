@@ -1,11 +1,6 @@
 import React, {Fragment, useState} from "react";
 import styled from "styled-components";
-
-const Card = styled.section`
-  padding: 1.5rem;
-  border: solid 1px ${({theme}) => theme.color.outline};
-  border-radius: 0 0 10px 10px;
-`
+import { BottomCard } from "./Card";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -18,6 +13,7 @@ const TabButton = styled.button.attrs((props: { active: boolean, index: number, 
     index: props.index,
     length: props.length,
 }))`
+  margin: 0;
   padding-top: 0;
   padding-bottom: 0;
   border: solid 1px ${({theme}) => theme.color.outline};
@@ -61,9 +57,9 @@ export default function Tabbed(
                 })}
             </HeaderContainer>
             <TabContext.Provider value={activeTabName}>
-                <Card>
+                <BottomCard>
                     {props.children}
-                </Card>
+                </BottomCard>
             </TabContext.Provider>
         </Fragment>
     );
