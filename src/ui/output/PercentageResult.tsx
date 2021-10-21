@@ -27,6 +27,9 @@ export abstract class PercentageResult {
                 prev + it.score!.calc() * it.weight!, 0
             );
             let totalWeightLeft = 1 - totalWeight;
+            if (totalWeightLeft < 0) {
+                return new InvalidPercentageResult();
+            }
             let theoreticalMaximum = totalAchieved + totalWeightLeft;
             let requiredAmount = thresh - totalAchieved;
             let requiredPercentage = requiredAmount / totalWeightLeft;
