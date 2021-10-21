@@ -48,11 +48,7 @@ class FractionScore extends Score {
         }
         let achieved = parseFloat(splits[0]);
         let outOf = parseFloat(splits[1]);
-        let ret = new FractionScore(str, achieved, outOf);
-        if (ret.calc() > 1) {
-            return null;
-        }
-        return ret;
+        return new FractionScore(str, achieved, outOf);
     }
 
     calc(): number {
@@ -86,11 +82,7 @@ class PercentageScore extends Score {
     }
 
     static fromString(str: string): PercentageScore | null {
-        let ret = new PercentageScore(str, parseFloat(str));
-        if (ret.calc() > 1) {
-            return null;
-        }
-        return ret;
+        return new PercentageScore(str, parseFloat(str));
     }
 
     calc(): number {
