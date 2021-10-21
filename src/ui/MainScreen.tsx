@@ -19,6 +19,7 @@ import {parseJSON} from "../util/Deserializer";
 import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
+import {useIdleTimer} from "react-idle-timer";
 
 
 const TableHeader = styled(StyledInput)`
@@ -71,9 +72,16 @@ export default function MainScreen() {
     const percentageThreshState = useState("");
     const outOfState = useState("");
 
+    const history = useHistory();
+
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
-        if (queryString) {
+        let encodedCurrent = encode(
+            JSON.stringify(
+                {title: title, assignments: assignments.slice(0, -1).map((it) => it.fullJSON())}
+            )
+        );
+        if (queryString && queryString !== encodedCurrent) {
             let loadedData = parseJSON(decode(queryString));
             if (loadedData !== null) {
                 setTitle(loadedData.title);
@@ -83,11 +91,32 @@ export default function MainScreen() {
                 ]);
             }
         }
-    }, [queryString])
+    }, [assignments, queryString, title])
 
     useEffect(() => {
         fillSavedAssignments();
-    }, [fillSavedAssignments]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    function saveAndPushData() {
+        let encodedCurrent = encode(
+            JSON.stringify(
+                {title: title, assignments: assignments.slice(0, -1).map((it) => it.fullJSON())}
+            )
+        );
+        if (queryString && queryString !== encodedCurrent) {
+            // refresh
+            let params = new URLSearchParams();
+            params.append("saved", encodedCurrent);
+            history.replace({search: params.toString()});
+        }
+    }
+
+    const {getRemainingTime, getLastActiveTime} = useIdleTimer({
+        timeout: 1000,
+        onIdle: saveAndPushData,
+        debounce: 500
+    })
 
     function duplicateAssignment(index: number) {
         setAssignments((currentAssignments) => {

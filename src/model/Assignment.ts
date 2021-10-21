@@ -39,6 +39,7 @@ export class Assignment {
         return null;
     }
 
+
     static ofEmpty(): Assignment {
         return new Assignment(false, null, null, null, uuidv4());
     }
@@ -80,4 +81,6 @@ export class Assignment {
     }
 
 }
+
+
 
