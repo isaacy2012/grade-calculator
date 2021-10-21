@@ -6,6 +6,8 @@ import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
+import { IconButton } from "./IconButton";
+import { IoCloseOutline } from "react-icons/io5";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -24,16 +26,6 @@ const LastContentCol = styled.p`
 const ContentRowContainer = styled.div`
   display: flex;
   flex-direction: row;
-`
-
-const DeleteButton = styled.button`
-  font-size: 1.6em;
-  background: none;
-  border: none;
-    // color: ${({theme}) => theme.color.outlineReject};
-  &:hover {
-    font-size: 1.3em;
-  }
 `
 
 const ContentUnderline = styled.div`
@@ -125,7 +117,8 @@ export default function ContentRow(
             </FlexChild6>
             <SpacerDiv>
                 {props.onClick === undefined &&
-                <DeleteButton onClick={props.onDelete}>×</DeleteButton>}
+                // ×
+                <IconButton onClick={props.onDelete}><IoCloseOutline/></IconButton>}
             </SpacerDiv>
         </FlexDiv>
     );
