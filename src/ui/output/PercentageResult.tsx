@@ -115,7 +115,7 @@ class OkPercentageResult extends ValidPercentageResult {
     }
 
     message(): React.ReactElement | void {
-        return <p>Over the remaining <b>{this.nToPercStr(this.totalWeightLeft)}%</b>, you need:</p>
+        return <p>Over the remaining <b>{this.nToPercStr(this.totalWeightLeft)}%</b>, you need at least:</p>
     }
 
 }
