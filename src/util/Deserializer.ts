@@ -34,7 +34,7 @@ function parseAssignment(thing: any): Assignment | null {
             if (thing.hasOwnProperty("score")) {
                 let score: Score | null = Score.fromString(thing.scoreStr);
                 if (!score) {
-                    return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, thing.weight);
+                    return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, (thing.weight*100).toString());
                 }
                 return new ValidAssignment(uuidv4(), thing.name, score, thing.weight);
             } else { // template
