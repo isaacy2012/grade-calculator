@@ -3,7 +3,7 @@ import {fractionRegex, numberRegex, percentageRegex} from "./Regex";
 export abstract class Score {
     readonly str: string;
 
-    constructor(str: string) {
+    protected constructor(str: string) {
         this.str = str;
     }
 

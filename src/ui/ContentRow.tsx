@@ -58,7 +58,7 @@ export default function ContentRow(
         onDelete?: () => void
     }
 ) {
-    const {onChange, assignment} = props;
+    const {onChange, assignment, onClick} = props;
     const assignmentUUID = assignment.uuid;
 
     const [nameStr, setNameStr] = useState<string>(assignment.getNameStr());
@@ -66,9 +66,11 @@ export default function ContentRow(
     const [weightStr, setWeightStr] = useState<string>(assignment.getWeightStr());
 
     useEffect(() => {
-        let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, assignmentUUID);
-        onChange(strAssignment);
-    }, [nameStr, scoreStr, weightStr, onChange, assignmentUUID])
+        if (onClick === undefined) {
+            let strAssignment = Assignment.fromStrings(nameStr, scoreStr, weightStr, assignmentUUID);
+            onChange(strAssignment);
+        }
+    }, [onClick, nameStr, scoreStr, weightStr, onChange, assignmentUUID])
 
     return (
         <FlexDiv>

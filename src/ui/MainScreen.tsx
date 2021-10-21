@@ -3,7 +3,7 @@ import React, {Fragment, useCallback, useEffect, useState} from "react";
 import {Instruction} from "./Instruction";
 import Title from "./Title";
 import Table from "./Table";
-import {Assignment, SerializableAssignment} from "../model/Assignment";
+import {AddButtonAssignment, Assignment, SerializableAssignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Container} from "./Container";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
@@ -73,12 +73,14 @@ export default function MainScreen() {
 
     const history = useHistory();
 
+    console.log("HOW IS THIS POSSIBLE" + (Assignment.fromStrings("bad", "bad", "bad", uuidv4()) instanceof AddButtonAssignment).toString());
+
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
         let encodedCurrent = encode(
             JSON.stringify(
                 {title: title, assignments: assignments
-                        .filter(it => it instanceof SerializableAssignment)
+                        .slice(0, -1)
                         .map((it) => (it as SerializableAssignment).fullJSON())}
             )
         );
@@ -208,7 +210,7 @@ export default function MainScreen() {
                     <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
                 </NoPaddingCard>
             </Container>
-            {/*{assignments.map((value, index) => <div key={index}><p>{value instanceof SerializableAssignment ? JSON.stringify(value.fullJSON()) : JSON.stringify(value)}</p></div>)}*/}
+            {/*{assignments.map((value, index) => <div key={index}><p>{value instanceof SerializableAssignment ? "true" + JSON.stringify(value.fullJSON()) : JSON.stringify(value)}</p></div>)}*/}
         </Fragment>
     );
 }
