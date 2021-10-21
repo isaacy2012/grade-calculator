@@ -41,7 +41,7 @@ function parseAssignment(thing: any): Assignment | null {
                 return new StubAssignment(uuidv4(), thing.name, "", thing.weight);
             }
         case "StubAssignment":
-            return new StubAssignment(uuidv4(), thing.nameStr, thing.scoreStr, thing.weightStr);
+            return new StubAssignment(uuidv4(), thing.nameStr, thing.scoreStr ? thing.scoreStr : "", thing.weightStr);
         default:
             return null;
     }
