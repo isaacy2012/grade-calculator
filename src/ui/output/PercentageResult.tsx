@@ -1,5 +1,5 @@
 import React, {ReactElement} from "react";
-import {Assignment} from "../../model/Assignment";
+import {Assignment, ValidAssignment} from "../../model/Assignment";
 
 const DIGITS = 2;
 const DEFAULT_PERC_STR = "--";
@@ -19,12 +19,12 @@ export abstract class PercentageResult {
 
     static create(assignments: Assignment[], threshStr: string, outOf: number): PercentageResult {
         let threshNum = parseFloat(threshStr)
-        if (!isNaN(threshNum) && assignments.every(it => it.accepted())) {
+        if (!isNaN(threshNum) && assignments.every(it => it instanceof ValidAssignment)) {
             let thresh = threshNum / 100;
-            let totalWeight = assignments.map((it: Assignment) => it.weight!)
+            let totalWeight = assignments.map((it: Assignment) => (it as ValidAssignment).weight!)
                 .reduce((prev: number, it: number) => prev + it, 0);
             let totalAchieved = assignments.reduce((prev: number, it: Assignment) =>
-                prev + it.score!.calc() * it.weight!, 0
+                prev + (it as ValidAssignment).score.calc() * (it as ValidAssignment).weight, 0
             );
             let totalWeightLeft = 1 - totalWeight;
             if (totalWeightLeft < 0) {

@@ -1,4 +1,4 @@
-import {Assignment} from "../model/Assignment";
+import {Assignment, StubAssignment, ValidAssignment} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 
@@ -25,13 +25,21 @@ export function parseJSON(json: string): {title: string, assignments: Assignment
 }
 
 function parseAssignment(thing: any): Assignment | null {
-    if (thing.clazz !== "Assignment") {
+    if (!thing.clazz.endsWith("Assignment")) {
         return null;
     }
-    let score: Score | null = Score.fromString(thing.scoreStr);
-    if (!score) {
-        return new Assignment(thing.valid, thing.name, null, thing.weight, uuidv4());
+
+    switch (thing.clazz) {
+        case "ValidAssignment":
+            let score: Score | null = Score.fromString(thing.scoreStr);
+            if (!score) {
+                return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, thing.weight);
+            }
+            return new ValidAssignment(uuidv4(), thing.name, score, thing.weight);
+        case "StubAssignment":
+            return new StubAssignment(uuidv4(), thing.nameStr, thing.scoreStr, thing.weightStr);
+        default:
+            return null;
     }
-    return new Assignment(thing.valid, thing.name, score, thing.weight, uuidv4());
 }
 
