@@ -26,6 +26,10 @@ export class Assignment {
         this.uuid = uuid;
     }
 
+    clone(): Assignment {
+        return new Assignment(this.valid, this.name, this.score, this.weight, uuidv4());
+    }
+
     static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment | null {
         let score = Score.fromString(scoreStr)
         let weight = parseNumOrPerc(weightStr);

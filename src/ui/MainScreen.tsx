@@ -89,11 +89,20 @@ export default function MainScreen() {
         fillSavedAssignments();
     }, [fillSavedAssignments]);
 
+    function duplicateAssignment(index: number) {
+        setAssignments((currentAssignments) => {
+            let newArr = [...currentAssignments];
+            let assignmentToDuplicate = currentAssignments[index];
+            let newAssignment = assignmentToDuplicate.clone();
+            newArr.splice(index, 0, newAssignment);
+            return newArr;
+        });
+    }
+
     function deleteAssignment(index: number) {
         setAssignments((currentAssignments) => {
             let newArr = [...currentAssignments];
             newArr.splice(index, 1);
-            console.log(newArr)
             return newArr;
         });
     }
@@ -148,6 +157,7 @@ export default function MainScreen() {
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
                     invalidate={() => invalidateAssignment(index)}
                     onClick={index === assignments.length - 1 ? addRow : undefined}
+                    onDuplicate={() => duplicateAssignment(index)}
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>

@@ -7,7 +7,7 @@ import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
 import { IconButton } from "./IconButton";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoCloseOutline, IoDuplicateSharp } from "react-icons/io5";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -60,6 +60,7 @@ export default function ContentRow(
         onChange: (assignment: Assignment) => void,
         invalidate: () => void,
         onClick?: () => void
+        onDuplicate?: () => void
         onDelete?: () => void
     }
 ) {
@@ -82,7 +83,11 @@ export default function ContentRow(
 
     return (
         <FlexDiv>
-            <SpacerDiv/>
+            <SpacerDiv>
+                {props.onClick === undefined &&
+                // ×
+                <IconButton fontSize="1.1em" onClick={props.onDuplicate}><IoDuplicateSharp/></IconButton>}
+            </SpacerDiv>
             <FlexChild6>
                 <ContentRowContainer onClick={props.onClick}>
                     <FirstContentCol>
