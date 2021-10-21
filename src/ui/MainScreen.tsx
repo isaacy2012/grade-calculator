@@ -71,16 +71,17 @@ export default function MainScreen() {
     const percentageThreshState = useState("");
     const outOfState = useState("");
 
-    const history = useHistory();
-
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
         if (queryString) {
-            let loadedAssignments: Assignment[] = parseJSON(decode(queryString));
-            setAssignments([
-                ...loadedAssignments,
-                Assignment.ofEmpty()
-            ]);
+            let loadedData = parseJSON(decode(queryString));
+            if (loadedData !== null) {
+                setTitle(loadedData.title);
+                setAssignments([
+                    ...loadedData.assignments,
+                    Assignment.ofEmpty()
+                ]);
+            }
         }
     }, [queryString])
 
@@ -136,7 +137,10 @@ export default function MainScreen() {
                     a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
             <Table title={
-                <TableHeader onChange={(event: InputChangeEvent) => setTitle(event.target.value)} placeholder="Title"/>
+                <TableHeader
+                    value={title}
+                    onChange={(event: InputChangeEvent) => setTitle(event.target.value)}
+                    placeholder="Title"/>
             } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
                     key={value.uuid}
@@ -147,13 +151,6 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
-            <Container>
-                <NoPaddingCard marginTop="20px">
-                    <InvisibleButton onClick={() => setShareExpanded((prev) => !prev)}><RiShareForward2Fill/> SHARE</InvisibleButton>
-                    {shareExpanded &&
-                    <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
-                </NoPaddingCard>
-            </Container>
             <Container top="20px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
@@ -171,6 +168,13 @@ export default function MainScreen() {
                         <GradeTab assignments={assignments.slice(0, -1)}/>
                     </Tab>
                 </Tabbed>
+            </Container>
+            <Container>
+                <NoPaddingCard marginTop="20px">
+                    <InvisibleButton onClick={() => setShareExpanded((prev) => !prev)}><RiShareForward2Fill/> SHARE</InvisibleButton>
+                    {shareExpanded &&
+                    <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
+                </NoPaddingCard>
             </Container>
             {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
         </Fragment>

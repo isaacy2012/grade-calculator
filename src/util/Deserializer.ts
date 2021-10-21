@@ -3,10 +3,14 @@ import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 
 
-export function parseJSON(json: string): Assignment[] {
+export function parseJSON(json: string): {title: string, assignments: Assignment[]} | null {
     let document = JSON.parse(json);
     let assignments: Assignment[] = [];
-    for (let thing of document) {
+    let title: string = document.title ? document.title : "";
+    if (!document.hasOwnProperty("assignments")) {
+        return null;
+    }
+    for (let thing of document.assignments) {
         let assignment = parseAssignment(thing);
         if (assignment) {
             assignments.push(assignment)
@@ -14,7 +18,10 @@ export function parseJSON(json: string): Assignment[] {
             // return undefined;
         }
     }
-    return assignments;
+    return {
+        title: title,
+        assignments: assignments
+    };
 }
 
 function parseAssignment(thing: any): Assignment | null {
