@@ -20,7 +20,11 @@ export function parseJSON(json: string): Assignment[] {
 function parseAssignment(thing: any): Assignment | null {
     if (thing.clazz !== "Assignment") {
         return null;
-    } else {
-        return Assignment.ofEmpty();
     }
+    let score: Score | null = Score.fromString(thing.scoreStr);
+    if (!score) {
+        return new Assignment(thing.valid, thing.name, null, thing.weight, uuidv4());
+    }
+    return new Assignment(thing.valid, thing.name, score, thing.weight, uuidv4());
 }
+

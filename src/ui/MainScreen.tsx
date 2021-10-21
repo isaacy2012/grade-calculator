@@ -14,7 +14,7 @@ import {v4 as uuidv4} from "uuid";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
 import {encode, decode} from "base-64";
-import { useHistory, useLocation } from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import {parseJSON} from "../util/Deserializer";
 
 
@@ -23,6 +23,12 @@ const TableHeader = styled(StyledInput)`
   font-size: 2em;
   font-weight: bold;
   border: none;
+`
+
+const Button = styled.button`
+  background: none;
+  border: none;
+    // color: ${({theme}) => theme.color.outlineReject};
 `
 
 const dummyAssignments: Assignment[] = [
@@ -51,23 +57,26 @@ export default function MainScreen() {
     const [outOfThresh, setOutOfThresh] = outOfState;
     const history = useHistory();
 
-    function printJSON() {
-        console.log(JSON.stringify(assignments));
-        console.log(encode(JSON.stringify(assignments)));
-        console.log(decode(encode(JSON.stringify(assignments))));
+    function copyToClipboard() {
+        console.log(JSON.stringify(assignments.map(it => it.fullJSON())));
         let params = new URLSearchParams();
-        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1))));
+        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1).map(it => it.fullJSON()))));
         history.push({search: params.toString()});
-        // window.location.reload();
+    }
+
+    function printTemplateJSON() {
+        console.log(JSON.stringify(assignments.map(it => it.templateJSON())));
+        let params = new URLSearchParams();
+        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1).map(it => it.templateJSON()))));
+        history.push({search: params.toString()});
     }
 
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
         if (queryString) {
             let loadedAssignments: Assignment[] = parseJSON(decode(queryString));
-            setAssignments([...defaultAssignments,
-                    ...loadedAssignments,
-                new Assignment(true, "Pranqued!", Score.fromString("43/43")!, 0.15, uuidv4()),
+            setAssignments([
+                ...loadedAssignments,
                 Assignment.ofEmpty()
             ]);
         }
@@ -147,7 +156,9 @@ export default function MainScreen() {
                                        threshState={percentageThreshState}
                                        outOfState={outOfState}
                         />
-                        <button onClick={printJSON}>Bobobo</button>
+                        <br/>
+                        <Button onClick={copyToClipboard}>SHARE</Button>
+                        <Button onClick={printTemplateJSON}>SHARE TEMPLATE</Button>
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}

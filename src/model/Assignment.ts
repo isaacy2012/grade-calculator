@@ -46,13 +46,22 @@ export class Assignment {
         return "name: " + this.name + ", score: " + this.score + ", weight: " + this.weight;
     }
 
-    toJSON(): any {
+    fullJSON(): any {
         return {
             clazz: "Assignment",
+            valid: this.valid,
             name: this.name,
-            score: this.score,
+            scoreStr: this.score?.str,
             weight: this.weight,
-            uuid: this.uuid,
+        };
+    }
+
+    templateJSON(): any {
+        return {
+            clazz: "Assignment",
+            valid: this.valid,
+            name: this.name,
+            weight: this.weight,
         };
     }
 

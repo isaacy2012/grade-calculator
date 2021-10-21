@@ -18,6 +18,7 @@ const TabButton = styled.button.attrs((props: { active: boolean, index: number, 
     index: props.index,
     length: props.length,
 }))`
+  margin: 0;
   padding-top: 0;
   padding-bottom: 0;
   border: solid 1px ${({theme}) => theme.color.outline};
