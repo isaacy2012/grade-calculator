@@ -14,12 +14,12 @@ const FirstContentCol = styled.p`
 `
 const ContentCol = styled.p`
   text-align: start;
-  flex: 2;
+  flex: 1.5;
 `
 
 const LastContentCol = styled.p`
   text-align: end;
-  flex: 1;
+  flex: 1.5;
 `
 
 const ContentRowContainer = styled.div`
@@ -43,6 +43,7 @@ const Input = styled(StyledInput).attrs((props: { accepted: boolean, empty: bool
   color: ${({empty, accepted, theme}) => empty || accepted ? theme.color.text : theme.color.outlineReject};
   font-weight: ${({empty, accepted}) => empty || accepted ? "normal" : "bold"};
   width: 100%;
+  text-decoration: ${({empty}) => empty ? "underline" : "none"};
 `
 
 const RightInput = styled(Input)`
@@ -84,7 +85,7 @@ export default function ContentRow(
                     <FirstContentCol>
                         <Input
                             value={nameStr}
-                            placeholder={"Assignment Name"}
+                            placeholder={"Name"}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
                             onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
@@ -93,8 +94,8 @@ export default function ContentRow(
                     <ContentCol>
                         <Input
                             value={scoreStr}
-                            placeholder={"%, or X/Y"}
-                            accepted={Score.fromString(scoreStr) !== undefined}
+                            placeholder={"Score Achieved"}
+                            accepted={Score.fromString(scoreStr) !== null}
                             empty={scoreStr.length === 0}
                             onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
                         />
@@ -102,7 +103,7 @@ export default function ContentRow(
                     <LastContentCol>
                         <RightInput
                             value={weightStr}
-                            placeholder={"%"}
+                            placeholder={"Overall Weight"}
                             accepted={parseNumOrPerc(weightStr) <= 1}
                             empty={weightStr.length === 0}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}

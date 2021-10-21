@@ -10,7 +10,7 @@ const WiderSection = styled.section`
 `
 
 export default function Table(
-    props: { title: React.ReactNode, headers: string[], children?: React.ReactNode }
+    props: { title: React.ReactNode, headers: string[], hints: string[], children?: React.ReactNode }
 ) {
 
     return (
@@ -22,7 +22,7 @@ export default function Table(
                 </FlexChild6>
                 <SpacerDiv/>
             </FlexDiv>
-            <HeaderRow headers={props.headers}/>
+            <HeaderRow headers={props.headers} hints={props.hints}/>
             {props.children}
         </WiderSection>
     );

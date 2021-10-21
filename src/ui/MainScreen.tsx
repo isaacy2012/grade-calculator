@@ -170,7 +170,8 @@ export default function MainScreen() {
                     value={title}
                     onChange={(event: InputChangeEvent) => setTitle(event.target.value)}
                     placeholder="Title"/>
-            } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
+            } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}
+            hints={["", "% or X/Y", "%"]}>
                 {assignments.map((value, index) => <ContentRow
                     key={value.uuid}
                     assignment={value}

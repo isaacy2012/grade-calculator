@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import React, {ReactNode} from "react";
+import React, {ReactElement, ReactNode} from "react";
 import {SpacerDiv} from "./SpacerDiv";
-import {FlexChild6, FlexDiv } from "./Flex";
+import {FlexChild6, FlexDiv} from "./Flex";
 
 const FirstHeaderCol = styled.h3`
   text-align: start;
@@ -30,24 +30,30 @@ const HeaderUnderline = styled.div`
   background: ${({theme}) => theme.color.headerUnderline};
 `
 
-const makeHeaderItem = (value: string, index: number, len: number): ReactNode => {
+const Hint = styled.span`
+  font-size: 0.8em;
+  font-weight: normal;
+  color: ${({theme}) => theme.color.utilityText};
+`
+
+const makeHeaderItem = (value: string, index: number, len: number, hint: string): ReactElement => {
     // first
     if (index === 0) {
-        return <FirstHeaderCol key={index}>{value}</FirstHeaderCol>
+        return <FirstHeaderCol key={index}>{value}<br/><Hint>{hint}</Hint></FirstHeaderCol>
     } else if (index === len - 1) { // last
-        return <LastHeaderCol key={index}>{value}</LastHeaderCol>
+        return <LastHeaderCol key={index}>{value}<br/><Hint>{hint}</Hint></LastHeaderCol>
     } else {
-        return <HeaderCol key={index}>{value}</HeaderCol>
+        return <HeaderCol key={index}>{value}<br/><Hint>{hint}</Hint></HeaderCol>
     }
 }
-export default function HeaderRow(props: { headers: string[] }) {
+export default function HeaderRow(props: { headers: string[], hints: string[] }) {
 
     return (
         <FlexDiv>
             <SpacerDiv/>
             <FlexChild6>
                 <HeaderRowContainer>
-                    {props.headers.map((value, index) => makeHeaderItem(value, index, props.headers.length))}
+                    {props.headers.map((value, index) => makeHeaderItem(value, index, props.headers.length, props.hints[index]))}
                 </HeaderRowContainer>
                 <HeaderUnderline/>
             </FlexChild6>
