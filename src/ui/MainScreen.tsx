@@ -73,8 +73,6 @@ export default function MainScreen() {
 
     const history = useHistory();
 
-    console.log("HOW IS THIS POSSIBLE" + (Assignment.fromStrings("bad", "bad", "bad", uuidv4()) instanceof AddButtonAssignment).toString());
-
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
         let encodedCurrent = encode(
