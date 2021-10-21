@@ -1,4 +1,4 @@
-import {fractionRegex, percentageRegex} from "./Regex";
+import {fractionRegex, numberRegex, percentageRegex} from "./Regex";
 
 export abstract class Score {
     readonly str: string;
@@ -10,10 +10,9 @@ export abstract class Score {
     static fromString(str: string): Score | null {
         if (fractionRegex.test(str)) {
             return FractionScore.fromString(str);
-        } else if (percentageRegex.test(str)) {
+        } else {
             return PercentageScore.fromString(str);
         }
-        return null;
     }
 
     abstract calc(): number
@@ -82,7 +81,12 @@ class PercentageScore extends Score {
     }
 
     static fromString(str: string): PercentageScore | null {
-        return new PercentageScore(str, parseFloat(str));
+        if (numberRegex.test(str)) {
+            return new PercentageScore(str, parseFloat(str));
+        } else if (percentageRegex.test(str)) {
+            return new PercentageScore(str, parseFloat(str.substr(0, str.length - 1)) / 100);
+        }
+        return null;
     }
 
     calc(): number {

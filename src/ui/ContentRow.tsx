@@ -1,6 +1,6 @@
 import styled, {useTheme} from "styled-components";
 import React, {ReactNode, useEffect, useState} from "react";
-import {Assignment} from "../model/Assignment";
+import {Assignment, parseNumOrPerc} from "../model/Assignment";
 import {fractionRegex, numberRegex, percentageRegex} from "../model/Regex";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
@@ -107,7 +107,7 @@ export default function ContentRow(
                         <RightInput
                             value={weightStr}
                             placeholder={props.onClick ? "Weight" : undefined}
-                            accepted={numberRegex.test(weightStr) && parseFloat(weightStr) <= 1}
+                            accepted={parseNumOrPerc(weightStr) <= 1}
                             empty={weightStr.length === 0}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
                         />

@@ -176,7 +176,7 @@ export default function MainScreen() {
                     <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
                 </NoPaddingCard>
             </Container>
-            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
+            {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
         </Fragment>
     );
 }

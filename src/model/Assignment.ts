@@ -1,6 +1,15 @@
 import {Score} from "./Score";
 import {v4 as uuidv4} from "uuid";
+import {percentageRegex} from "./Regex";
 
+
+export function parseNumOrPerc(str: string): number {
+    if (percentageRegex.test(str)) {
+        return parseFloat(str.substr(0, str.length-1))/100;
+    } else {
+        return parseFloat(str);
+    }
+}
 
 export class Assignment {
     valid: boolean
@@ -19,8 +28,9 @@ export class Assignment {
 
     static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment | null {
         let score = Score.fromString(scoreStr)
+        let weight = parseNumOrPerc(weightStr);
         if (nameStr.trim().length !== 0 && score && weightStr.trim().length !== 0) {
-            return new Assignment(true, nameStr, score, parseFloat(weightStr), uuid);
+            return new Assignment(true, nameStr, score, weight, uuid);
         }
         return null;
     }
