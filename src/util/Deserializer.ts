@@ -31,11 +31,15 @@ function parseAssignment(thing: any): Assignment | null {
 
     switch (thing.clazz) {
         case "ValidAssignment":
-            let score: Score | null = Score.fromString(thing.scoreStr);
-            if (!score) {
-                return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, thing.weight);
+            if (thing.hasOwnProperty("score")) {
+                let score: Score | null = Score.fromString(thing.scoreStr);
+                if (!score) {
+                    return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, thing.weight);
+                }
+                return new ValidAssignment(uuidv4(), thing.name, score, thing.weight);
+            } else { // template
+                return new StubAssignment(uuidv4(), thing.name, "", thing.weight);
             }
-            return new ValidAssignment(uuidv4(), thing.name, score, thing.weight);
         case "StubAssignment":
             return new StubAssignment(uuidv4(), thing.nameStr, thing.scoreStr, thing.weightStr);
         default:
