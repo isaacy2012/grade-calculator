@@ -48,7 +48,7 @@ function shareUrl(
                     .map((it) => deserializer(it as SerializableAssignment))
             })
     ));
-    return process.env.PUBLIC_URL + "/?" + params.toString();
+    return window.location.host + process.env.PUBLIC_URL + "/?" + params.toString();
 }
 
 
