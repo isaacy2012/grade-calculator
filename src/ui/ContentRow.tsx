@@ -35,15 +35,16 @@ const ContentUnderline = styled.div`
   background: ${({theme}) => theme.color.contentUnderline};
 `
 
-const Input = styled(StyledInput).attrs((props: { accepted: boolean, empty: boolean }) => ({
+const Input = styled(StyledInput).attrs((props: { accepted: boolean, empty: boolean, shouldUnderline: boolean }) => ({
     accepted: props.accepted,
     empty: props.empty,
+    shouldUnderline: props.shouldUnderline,
 }))`
   font-size: 1em;
   color: ${({empty, accepted, theme}) => empty || accepted ? theme.color.text : theme.color.outlineReject};
   font-weight: ${({empty, accepted}) => empty || accepted ? "normal" : "bold"};
   width: 100%;
-  text-decoration: ${({empty}) => empty ? "underline" : "none"};
+  text-decoration: ${({empty, shouldUnderline}) => empty && shouldUnderline ? "underline" : "none"};
 `
 
 const RightInput = styled(Input)`
@@ -88,6 +89,7 @@ export default function ContentRow(
                             placeholder={"Name"}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
+                            shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
                         />
                     </FirstContentCol>
@@ -97,6 +99,7 @@ export default function ContentRow(
                             placeholder={"Score Achieved"}
                             accepted={Score.fromString(scoreStr) !== null}
                             empty={scoreStr.length === 0}
+                            shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
                         />
                     </ContentCol>
@@ -106,6 +109,7 @@ export default function ContentRow(
                             placeholder={"Overall Weight"}
                             accepted={parseNumOrPerc(weightStr) <= 1}
                             empty={weightStr.length === 0}
+                            shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
                         />
                     </LastContentCol>
