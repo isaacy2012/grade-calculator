@@ -3,7 +3,7 @@ import React, {Fragment, useCallback, useEffect, useState} from "react";
 import {Instruction} from "./Instruction";
 import Title from "./Title";
 import Table from "./Table";
-import {Assignment} from "../model/Assignment";
+import {Assignment, SerializableAssignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
 import {Container} from "./Container";
@@ -48,12 +48,12 @@ const InvisibleButton = styled.button`
 `
 
 const dummyAssignments: Assignment[] = [
-    new Assignment(true, "Assignment 1", Score.fromString("49/50")!, 0.025, uuidv4()),
-    new Assignment(true, "Project 1", Score.fromString("98/100")!, 0.15, uuidv4()),
-    new Assignment(true, "Assignment 2", Score.fromString("47/50")!, 0.025, uuidv4()),
-    new Assignment(true, "Assignment 3", Score.fromString("40/40")!, 0.025, uuidv4()),
-    new Assignment(true, "Project 2", Score.fromString("43/43")!, 0.15, uuidv4()),
-    new Assignment(true, "Assignment 4", Score.fromString("24.5/30")!, 0.025, uuidv4()),
+    Assignment.fromStrings("Assignment 1", "49/50", "0.025", uuidv4().toString()),
+    Assignment.fromStrings("Project 1", "98/100", "0.15", uuidv4().toString()),
+    Assignment.fromStrings("Assignment 2", "47/50", "0.025", uuidv4().toString()),
+    Assignment.fromStrings("Assignment 3", "40/40", "0.025", uuidv4().toString()),
+    Assignment.fromStrings("Project 2", "43/43", "0.15", uuidv4().toString()),
+    Assignment.fromStrings("Assignment 4", "24.5/30", "0.025", uuidv4().toString()),
 ]
 
 const defaultAssignments: Assignment[] = []
@@ -66,7 +66,7 @@ function useQuery() {
 }
 
 export default function MainScreen() {
-    const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofEmpty()]);
+    const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofAdd()]);
     const [shareExpanded, setShareExpanded] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
     const percentageThreshState = useState("");
@@ -78,7 +78,9 @@ export default function MainScreen() {
     let fillSavedAssignments = useCallback(() => {
         let encodedCurrent = encode(
             JSON.stringify(
-                {title: title, assignments: assignments.slice(0, -1).map((it) => it.fullJSON())}
+                {title: title, assignments: assignments
+                        .filter(it => it instanceof SerializableAssignment)
+                        .map((it) => (it as SerializableAssignment).fullJSON())}
             )
         );
         if (queryString && queryString !== encodedCurrent) {
@@ -87,7 +89,7 @@ export default function MainScreen() {
                 setTitle(loadedData.title);
                 setAssignments([
                     ...loadedData.assignments,
-                    Assignment.ofEmpty()
+                    Assignment.ofAdd()
                 ]);
             }
         }
@@ -101,10 +103,12 @@ export default function MainScreen() {
     function saveAndPushData() {
         let encodedCurrent = encode(
             JSON.stringify(
-                {title: title, assignments: assignments.slice(0, -1).map((it) => it.fullJSON())}
+                {title: title, assignments: assignments
+                        .filter(it => it instanceof SerializableAssignment)
+                        .map((it) => (it as SerializableAssignment).fullJSON())}
             )
         );
-        if (queryString && queryString !== encodedCurrent) {
+        if (queryString !== encodedCurrent) {
             // refresh
             let params = new URLSearchParams();
             params.append("saved", encodedCurrent);
@@ -112,7 +116,7 @@ export default function MainScreen() {
         }
     }
 
-    const {getRemainingTime, getLastActiveTime} = useIdleTimer({
+    useIdleTimer({
         timeout: 1000,
         onIdle: saveAndPushData,
         debounce: 500
@@ -138,6 +142,7 @@ export default function MainScreen() {
 
     function updateAssignment(assignment: Assignment, index: number) {
         if (assignments[index].equals(assignment)) {
+            // console.log("unfortunately, " + JSON.stringify(assignments[index]) + " was equal to " + JSON.stringify(assignment))
             return;
         }
         setAssignments((currentAssignments) => {
@@ -147,22 +152,10 @@ export default function MainScreen() {
         });
     }
 
-    function invalidateAssignment(index: number) {
-        if (!assignments[index].valid) {
-            return;
-        }
-        setAssignments((currentAssignments) => {
-            let newArr = [...currentAssignments];
-            newArr[index].valid = false;
-            return newArr;
-        });
-
-    }
-
     function addRow() {
         setAssignments((currentAssignments) => {
             let newArr = [...currentAssignments];
-            newArr.push(Assignment.ofEmpty());
+            newArr.push(Assignment.ofAdd());
             return newArr;
         });
     }
@@ -184,7 +177,6 @@ export default function MainScreen() {
                     key={value.uuid}
                     assignment={value}
                     onChange={(assignment: Assignment) => updateAssignment(assignment, index)}
-                    invalidate={() => invalidateAssignment(index)}
                     onClick={index === assignments.length - 1 ? addRow : undefined}
                     onDuplicate={() => duplicateAssignment(index)}
                     onDelete={() => deleteAssignment(index)}
@@ -217,7 +209,7 @@ export default function MainScreen() {
                     <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
                 </NoPaddingCard>
             </Container>
-            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
+            {/*{assignments.map((value, index) => <div key={index}><p>{value instanceof SerializableAssignment ? JSON.stringify(value.fullJSON()) : JSON.stringify(value)}</p></div>)}*/}
         </Fragment>
     );
 }
