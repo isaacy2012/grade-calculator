@@ -82,7 +82,7 @@ class PercentageScore extends Score {
 
     static fromString(str: string): PercentageScore | null {
         if (numberRegex.test(str)) {
-            return new PercentageScore(str, parseFloat(str));
+            return new PercentageScore(str, parseFloat(str) / 100);
         } else if (percentageRegex.test(str)) {
             return new PercentageScore(str, parseFloat(str.substr(0, str.length - 1)) / 100);
         }

@@ -84,7 +84,7 @@ export default function ContentRow(
                     <FirstContentCol>
                         <Input
                             value={nameStr}
-                            placeholder={props.onClick ? "Assignment" : undefined}
+                            placeholder={"Assignment Name"}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
                             onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
@@ -93,7 +93,7 @@ export default function ContentRow(
                     <ContentCol>
                         <Input
                             value={scoreStr}
-                            placeholder={props.onClick ? "Score" : undefined}
+                            placeholder={"%, or X/Y"}
                             accepted={Score.fromString(scoreStr) !== undefined}
                             empty={scoreStr.length === 0}
                             onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
@@ -102,7 +102,7 @@ export default function ContentRow(
                     <LastContentCol>
                         <RightInput
                             value={weightStr}
-                            placeholder={props.onClick ? "Weight" : undefined}
+                            placeholder={"%"}
                             accepted={parseNumOrPerc(weightStr) <= 1}
                             empty={weightStr.length === 0}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}

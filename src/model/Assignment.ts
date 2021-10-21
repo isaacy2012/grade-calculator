@@ -7,7 +7,7 @@ export function parseNumOrPerc(str: string): number {
     if (percentageRegex.test(str)) {
         return parseFloat(str.substr(0, str.length - 1)) / 100;
     } else {
-        return parseFloat(str);
+        return parseFloat(str) / 100;
     }
 }
 
