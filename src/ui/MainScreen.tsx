@@ -16,8 +16,8 @@ import GradeTab from "./output/GradeTab";
 import {encode, decode} from "base-64";
 import {useHistory, useLocation} from "react-router-dom";
 import {parseJSON} from "../util/Deserializer";
-import { NoPaddingCard } from "./Card";
-import { RiShareForward2Fill } from "react-icons/ri";
+import {NoPaddingCard} from "./Card";
+import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
 
 
@@ -37,12 +37,12 @@ const InvisibleButton = styled.button`
   font-size: 1.1em;
   //font-weight: 600;
   margin: 0;
-  padding: 10px;
+  padding: 15px;
   width: 100%;
   background: none;
   border: none;
   border-radius: 10px;
-  
+
     // color: ${({theme}) => theme.color.outlineReject};
 `
 
@@ -171,12 +171,14 @@ export default function MainScreen() {
             </Container>
             <Container>
                 <NoPaddingCard marginTop="20px">
-                    <InvisibleButton onClick={() => setShareExpanded((prev) => !prev)}><RiShareForward2Fill/> SHARE</InvisibleButton>
+                    <InvisibleButton onClick={() => setShareExpanded((prev) => !prev)}>
+                        <RiShareForward2Fill/> SHARE
+                    </InvisibleButton>
                     {shareExpanded &&
                     <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
                 </NoPaddingCard>
             </Container>
-            {assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}
+            {/*{assignments.map((value, index) => <div key={index}>{value.toString()}</div>)}*/}
         </Fragment>
     );
 }

@@ -56,7 +56,7 @@ export default function ShareSheet(props: { title: string, assignments: Assignme
 
     return (
         <CardContainer>
-            <H3First>Share</H3First>
+            <H3 marginTop={"0.25em"}>Share Template with Scores</H3>
             {copied === "FULL" &&
             <CopiedText>Copied!</CopiedText>}
             <FlexDiv>
@@ -68,7 +68,7 @@ export default function ShareSheet(props: { title: string, assignments: Assignme
                     <FixedIconButton><HiOutlineClipboardCopy/></FixedIconButton>
                 </CopyToClipboard>
             </FlexDiv>
-            <H3>Share Template (No Scores)</H3>
+            <H3>Share Template</H3>
             {copied === "TEMPLATE" &&
             <CopiedText>Copied!</CopiedText>}
             <FlexDiv>
