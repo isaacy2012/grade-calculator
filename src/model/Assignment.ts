@@ -5,56 +5,86 @@ import {percentageRegex} from "./Regex";
 
 export function parseNumOrPerc(str: string): number {
     if (percentageRegex.test(str)) {
-        return parseFloat(str.substr(0, str.length-1))/100;
+        return parseFloat(str.substr(0, str.length - 1)) / 100;
     } else {
         return parseFloat(str);
     }
 }
 
-export class Assignment {
-    valid: boolean
-    readonly name: string | null;
-    readonly score: Score | null;
-    readonly weight: number | null;
+export abstract class Assignment {
     readonly uuid: string;
 
-    constructor(valid: boolean, name: string | null, score: Score | null, weight: number | null, uuid: string) {
-        this.valid = valid;
-        this.name = name;
-        this.score = score;
-        this.weight = weight;
+    abstract getNameStr(): string;
+
+    abstract getScoreStr(): string;
+
+    abstract getWeightStr(): string;
+
+
+    constructor(uuid: string) {
         this.uuid = uuid;
     }
 
-    clone(): Assignment {
-        return new Assignment(this.valid, this.name, this.score, this.weight, uuidv4());
-    }
+    abstract clone(): Assignment
 
-    static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment | null {
+    abstract equals(other: Assignment): boolean;
+
+    static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment {
         let score = Score.fromString(scoreStr)
         let weight = parseNumOrPerc(weightStr);
         if (nameStr.trim().length !== 0 && score && weightStr.trim().length !== 0) {
-            return new Assignment(true, nameStr, score, weight, uuid);
+            return new ValidAssignment(uuid, nameStr, score, weight);
         }
-        return null;
+        return new StubAssignment(uuid, nameStr, scoreStr, weightStr);
     }
 
-
-    static ofEmpty(): Assignment {
-        return new Assignment(false, null, null, null, uuidv4());
+    static ofAdd(): Assignment {
+        return new AddButtonAssignment(uuidv4());
     }
 
-    accepted(): boolean {
-        return this.name !== null
-            && this.score !== null
-            && this.weight !== null;
+}
 
+export abstract class SerializableAssignment extends Assignment {
+    abstract fullJSON(): any
+
+    abstract templateJSON(): any
+}
+
+export class ValidAssignment extends SerializableAssignment {
+    readonly name: string;
+    readonly score: Score;
+    readonly weight: number;
+
+    getNameStr(): string {
+        return this.name;
+    }
+
+    getScoreStr(): string {
+        return this.score.toInputString();
+    }
+
+    getWeightStr(): string {
+        return this.weight.toString();
+    }
+
+    constructor(uuid: string, name: string, score: Score, weight: number) {
+        super(uuid);
+        this.name = name;
+        this.score = score;
+        this.weight = weight;
     }
 
     equals(other: Assignment): boolean {
-        return this.name === other.name
-            && this.score?.equals(other.score) === true
-            && this.weight === other.weight;
+        if (other instanceof ValidAssignment) {
+            return this.name === other.name
+                && this.score.equals(other.score)
+                && this.weight === other.weight;
+        }
+        return false;
+    }
+
+    clone(): Assignment {
+        return new ValidAssignment(uuidv4(), this.name, this.score, this.weight);
     }
 
     toString(): string {
@@ -63,8 +93,7 @@ export class Assignment {
 
     fullJSON(): any {
         return {
-            clazz: "Assignment",
-            valid: this.valid,
+            clazz: "ValidAssignment",
             name: this.name,
             scoreStr: this.score?.str,
             weight: this.weight,
@@ -73,14 +102,92 @@ export class Assignment {
 
     templateJSON(): any {
         return {
-            clazz: "Assignment",
-            valid: this.valid,
+            clazz: "ValidAssignment",
             name: this.name,
             weight: this.weight,
         };
     }
 
+
 }
 
+export class StubAssignment extends SerializableAssignment {
+    readonly nameStr: string;
+    readonly scoreStr: string;
+    readonly weightStr: string;
 
+    getNameStr(): string {
+        return this.nameStr;
+    }
+
+    getScoreStr(): string {
+        return this.scoreStr;
+    }
+
+    getWeightStr(): string {
+        return this.weightStr;
+    }
+
+    constructor(uuid: string, nameStr: string, scoreStr: string, weightStr: string) {
+        super(uuid);
+        this.nameStr = nameStr;
+        this.scoreStr = scoreStr;
+        this.weightStr = weightStr;
+    }
+
+
+    clone(): Assignment {
+        return new StubAssignment(uuidv4(), this.nameStr, this.scoreStr, this.weightStr);
+    }
+
+    equals(other: Assignment): boolean {
+        if (other instanceof StubAssignment) {
+            return this.nameStr === other.nameStr
+                && this.scoreStr === other.scoreStr
+                && this.weightStr === other.weightStr;
+        }
+        return false;
+    }
+
+    fullJSON(): any {
+        return {
+            clazz: "StubAssignment",
+            nameStr: this.nameStr,
+            scoreStr: this.scoreStr,
+            weightStr: this.weightStr,
+        };
+    }
+
+    templateJSON(): any {
+        return {
+            clazz: "StubAssignment",
+            nameStr: this.weightStr,
+            weightStr: this.weightStr,
+        };
+    }
+}
+
+export class AddButtonAssignment extends Assignment {
+
+    getNameStr(): string {
+        return "";
+    }
+
+    getScoreStr(): string {
+        return "";
+    }
+
+    getWeightStr(): string {
+        return "";
+    }
+
+    equals(other: Assignment): boolean {
+        return other instanceof AddButtonAssignment;
+    }
+
+
+    clone(): Assignment {
+        return new AddButtonAssignment(uuidv4());
+    }
+}
 
