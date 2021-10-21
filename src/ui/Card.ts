@@ -15,6 +15,11 @@ export const NoPaddingCard = styled(Card)`
   padding: 0;
 `
 
+export const CardContainer = styled.section`
+  text-align: start;
+  padding: 0 1.5rem 1.5rem;
+`
+
 export const BottomCard = styled(Card)`
   border-radius: 0 0 10px 10px;
 `
