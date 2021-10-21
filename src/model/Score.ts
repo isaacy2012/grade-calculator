@@ -51,7 +51,8 @@ class FractionScore extends Score {
     }
 
     calc(): number {
-        return this.achieved / this.outOf;
+        let result = this.achieved / this.outOf;
+        return isNaN(result) ? 0 : result;
     }
 
     equals(other: Score | null): boolean {

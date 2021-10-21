@@ -106,6 +106,14 @@ export default function MainScreen() {
                         .map((it) => (it as SerializableAssignment).fullJSON())}
             )
         );
+        console.log("DATA: " +
+            JSON.stringify(
+                {title: title, assignments: assignments
+                        .filter(it => it instanceof SerializableAssignment)
+                        .map((it) => (it as SerializableAssignment).fullJSON())}
+            )
+        );
+
         if (queryString !== encodedCurrent) {
             // refresh
             let params = new URLSearchParams();

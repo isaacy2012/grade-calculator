@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactNode} from "react";
 import {Assignment, ValidAssignment} from "../../model/Assignment";
 
 const DIGITS = 2;
@@ -9,7 +9,7 @@ export abstract class PercentageResult {
 
     abstract requiredAchievedStr(): string
 
-    abstract message(): ReactElement | void
+    abstract message(): ReactNode
 
     abstract isValid(): boolean
 
@@ -19,7 +19,11 @@ export abstract class PercentageResult {
 
     static create(assignments: Assignment[], threshStr: string, outOf: number): PercentageResult {
         let threshNum = parseFloat(threshStr)
-        if (!isNaN(threshNum) && assignments.every(it => it instanceof ValidAssignment)) {
+        if (isNaN(threshNum)) {
+            return new InvalidPercentageResult(threshStr === "" ? null : <span>the threshold <b>{threshStr}</b> isn't valid.</span>);
+        } else if (!assignments.every(it => it instanceof ValidAssignment)) {
+            return new InvalidPercentageResult(<span>You haven't filled in all the assignments.</span>);
+        } else {
             let thresh = threshNum / 100;
             let totalWeight = assignments.map((it: Assignment) => (it as ValidAssignment).weight!)
                 .reduce((prev: number, it: number) => prev + it, 0);
@@ -27,8 +31,9 @@ export abstract class PercentageResult {
                 prev + (it as ValidAssignment).score.calc() * (it as ValidAssignment).weight, 0
             );
             let totalWeightLeft = 1 - totalWeight;
-            if (totalWeightLeft < 0) {
-                return new InvalidPercentageResult();
+            if (totalWeightLeft <= 0) {
+                return new InvalidPercentageResult(
+                    <span>it looks like you've already completed <b>{(totalWeightLeft * 100).toFixed(DIGITS)}</b> of the course.</span>);
             }
             let theoreticalMaximum = totalAchieved + totalWeightLeft;
             let requiredAmount = thresh - totalAchieved;
@@ -41,8 +46,6 @@ export abstract class PercentageResult {
             } else {
                 return new OkPercentageResult(requiredPercentage, requiredAchieved, totalWeightLeft);
             }
-        } else {
-            return new InvalidPercentageResult();
         }
     }
 }
@@ -73,6 +76,13 @@ abstract class ValidPercentageResult extends PercentageResult {
 }
 
 class InvalidPercentageResult extends PercentageResult {
+    readonly messageElement: ReactNode;
+
+    constructor(messageStr: React.ReactNode) {
+        super();
+        this.messageElement = messageStr;
+    }
+
     requiredPercentageStr(): string {
         return DEFAULT_PERC_STR;
     }
@@ -81,7 +91,8 @@ class InvalidPercentageResult extends PercentageResult {
         return DEFAULT_PERC_STR;
     }
 
-    message(): ReactElement | void {
+    message(): ReactNode {
+        return this.messageElement == null ? null : <p>Hmm... that doesn't seem right - {this.messageElement}</p>;
     }
 
     isValid(): boolean {
@@ -100,13 +111,13 @@ class CantReachPercentageResult extends ValidPercentageResult {
         this.theoreticalMaximum = theoreticalMaximum;
     }
 
-    message(): ReactElement | void {
-        return <p>Unfortunately, you can't reach {this.nToPercStr(this.thresh)}%. The maximum percentage you can achieve
-            is <b>{this.nToPercStr(this.theoreticalMaximum)}%</b></p>;
+    message(): ReactNode {
+        return <p>Unfortunately, you can't reach {this.nToPercStr(this.thresh)}%.<br/>The maximum percentage you can achieve
+            is <b>{this.nToPercStr(this.theoreticalMaximum)}%</b>.</p>;
     }
 }
 
-class OkPercentageResult extends ValidPercentageResult {
+export class OkPercentageResult extends ValidPercentageResult {
     readonly totalWeightLeft: number;
 
     constructor(requiredPercentage: number, requiredAchieved: number, totalWeightLeft: number) {
@@ -114,7 +125,7 @@ class OkPercentageResult extends ValidPercentageResult {
         this.totalWeightLeft = totalWeightLeft;
     }
 
-    message(): React.ReactElement | void {
+    message(): ReactNode {
         return <p>Over the remaining <b>{this.nToPercStr(this.totalWeightLeft)}%</b>, you need at least:</p>
     }
 
@@ -124,11 +135,11 @@ class AlreadyReachedResult extends InvalidPercentageResult {
     readonly totalAchieved: number;
 
     constructor(totalAchieved: number) {
-        super();
+        super(null);
         this.totalAchieved = totalAchieved;
     }
 
-    message(): ReactElement | void {
+    message(): ReactNode {
         return <p>Congratulations, you have already reached <b>{this.nToPercStr(this.totalAchieved)}%</b>!</p>;
     }
 }

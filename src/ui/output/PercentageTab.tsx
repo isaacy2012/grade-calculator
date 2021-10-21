@@ -4,13 +4,13 @@ import {Assignment} from "../../model/Assignment";
 import styled from "styled-components";
 import {InputChangeEvent} from "../StyledInput";
 import VariableWidthInput from "./VariableWidthInput";
-import {PercentageResult} from "./PercentageResult";
+import {OkPercentageResult, PercentageResult} from "./PercentageResult";
 
 
 const Display = styled.span.attrs((props: { marginRight?: string }) => ({
     marginRight: props.marginRight,
 }))`
-  margin-right: ${({marginRight}) => marginRight ? marginRight : undefined };
+  margin-right: ${({marginRight}) => marginRight ? marginRight : undefined};
   color: ${({theme}) => theme.color.text};
   font-weight: 500;
   font-size: 3rem;
@@ -57,6 +57,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
             </UtilityText>
             <H3>Required Result</H3>
             {result.message()}
+            {result instanceof OkPercentageResult &&
             <span>
                 <Display marginRight="2px"><Hi
                     enabled={result.isValid()}>{result.requiredPercentageStr()}</Hi></Display><UtilityText>%</UtilityText>
@@ -70,6 +71,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
                                         setOutOfStr(event.target.value.trim())
                                     }/>
             </span>
+            }
         </Fragment>
     );
 }

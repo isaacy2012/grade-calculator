@@ -64,7 +64,7 @@ export class ValidAssignment extends SerializableAssignment {
     }
 
     getWeightStr(): string {
-        return this.weight.toString();
+        return (this.weight*100).toString();
     }
 
     constructor(uuid: string, name: string, score: Score, weight: number) {
@@ -95,7 +95,7 @@ export class ValidAssignment extends SerializableAssignment {
         return {
             clazz: "ValidAssignment",
             name: this.name,
-            scoreStr: this.score?.str,
+            scoreStr: this.score.str,
             weight: this.weight,
         };
     }
