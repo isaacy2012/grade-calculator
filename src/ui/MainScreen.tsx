@@ -7,7 +7,7 @@ import {Assignment} from "../model/Assignment";
 import ContentRow from "./ContentRow";
 import {Score} from "../model/Score";
 import {Container} from "./Container";
-import {StyledInput} from "./StyledInput";
+import {InputChangeEvent, StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
 import Tab from "./Tab";
 import {v4 as uuidv4} from "uuid";
@@ -16,6 +16,9 @@ import GradeTab from "./output/GradeTab";
 import {encode, decode} from "base-64";
 import {useHistory, useLocation} from "react-router-dom";
 import {parseJSON} from "../util/Deserializer";
+import { NoPaddingCard } from "./Card";
+import { RiShareForward2Fill } from "react-icons/ri";
+import ShareSheet from "./ShareSheet";
 
 
 const TableHeader = styled(StyledInput)`
@@ -25,9 +28,21 @@ const TableHeader = styled(StyledInput)`
   border: none;
 `
 
-const Button = styled.button`
+const InvisibleButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  white-space: pre;
+  font-size: 1.1em;
+  //font-weight: 600;
+  margin: 0;
+  padding: 10px;
+  width: 100%;
   background: none;
   border: none;
+  border-radius: 10px;
+  
     // color: ${({theme}) => theme.color.outlineReject};
 `
 
@@ -51,25 +66,12 @@ function useQuery() {
 
 export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>([...dummyAssignments, Assignment.ofEmpty()]);
+    const [shareExpanded, setShareExpanded] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>("");
     const percentageThreshState = useState("");
-    const [percentageThresh, setPercentageThresh] = percentageThreshState;
     const outOfState = useState("");
-    const [outOfThresh, setOutOfThresh] = outOfState;
+
     const history = useHistory();
-
-    function copyToClipboard() {
-        console.log(JSON.stringify(assignments.map(it => it.fullJSON())));
-        let params = new URLSearchParams();
-        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1).map(it => it.fullJSON()))));
-        history.push({search: params.toString()});
-    }
-
-    function printTemplateJSON() {
-        console.log(JSON.stringify(assignments.map(it => it.templateJSON())));
-        let params = new URLSearchParams();
-        params.append("saved", encode(JSON.stringify(assignments.slice(0, -1).map(it => it.templateJSON()))));
-        history.push({search: params.toString()});
-    }
 
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
@@ -134,7 +136,7 @@ export default function MainScreen() {
                     a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
             <Table title={
-                <TableHeader placeholder="Title"/>
+                <TableHeader onChange={(event: InputChangeEvent) => setTitle(event.target.value)} placeholder="Title"/>
             } headers={["ASSIGNMENT", "SCORE", "WEIGHT"]}>
                 {assignments.map((value, index) => <ContentRow
                     key={value.uuid}
@@ -145,7 +147,14 @@ export default function MainScreen() {
                     onDelete={() => deleteAssignment(index)}
                 />)}
             </Table>
-            <Container top="50px">
+            <Container>
+                <NoPaddingCard marginTop="20px">
+                    <InvisibleButton onClick={() => setShareExpanded((prev) => !prev)}><RiShareForward2Fill/> SHARE</InvisibleButton>
+                    {shareExpanded &&
+                    <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
+                </NoPaddingCard>
+            </Container>
+            <Container top="20px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
                         headerElements={[<span>% Reach a <b>percentage</b></span>,
@@ -156,9 +165,6 @@ export default function MainScreen() {
                                        threshState={percentageThreshState}
                                        outOfState={outOfState}
                         />
-                        <br/>
-                        <Button onClick={copyToClipboard}>SHARE</Button>
-                        <Button onClick={printTemplateJSON}>SHARE TEMPLATE</Button>
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}
