@@ -31,7 +31,7 @@ function parseAssignment(thing: any): Assignment | null {
 
     switch (thing.clazz) {
         case "ValidAssignment":
-            if (thing.hasOwnProperty("score")) {
+            if (thing.hasOwnProperty("scoreStr")) {
                 let score: Score | null = Score.fromString(thing.scoreStr);
                 if (!score) {
                     return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, numToStr(thing.weight));
