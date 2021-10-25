@@ -3,7 +3,7 @@ import {H3, H3First} from "./H3";
 import {Assignment} from "../../model/Assignment";
 import styled from "styled-components";
 import {InputChangeEvent} from "../StyledInput";
-import VariableWidthInput from "./VariableWidthInput";
+import AutosizeInput from "react-input-autosize";
 import {OkPercentageResult, PercentageResult} from "./PercentageResult";
 
 
@@ -45,13 +45,18 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
         <Fragment>
             <H3First>Desired Percentage</H3First>
             <UtilityText>
-                <VariableWidthInput value={threshStr}
-                                    maxLength={4}
-                                    type="numeric"
-                                    placeholder="--"
-                                    onChange={(event: InputChangeEvent) =>
-                                        setThreshStr(event.target.value.trim())
-                                    }
+                <AutosizeInput value={threshStr}
+                               maxLength={4}
+                               inputStyle = {{
+                                   fontSize: "3rem",
+                                   fontWeight: 500,
+                                   border: "none",
+                               }}
+                               type="numeric"
+                               placeholder="--"
+                               onChange={(event: InputChangeEvent) =>
+                                   setThreshStr(event.target.value.trim())
+                               }
                 />
                 %
             </UtilityText>
@@ -63,13 +68,18 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
                     enabled={result.isValid()}>{result.requiredPercentageStr()}</Hi></Display><UtilityText>%</UtilityText>
                 <Or>  or  </Or>
                 <Display><Hi enabled={result.isValid()}>{result.requiredAchievedStr()}</Hi><UtilityText>/</UtilityText></Display>
-                <VariableWidthInput value={outOfStr}
-                                    maxLength={5}
-                                    type="numeric"
-                                    placeholder={defaultOutOf.toString()}
-                                    onChange={(event: InputChangeEvent) =>
-                                        setOutOfStr(event.target.value.trim())
-                                    }/>
+                <AutosizeInput value={outOfStr}
+                               inputStyle = {{
+                                   fontSize: "3rem",
+                                   fontWeight: 500,
+                                   border: "none",
+                               }}
+                               maxLength={5}
+                               type="numeric"
+                               placeholder={defaultOutOf.toString()}
+                               onChange={(event: InputChangeEvent) =>
+                                   setOutOfStr(event.target.value.trim())
+                               }/>
             </span>
             }
         </Fragment>

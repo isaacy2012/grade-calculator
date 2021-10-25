@@ -8,9 +8,4 @@ export const StyledInput = styled.input`
   width: 100%;
   box-sizing: border-box;
 
-  &:focus {
-    outline: none;
-    border: none;
-    text-decoration: underline;
-  }
 `
