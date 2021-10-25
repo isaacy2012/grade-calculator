@@ -4,6 +4,10 @@
   min-height: 100vh;
 }
 
+h3 {
+  color: #000000;
+}
+
 *{
   font-family: 'Work Sans', sans-serif;
 }
