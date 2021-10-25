@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, {useEffect, useState} from "react";
-import {Assignment, parseNumOrPerc} from "../model/Assignment";
+import {Assignment, numOrPercToStr} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
@@ -107,7 +107,7 @@ export default function ContentRow(
                         <RightInput
                             value={weightStr}
                             placeholder={"Overall Weight"}
-                            accepted={parseNumOrPerc(weightStr) <= 1}
+                            accepted={numOrPercToStr(weightStr) <= 1}
                             empty={weightStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
