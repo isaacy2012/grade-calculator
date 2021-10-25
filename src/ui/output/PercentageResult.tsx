@@ -19,23 +19,27 @@ export abstract class PercentageResult {
 
     static create(assignments: Assignment[], threshStr: string, outOf: number): PercentageResult {
         let threshNum = parseFloat(threshStr)
-        if (isNaN(threshNum)) {
-            return new InvalidPercentageResult(threshStr === "" ? null : <span>the threshold <b>{threshStr}</b> isn't valid.</span>);
-        } else if (!assignments.every(it => it instanceof ValidAssignment)) {
+            if (!assignments.every(it => it instanceof ValidAssignment)) {
             return new InvalidPercentageResult(<span>You haven't filled in all the assignments.</span>);
         } else {
-            let thresh = threshNum / 100;
             let totalWeight = assignments.map((it: Assignment) => (it as ValidAssignment).weight!)
                 .reduce((prev: number, it: number) => prev + it, 0);
             let totalAchieved = assignments.reduce((prev: number, it: Assignment) =>
                 prev + (it as ValidAssignment).score.calc() * (it as ValidAssignment).weight, 0
             );
             let totalWeightLeft = 1 - totalWeight;
-            if (totalWeightLeft <= 0) {
+            if (totalWeightLeft < 0) {
                 return new InvalidPercentageResult(
                     <span>it looks like you've already completed <b>{(totalWeightLeft * 100).toFixed(DIGITS)}</b> of the course.</span>);
+            } else if (totalWeightLeft === 0) {
+                return new AlreadyFinalResult(totalAchieved);
             }
             let theoreticalMaximum = totalAchieved + totalWeightLeft;
+            if (isNaN(threshNum)) {
+                return new InvalidPercentageResult(threshStr === "" ? null :
+                    <span>the threshold <b>{threshStr}</b> isn't valid.</span>);
+            }
+            let thresh = threshNum / 100;
             let requiredAmount = thresh - totalAchieved;
             let requiredPercentage = requiredAmount / totalWeightLeft;
             let requiredAchieved = (requiredPercentage * outOf);
@@ -100,6 +104,18 @@ class InvalidPercentageResult extends PercentageResult {
     }
 }
 
+class AlreadyFinalResult extends InvalidPercentageResult {
+    readonly totalAchieved: number;
+
+    constructor(totalAchieved: number) {
+        super(null);
+        this.totalAchieved = totalAchieved;
+    }
+
+    message(): ReactNode {
+        return <p>Congratulations, you have reached <b>{this.nToPercStr(this.totalAchieved)}%</b>!</p>;
+    }
+}
 
 class CantReachPercentageResult extends ValidPercentageResult {
     readonly thresh: number;
