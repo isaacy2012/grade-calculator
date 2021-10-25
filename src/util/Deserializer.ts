@@ -1,4 +1,4 @@
-import {Assignment, StubAssignment, ValidAssignment} from "../model/Assignment";
+import {Assignment, numToStr, StubAssignment, ValidAssignment} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 
@@ -34,11 +34,11 @@ function parseAssignment(thing: any): Assignment | null {
             if (thing.hasOwnProperty("score")) {
                 let score: Score | null = Score.fromString(thing.scoreStr);
                 if (!score) {
-                    return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, (thing.weight*100).toString());
+                    return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, numToStr(thing.weight));
                 }
                 return new ValidAssignment(uuidv4(), thing.name, score, thing.weight);
             } else { // template
-                return new StubAssignment(uuidv4(), thing.name, "", thing.weight);
+                return new StubAssignment(uuidv4(), thing.name, "", numToStr(thing.weight));
             }
         case "StubAssignment":
             return new StubAssignment(uuidv4(), thing.nameStr, thing.scoreStr ? thing.scoreStr : "", thing.weightStr);
