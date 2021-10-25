@@ -86,7 +86,7 @@ export default function ContentRow(
                     <FirstContentCol>
                         <Input
                             value={nameStr}
-                            placeholder={"[Name]"}
+                            placeholder={"Title"}
                             accepted={nameStr !== ""}
                             empty={nameStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
