@@ -1,13 +1,15 @@
 import {Score} from "./Score";
 import {v4 as uuidv4} from "uuid";
-import {percentageRegex} from "./Regex";
+import {numberRegex, percentageRegex} from "./Regex";
 
 
 export function numOrPercToStr(str: string): number {
     if (percentageRegex.test(str)) {
         return parseFloat(str.substr(0, str.length - 1)) / 100;
-    } else {
+    } else if (numberRegex.test(str)) {
         return parseFloat(str) / 100;
+    } else {
+        return NaN;
     }
 }
 
@@ -36,7 +38,7 @@ export abstract class Assignment {
     static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment {
         let score = Score.fromString(scoreStr)
         let weight = numOrPercToStr(weightStr);
-        if (nameStr.trim().length !== 0 && score && weightStr.trim().length !== 0) {
+        if (nameStr.trim().length !== 0 && score && !isNaN(weight)) {
             return new ValidAssignment(uuid, nameStr, score, weight);
         }
         return new StubAssignment(uuid, nameStr, scoreStr, weightStr);
