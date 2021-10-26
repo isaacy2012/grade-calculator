@@ -1,5 +1,6 @@
 html {
   background-color: #FFFFFF;
+  font-size: clamp(10px, 2.75vw, 16px);
 }
 
 body {
