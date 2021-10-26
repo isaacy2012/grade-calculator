@@ -3,6 +3,7 @@ import {Assignment, ValidAssignment} from "../../model/Assignment";
 
 const DIGITS = 2;
 const DEFAULT_PERC_STR = "--";
+const HMM = "Hmm... that doesn't seem right -";
 
 export abstract class PercentageResult {
     abstract requiredPercentageStr(): string
@@ -19,7 +20,7 @@ export abstract class PercentageResult {
 
     static create(assignments: Assignment[], threshStr: string, outOf: number): PercentageResult {
         let threshNum = parseFloat(threshStr)
-            if (!assignments.every(it => it instanceof ValidAssignment)) {
+        if (!assignments.every(it => it instanceof ValidAssignment)) {
             return new InvalidPercentageResult(<span>You haven't filled in all the assignments.</span>);
         } else {
             let totalWeight = assignments.map((it: Assignment) => (it as ValidAssignment).weight!)
@@ -30,14 +31,14 @@ export abstract class PercentageResult {
             let totalWeightLeft = 1 - totalWeight;
             if (totalWeightLeft < 0) {
                 return new InvalidPercentageResult(
-                    <span>it looks like you've already completed <b>{(totalWeightLeft * 100).toFixed(DIGITS)}</b> of the course.</span>);
+                    <span>{HMM} it looks like you've already completed <b>{(totalWeightLeft * 100).toFixed(DIGITS)}</b> of the course.</span>);
             } else if (totalWeightLeft === 0) {
                 return new AlreadyFinalResult(totalAchieved);
             }
             let theoreticalMaximum = totalAchieved + totalWeightLeft;
             if (isNaN(threshNum)) {
-                return new InvalidPercentageResult(threshStr === "" ? null :
-                    <span>the threshold <b>{threshStr}</b> isn't valid.</span>);
+                return new InvalidPercentageResult(threshStr === "" ? <span>Enter your desired percentage above.</span> :
+                    <span>{HMM} the threshold <b>{threshStr}</b> isn't valid.</span>);
             }
             let thresh = threshNum / 100;
             let requiredAmount = thresh - totalAchieved;
@@ -96,7 +97,7 @@ class InvalidPercentageResult extends PercentageResult {
     }
 
     message(): ReactNode {
-        return this.messageElement == null ? null : <p>Hmm... that doesn't seem right - {this.messageElement}</p>;
+        return this.messageElement == null ? null : <p>{this.messageElement}</p>;
     }
 
     isValid(): boolean {
