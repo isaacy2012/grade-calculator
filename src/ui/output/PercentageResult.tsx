@@ -31,7 +31,7 @@ export abstract class PercentageResult {
             let totalWeightLeft = 1 - totalWeight;
             if (totalWeightLeft < 0) {
                 return new InvalidPercentageResult(
-                    <span>{HMM} it looks like you've already completed <b>{(totalWeightLeft * 100).toFixed(DIGITS)}</b> of the course.</span>);
+                    <span>{HMM} it looks like you've already completed <b>{(100-(totalWeightLeft * 100)).toFixed(DIGITS)}%</b> of the course.</span>);
             } else if (totalWeightLeft === 0) {
                 return new AlreadyFinalResult(totalAchieved);
             }
