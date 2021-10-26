@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/grade-calculator/static/css/main.7a154eff.chunk.css",
+    "main.css": "/grade-calculator/static/css/main.576c6931.chunk.css",
     "main.js": "/grade-calculator/static/js/main.b648f826.chunk.js",
     "main.js.map": "/grade-calculator/static/js/main.b648f826.chunk.js.map",
     "runtime-main.js": "/grade-calculator/static/js/runtime-main.7efc27a5.js",
@@ -10,13 +10,13 @@
     "static/js/3.34c4c45b.chunk.js": "/grade-calculator/static/js/3.34c4c45b.chunk.js",
     "static/js/3.34c4c45b.chunk.js.map": "/grade-calculator/static/js/3.34c4c45b.chunk.js.map",
     "index.html": "/grade-calculator/index.html",
-    "static/css/main.7a154eff.chunk.css.map": "/grade-calculator/static/css/main.7a154eff.chunk.css.map",
+    "static/css/main.576c6931.chunk.css.map": "/grade-calculator/static/css/main.576c6931.chunk.css.map",
     "static/js/2.b2f86b94.chunk.js.LICENSE.txt": "/grade-calculator/static/js/2.b2f86b94.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.7efc27a5.js",
     "static/js/2.b2f86b94.chunk.js",
-    "static/css/main.7a154eff.chunk.css",
+    "static/css/main.576c6931.chunk.css",
     "static/js/main.b648f826.chunk.js"
   ]
 }
