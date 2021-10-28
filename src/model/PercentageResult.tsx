@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {Assignment, ValidAssignment} from "../../model/Assignment";
+import {Assignment, ValidAssignment} from "./Assignment";
 
 const DIGITS = 2;
 const DEFAULT_PERC_STR = "--";

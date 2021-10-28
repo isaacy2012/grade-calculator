@@ -4,7 +4,7 @@ import {Assignment} from "../../model/Assignment";
 import styled from "styled-components";
 import {InputChangeEvent} from "../StyledInput";
 import AutosizeInput from "react-input-autosize";
-import {OkPercentageResult, PercentageResult} from "./PercentageResult";
+import {OkPercentageResult, PercentageResult} from "../../model/PercentageResult";
 
 
 const Display = styled.span.attrs((props: { marginRight?: string }) => ({
