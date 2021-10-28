@@ -45,6 +45,10 @@ const InvisibleButton = styled.button`
     // color: ${({theme}) => theme.color.outlineReject};
 `
 
+const InvisibleLink = styled.a`
+    text-decoration: none;
+`
+
 // const dummyAssignments: Assignment[] = [
 //     Assignment.fromStrings("Assignment 1", "49/50", "0.025", uuidv4().toString()),
 //     Assignment.fromStrings("Project 1", "98/100", "0.15", uuidv4().toString()),
@@ -169,7 +173,7 @@ export default function MainScreen() {
     return (
         <Fragment>
             <Container bottom="50px">
-                <Title>Grade Calculator</Title>
+                <InvisibleLink href={process.env.PUBLIC_URL}><Title>Grade Calculator</Title></InvisibleLink>
                 <Instruction>Enter your assignment information, then choose whether you want to reach
                     a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
