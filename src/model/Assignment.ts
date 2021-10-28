@@ -39,7 +39,7 @@ export abstract class Assignment {
         let score = Score.fromString(scoreStr)
         let weight = numOrPercToStr(weightStr);
         if (nameStr.trim().length !== 0 && score && !isNaN(weight)) {
-            return new ValidAssignment(uuid, nameStr, score, weight);
+            return new ValidAssignment(uuid, nameStr, score, weight, weightStr);
         }
         return new StubAssignment(uuid, nameStr, scoreStr, weightStr);
     }
@@ -51,6 +51,7 @@ export abstract class Assignment {
 }
 
 export abstract class SerializableAssignment extends Assignment {
+
     abstract fullJSON(): any
 
     abstract templateJSON(): any
@@ -60,6 +61,7 @@ export class ValidAssignment extends SerializableAssignment {
     readonly name: string;
     readonly score: Score;
     readonly weight: number;
+    readonly weightStr: string;
 
     getNameStr(): string {
         return this.name;
@@ -70,14 +72,15 @@ export class ValidAssignment extends SerializableAssignment {
     }
 
     getWeightStr(): string {
-        return (this.weight*100).toString();
+        return this.weightStr;
     }
 
-    constructor(uuid: string, name: string, score: Score, weight: number) {
+    constructor(uuid: string, name: string, score: Score, weight: number, weightStr: string) {
         super(uuid);
         this.name = name;
         this.score = score;
         this.weight = weight;
+        this.weightStr = weightStr;
     }
 
     equals(other: Assignment): boolean {
@@ -90,7 +93,7 @@ export class ValidAssignment extends SerializableAssignment {
     }
 
     clone(): Assignment {
-        return new ValidAssignment(uuidv4(), this.name, this.score, this.weight);
+        return new ValidAssignment(uuidv4(), this.name, this.score, this.weight, this.weightStr);
     }
 
     toString(): string {
@@ -102,7 +105,7 @@ export class ValidAssignment extends SerializableAssignment {
             clazz: "ValidAssignment",
             name: this.name,
             scoreStr: this.score.str,
-            weight: this.weight,
+            weightStr: this.weightStr,
         };
     }
 
@@ -110,10 +113,9 @@ export class ValidAssignment extends SerializableAssignment {
         return {
             clazz: "ValidAssignment",
             name: this.name,
-            weight: this.weight,
+            weightStr: this.weightStr,
         };
     }
-
 
 }
 
