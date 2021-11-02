@@ -8,10 +8,17 @@ import {theme} from '../theme/Theme';
 import MainScreen from "./MainScreen";
 
 
-const Signature = styled.p`
+const FooterChild = styled.p`
   position: absolute;
-  right: 25px;
   bottom: 5px;
+`
+const LeftFooterChild = styled(FooterChild)`
+  left: 25px;
+`
+
+const RightFooterChild = styled(FooterChild)`
+  text-align: right;
+  right: 25px;
 `
 
 const Footer = styled.footer`
@@ -26,7 +33,10 @@ function App() {
                     <MainScreen/>
                 </BrowserRouter>
                 <Footer>
-                <Signature>Made by <a href="https://isaacy.dev">Isaac Young</a></Signature>
+                    <LeftFooterChild>
+                        <a href="https://github.com/isaacy2012/grade-calculator/issues/new">Report an Issue</a>
+                    </LeftFooterChild>
+                <RightFooterChild>Made by <a href="https://isaacy.dev">Isaac Young</a></RightFooterChild>
                 </Footer>
             </ThemeProvider>
         </div>
