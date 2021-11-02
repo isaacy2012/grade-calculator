@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/grade-calculator/static/css/main.c92dc8e2.chunk.css",
-    "main.js": "/grade-calculator/static/js/main.dc0b57ed.chunk.js",
-    "main.js.map": "/grade-calculator/static/js/main.dc0b57ed.chunk.js.map",
+    "main.js": "/grade-calculator/static/js/main.d734ed99.chunk.js",
+    "main.js.map": "/grade-calculator/static/js/main.d734ed99.chunk.js.map",
     "runtime-main.js": "/grade-calculator/static/js/runtime-main.7efc27a5.js",
     "runtime-main.js.map": "/grade-calculator/static/js/runtime-main.7efc27a5.js.map",
     "static/js/2.a1919d66.chunk.js": "/grade-calculator/static/js/2.a1919d66.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.7efc27a5.js",
     "static/js/2.a1919d66.chunk.js",
     "static/css/main.c92dc8e2.chunk.css",
-    "static/js/main.dc0b57ed.chunk.js"
+    "static/js/main.d734ed99.chunk.js"
   ]
 }
