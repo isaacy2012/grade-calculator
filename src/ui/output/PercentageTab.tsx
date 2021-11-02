@@ -1,13 +1,14 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useMemo} from "react";
 import {H3, H3First} from "./H3";
 import {Assignment} from "../../model/Assignment";
 import styled from "styled-components";
 import {InputChangeEvent} from "../StyledInput";
 import AutosizeInput from "react-input-autosize";
-import {OkPercentageResult, PercentageResult} from "../../model/PercentageResult";
+import {AlreadyFinalResult, OkPercentageResult, PercentageResult} from "../../model/PercentageResult";
+import {DEFAULT_OUT_OF} from "../../constant/Constants";
 
 
-const Display = styled.span.attrs((props: { marginRight?: string }) => ({
+export const Display = styled.span.attrs((props: { marginRight?: string }) => ({
     marginRight: props.marginRight,
 }))`
   margin-right: ${({marginRight}) => marginRight ? marginRight : undefined};
@@ -15,7 +16,7 @@ const Display = styled.span.attrs((props: { marginRight?: string }) => ({
   font-weight: 500;
   font-size: 3rem;
 `
-const Hi = styled.span.attrs((props: { enabled: boolean }) => ({
+export const Hi = styled.span.attrs((props: { enabled: boolean }) => ({
     enabled: props.enabled,
 }))`
   color: ${({enabled, theme}) => enabled ? theme.color.highlight : theme.color.utilityText};
@@ -37,51 +38,65 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
     const [threshStr, setThreshStr] = props.threshState;
     const [outOfStr, setOutOfStr] = props.outOfState;
 
-    let defaultOutOf = 100;
-    let outOf = parseFloat(outOfStr);
-    const result = PercentageResult.create(assignments, threshStr, !isNaN(outOf) ? outOf : defaultOutOf);
-
-    return (
-        <Fragment>
-            <H3First>Desired Percentage</H3First>
-            <UtilityText>
-                <AutosizeInput value={threshStr}
-                               maxLength={4}
-                               inputStyle = {{
-                                   fontSize: "3rem",
-                                   fontWeight: 500,
-                                   border: "none",
-                               }}
-                               type="numeric"
-                               placeholder="--"
-                               onChange={(event: InputChangeEvent) =>
-                                   setThreshStr(event.target.value.trim())
-                               }
-                />
-                %
-            </UtilityText>
-            <H3>Required Result</H3>
-            {result.message()}
-            {result instanceof OkPercentageResult &&
-            <span>
-                <Display marginRight="2px"><Hi
-                    enabled={result.isValid()}>{result.requiredPercentageStr()}</Hi></Display><UtilityText>%</UtilityText>
-                <Or>  or  </Or>
-                <Display><Hi enabled={result.isValid()}>{result.requiredAchievedStr()}</Hi><UtilityText>/</UtilityText></Display>
-                <AutosizeInput value={outOfStr}
-                               inputStyle = {{
-                                   fontSize: "3rem",
-                                   fontWeight: 500,
-                                   border: "none",
-                               }}
-                               maxLength={5}
-                               type="numeric"
-                               placeholder={defaultOutOf.toString()}
-                               onChange={(event: InputChangeEvent) =>
-                                   setOutOfStr(event.target.value.trim())
-                               }/>
-            </span>
-            }
-        </Fragment>
+    const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
+    const result = useMemo(() =>
+            PercentageResult.create(assignments, threshStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF),
+        [assignments, threshStr, outOf]
     );
+
+    if (result instanceof AlreadyFinalResult) {
+        return (
+            <Fragment>
+                <H3First>Final Result</H3First>
+                {result.message()}
+                <Display><Hi enabled={true}>{result.percentageStr()}</Hi></Display><UtilityText>%</UtilityText>
+            </Fragment>
+        );
+    } else {
+        return (
+            <Fragment>
+                <H3First>Desired Percentage</H3First>
+                <UtilityText>
+                    <AutosizeInput value={threshStr}
+                                   maxLength={4}
+                                   inputStyle={{
+                                       fontSize: "3rem",
+                                       fontWeight: 500,
+                                       border: "none",
+                                   }}
+                                   type="numeric"
+                                   placeholder="--"
+                                   onChange={(event: InputChangeEvent) =>
+                                       setThreshStr(event.target.value.trim())
+                                   }
+                    />
+                    %
+                </UtilityText>
+                <H3>Required Result</H3>
+                {result.message()}
+                {result instanceof OkPercentageResult &&
+                <span>
+                        <Display marginRight="2px"><Hi
+                            enabled={result.isValid()}>{result.requiredPercentageStr()}</Hi></Display><UtilityText>%</UtilityText>
+                        <Or>  or  </Or>
+                        <Display><Hi
+                            enabled={result.isValid()}>{result.requiredAchievedStr()}</Hi><UtilityText>/</UtilityText></Display>
+                        <AutosizeInput value={outOfStr}
+                                       inputStyle={{
+                                           fontSize: "3rem",
+                                           fontWeight: 500,
+                                           border: "none",
+                                       }}
+                                       maxLength={5}
+                                       type="numeric"
+                                       placeholder={DEFAULT_OUT_OF.toString()}
+                                       onChange={(event: InputChangeEvent) =>
+                                           setOutOfStr(event.target.value.trim())
+                                       }/>
+                    </span>
+                }
+            </Fragment>
+        );
+    }
+
 }
