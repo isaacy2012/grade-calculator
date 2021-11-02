@@ -114,7 +114,7 @@ export class AlreadyFinalResult extends InvalidPercentageResult {
     }
 
     message(): ReactNode {
-        return <p>Congratulations, you have already completed 100% of the course and reached:</p>;
+        return <p>Congratulations, you have already completed 100% of the course and achieved:</p>;
     }
 
     percentageStr(): string {
