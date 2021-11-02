@@ -81,7 +81,7 @@ export default function MainScreen() {
         let encodedCurrent = encode(
             JSON.stringify(
                 {title: title, assignments: assignments
-                        .slice(0, -1)
+                        .filter(it => it instanceof SerializableAssignment)
                         .map((it) => (it as SerializableAssignment).fullJSON())}
             )
         );
@@ -103,6 +103,13 @@ export default function MainScreen() {
     }, []);
 
     function saveAndPushData() {
+        // set to default url if no new data
+        if (title === "" && assignments.filter(it => it instanceof SerializableAssignment).length === 0) {
+            let params = new URLSearchParams();
+            history.replace({search: params.toString()});
+            return;
+        }
+
         let encodedCurrent = encode(
             JSON.stringify(
                 {title: title, assignments: assignments
