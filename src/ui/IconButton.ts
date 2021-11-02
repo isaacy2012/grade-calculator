@@ -7,10 +7,10 @@ export const IconButton = styled.button.attrs((props: { fontSize?: string }) => 
   border: none;
   text-align: center;
   font-size: ${({fontSize}) => fontSize ? fontSize : "1.3em"};
-  color: ${({theme}) => theme.color.sideButton};
+  color: ${({theme}) => theme.color.button};
 
   &:hover {
-    color: ${({theme}) => theme.color.sideButtonPressed};
+    color: ${({theme}) => theme.color.buttonPressed};
   }
 `
 
@@ -20,8 +20,10 @@ export const FixedIconButton = styled.button`
   font-size: 1.5em;
   padding-right: 0;
   width: 2.5rem;
+  color: ${({theme}) => theme.color.button};
+
   &:hover {
-    font-size: 1.3em;
+    color: ${({theme}) => theme.color.buttonPressed};
   }
 `
 
