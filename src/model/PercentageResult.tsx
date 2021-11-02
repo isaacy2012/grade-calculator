@@ -1,5 +1,6 @@
 import React, {ReactNode} from "react";
 import {Assignment, ValidAssignment} from "./Assignment";
+import {Display} from "../ui/output/PercentageTab";
 
 const DIGITS = 2;
 const DEFAULT_PERC_STR = "--";
@@ -44,7 +45,7 @@ export abstract class PercentageResult {
             let requiredAmount = thresh - totalAchieved;
             let requiredPercentage = requiredAmount / totalWeightLeft;
             let requiredAchieved = (requiredPercentage * outOf);
-            if (requiredPercentage < 0) {
+            if (requiredPercentage <= 0) {
                 return new AlreadyReachedResult(totalAchieved);
             } else if (requiredPercentage > 1) {
                 return new CantReachPercentageResult(requiredPercentage, requiredAchieved, thresh, theoreticalMaximum);
@@ -105,7 +106,7 @@ class InvalidPercentageResult extends PercentageResult {
     }
 }
 
-class AlreadyFinalResult extends InvalidPercentageResult {
+export class AlreadyFinalResult extends InvalidPercentageResult {
     readonly totalAchieved: number;
 
     constructor(totalAchieved: number) {
@@ -114,7 +115,11 @@ class AlreadyFinalResult extends InvalidPercentageResult {
     }
 
     message(): ReactNode {
-        return <p>Congratulations, you have reached <b>{this.nToPercStr(this.totalAchieved)}%</b>!</p>;
+        return <p>Congratulations, you have already completed 100% of the course and reached:</p>;
+    }
+
+    percentageStr(): string {
+        return this.nToPercStr(this.totalAchieved);
     }
 }
 
