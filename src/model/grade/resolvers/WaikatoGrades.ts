@@ -6,6 +6,7 @@ export class WaikatoGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "WAI",
             "University of Waikato",
             false,
             [

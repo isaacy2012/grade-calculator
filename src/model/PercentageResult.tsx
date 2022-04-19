@@ -8,7 +8,7 @@ export abstract class PercentageResult implements Result {
     static create(assignments: Assignment[], threshStr: string, outOf: number): Result {
         return create(
             assignments,
-            parseFloat(threshStr) * 100,
+            parseFloat(threshStr) / 100.0,
             outOf,
             (totalAchieved) => new AlreadyFinalPercentageResult(totalAchieved),
             () => new InvalidPercentageResult(

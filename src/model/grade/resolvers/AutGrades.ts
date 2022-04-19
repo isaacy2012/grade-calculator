@@ -5,6 +5,7 @@ export class AutGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "AUT",
             "Auckland University of Technology",
             false,
             [

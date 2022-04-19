@@ -1,24 +1,23 @@
-import React, {Fragment, useMemo} from "react";
-import {H3, H3First} from "./H3";
+import React, {Fragment, useMemo, useState} from "react";
 import {Assignment} from "../../model/Assignment";
 import {InputChangeEvent} from "../StyledInput";
 import AutosizeInput from "react-input-autosize";
 import {AlreadyFinalPercentageResult, PercentageResult} from "../../model/PercentageResult";
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
-import {Display, Hi, Or, State, UtilityText} from "./TabComponents";
+import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
 import {OkResult} from "../../model/Result";
 
 
-export default function PercentageTab(props: { assignments: Assignment[], threshState: State<string>, outOfState: State<string> }) {
+export default function PercentageTab(props: { assignments: Assignment[], outOfState: State<string> }) {
     const assignments = props.assignments;
 
-    const [threshStr, setThreshStr] = props.threshState;
+    const [desiredPercentageStr, setDesiredPercentageStr] = useState("");
     const [outOfStr, setOutOfStr] = props.outOfState;
 
     const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
     const result = useMemo(() =>
-            PercentageResult.create(assignments, threshStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF),
-        [assignments, threshStr, outOf]
+            PercentageResult.create(assignments, desiredPercentageStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF),
+        [assignments, desiredPercentageStr, outOf]
     );
 
     if (result instanceof AlreadyFinalPercentageResult) {
@@ -35,7 +34,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
         <Fragment>
             <H3First>Desired Percentage</H3First>
             <UtilityText>
-                <AutosizeInput value={threshStr}
+                <AutosizeInput value={desiredPercentageStr}
                                maxLength={4}
                                inputStyle={{
                                    fontSize: "3rem",
@@ -45,7 +44,7 @@ export default function PercentageTab(props: { assignments: Assignment[], thresh
                                type="numeric"
                                placeholder="--"
                                onChange={(event: InputChangeEvent) =>
-                                   setThreshStr(event.target.value.trim())
+                                   setDesiredPercentageStr(event.target.value.trim())
                                }
                 />
                 %

@@ -5,6 +5,7 @@ export class UoaGrades extends GradeResolver {
 
     constructor() {
         super(
+            "UOA",
             "University of Auckland",
             false,
             [

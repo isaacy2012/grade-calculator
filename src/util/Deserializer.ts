@@ -1,23 +1,33 @@
 import {Assignment, numOrPercToStr, StubAssignment, ValidAssignment} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
+import {compressToBase64, decompressFromBase64} from "@amoutonbrady/lz-string"
 
-export function writeJSON(title: string, gradeResolverName: string | null, assignments: Assignment[]) {
-    return JSON.stringify(
+export function writeCompressedJSON(title: string, gradeResolverId: string | null, assignments: Assignment[]) {
+    return compressToBase64(JSON.stringify(
         {
             title: title,
-            gradeResolverName: gradeResolverName,
+            gradeResolverId: gradeResolverId,
             assignments: assignments
         }
-    )
+    ))
 }
 
-export function parseJSON(json: string): {title: string, gradeResolverName: string, assignments: Assignment[]} | null {
-    let document = JSON.parse(json);
+export function parseCompressedJSON(json: string): {title: string, gradeResolverId: string, assignments: Assignment[]} | null {
+    let decompressed = decompressFromBase64(json);
+    if (decompressed == null) {
+        return null;
+    }
+    let document
+    try {
+        document = JSON.parse(decompressed);
+    } catch (e) {
+        return null;
+    }
     let assignments: Assignment[] = [];
-    let gradeResolverName = null;
-    if (document.hasOwnProperty("gradeResolverName")) {
-        gradeResolverName = document.gradeResolverName;
+    let gradeResolverId = null;
+    if (document.hasOwnProperty("gradeResolverId")) {
+        gradeResolverId = document.gradeResolverId;
     }
     let title: string = document.title ? document.title : "";
     if (!document.hasOwnProperty("assignments")) {
@@ -33,7 +43,7 @@ export function parseJSON(json: string): {title: string, gradeResolverName: stri
     }
     return {
         title: title,
-        gradeResolverName: gradeResolverName,
+        gradeResolverId: gradeResolverId,
         assignments: assignments
     };
 }

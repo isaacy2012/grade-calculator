@@ -6,6 +6,7 @@ export class MasseyGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "MAS",
             "Massey University",
             false,
             [

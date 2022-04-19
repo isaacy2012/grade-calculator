@@ -6,6 +6,7 @@ export class UcGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "UC",
             "University of Canterbury",
             false,
             [
