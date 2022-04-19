@@ -1,6 +1,6 @@
 import React, {Fragment, useMemo, useState} from "react";
 import {Assignment} from "../../model/Assignment";
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import {GRADE_RESOLVERS, LabelToGradeResolver} from "../../model/grade/GradeResolvers";
 import AutosizeInput from "react-input-autosize";
 import {InputChangeEvent} from "../StyledInput";
@@ -9,6 +9,7 @@ import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpe
 import {theme} from "../../theme/Theme";
 import {AlreadyFinalGradeResult, GradeResult} from "../../model/GradeResult";
 import {OkResult} from "../../model/Result";
+import {GITHUB_NEW_ISSUE_URL, GITHUB_URL} from "../../Constants";
 
 
 export default function GradeTab(props: { assignments: Assignment[], outOfState: State<string>, currentGradeResolverPairState: State<LabelToGradeResolver | null> }) {
@@ -29,6 +30,23 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
         [currentGradeResolverPair, assignments, desiredGradeStr, outOf]
     );
 
+    function NoOptionsMessage(props: any): JSX.Element {
+        return (
+            <components.NoOptionsMessage {... props}>
+                No schools found.
+                <br/>
+                <br/>
+                Make an <a
+                rel="noreferrer" target="_blank"
+                href={GITHUB_NEW_ISSUE_URL}>issue</a> or help contribute
+                on <a
+                rel="noreferrer" target="_blank"
+                href={GITHUB_URL}>GitHub</a> to Reverse Grade
+                Calculator to add your school!
+            </components.NoOptionsMessage>
+        )
+    }
+
     if (result instanceof AlreadyFinalGradeResult) {
         return (
             <Fragment>
@@ -43,6 +61,7 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
         <Fragment>
             <H3First>Your School</H3First>
             <Select
+                components={{ NoOptionsMessage }}
                 options={GRADE_RESOLVERS}
                 value={currentGradeResolverPair}
                 onChange={opt => setCurrentGradeResolverPair(opt)}
