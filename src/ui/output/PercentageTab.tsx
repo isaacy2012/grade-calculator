@@ -1,13 +1,13 @@
-import React, {Fragment, useMemo, useState} from "react";
+import React, {Fragment, useMemo} from "react";
 import {H3, H3First} from "./H3";
 import {Assignment} from "../../model/Assignment";
 import {InputChangeEvent} from "../StyledInput";
 import AutosizeInput from "react-input-autosize";
-import {AlreadyFinalPercentageResult, OkResult, PercentageResult} from "../../model/PercentageResult";
+import {AlreadyFinalPercentageResult, PercentageResult} from "../../model/PercentageResult";
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
-import {Display, Hi, Or, UtilityText} from "./TabComponents";
+import {Display, Hi, Or, State, UtilityText} from "./TabComponents";
+import {OkResult} from "../../model/Result";
 
-type State<T> = [T, React.Dispatch<React.SetStateAction<T>>]
 
 export default function PercentageTab(props: { assignments: Assignment[], threshState: State<string>, outOfState: State<string> }) {
     const assignments = props.assignments;

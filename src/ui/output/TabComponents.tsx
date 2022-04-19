@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 export const Display = styled.span.attrs((props: { marginRight?: string }) => ({
     marginRight: props.marginRight,
@@ -22,3 +23,4 @@ export const Or = styled.b`
   white-space: pre;
 `
 
+export type State<T> = [T, React.Dispatch<React.SetStateAction<T>>]

@@ -7,6 +7,8 @@ import {CardContainer} from "./Card";
 import {HiOutlineClipboardCopy} from "react-icons/hi";
 import {FixedIconButton} from "./IconButton";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {GradeResolver} from "../model/grade/Grade";
+import {writeJSON} from "../util/Deserializer";
 
 const CopyInput = styled.input`
   flex: 1;
@@ -36,31 +38,33 @@ const CopiedText = styled.p`
 
 function shareUrl(
     title: string,
+    gradeResolver: GradeResolver | undefined,
     assignments: Assignment[],
     deserializer: (assignment: SerializableAssignment) => any
 ): string {
     let params = new URLSearchParams();
     params.append("saved", encode(
-        JSON.stringify(
-            {
-                title: title, assignments: assignments
+        writeJSON(
+                title,
+                gradeResolver !== undefined ? gradeResolver.name : null,
+                assignments
                     .filter(it => it instanceof SerializableAssignment)
                     .map((it) => deserializer(it as SerializableAssignment))
-            })
+            )
     ));
     return "https://" + window.location.host + process.env.PUBLIC_URL + "/?" + params.toString();
 }
 
 
-export default function ShareSheet(props: { title: string, assignments: Assignment[] }) {
-    let {title, assignments} = props;
+export default function ShareSheet(props: { title: string, gradeResolver: GradeResolver | undefined, assignments: Assignment[] }) {
+    let {title, gradeResolver, assignments} = props;
     const shareFullUrl = useMemo(() =>
-            shareUrl(title, assignments, (it) => it.fullJSON()),
-        [title, assignments]
+            shareUrl(title, gradeResolver, assignments, (it) => it.fullJSON()),
+        [title, gradeResolver, assignments]
     )
     const shareTemplateUrl = useMemo(() =>
-            shareUrl(title, assignments, (it) => it.templateJSON()),
-        [title, assignments]
+            shareUrl(title, gradeResolver, assignments, (it) => it.templateJSON()),
+        [title, gradeResolver, assignments]
     )
     const [copied, setCopied] = useState<string | null>(null);
 

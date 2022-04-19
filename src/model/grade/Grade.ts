@@ -11,12 +11,14 @@ export class Grade {
 }
 
 export abstract class GradeResolver {
+    readonly name: string;
     readonly caseSensitive: boolean;
     readonly grades: Grade[]
 
-    protected constructor(grades: Grade[], caseSensitive: boolean) {
-        this.grades = grades;
+    protected constructor(name: string, caseSensitive: boolean, grades: Grade[]) {
+        this.name = name;
         this.caseSensitive = caseSensitive;
+        this.grades = grades;
     }
 
     numToGradeStr(num: number): string {

@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
 import {Assignment} from "./Assignment";
-import {create, HMM, OkResult, Result} from "./PercentageResult";
+import {create, HMM, OkResult, Result} from "./Result";
 import a from "indefinite";
 import {GradeResolver} from "./grade/Grade";
 
@@ -21,7 +21,7 @@ export abstract class GradeResult implements Result {
             (totalAchieved) => new AlreadyFinalGradeResult(gradeResolver, totalAchieved),
             () => new InvalidGradeResult(gradeResolver,
                 threshStr === "" ? <span>Enter your desired percentage above.</span> :
-                    <span>{HMM} the threshold <b>{threshStr}</b> isn't valid.</span>
+                    <span>{HMM} the grade <b>{threshStr}</b> isn't valid.</span>
             ),
             (totalAchieved) => new AlreadyReachedGradeResult(gradeResolver, totalAchieved),
             (requiredPercentage, requiredAchieved, theoreticalMaximum) =>

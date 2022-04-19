@@ -2,10 +2,23 @@ import {Assignment, numOrPercToStr, StubAssignment, ValidAssignment} from "../mo
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 
+export function writeJSON(title: string, gradeResolverName: string | null, assignments: Assignment[]) {
+    return JSON.stringify(
+        {
+            title: title,
+            gradeResolverName: gradeResolverName,
+            assignments: assignments
+        }
+    )
+}
 
-export function parseJSON(json: string): {title: string, assignments: Assignment[]} | null {
+export function parseJSON(json: string): {title: string, gradeResolverName: string, assignments: Assignment[]} | null {
     let document = JSON.parse(json);
     let assignments: Assignment[] = [];
+    let gradeResolverName = null;
+    if (document.hasOwnProperty("gradeResolverName")) {
+        gradeResolverName = document.gradeResolverName;
+    }
     let title: string = document.title ? document.title : "";
     if (!document.hasOwnProperty("assignments")) {
         return null;
@@ -20,6 +33,7 @@ export function parseJSON(json: string): {title: string, assignments: Assignment
     }
     return {
         title: title,
+        gradeResolverName: gradeResolverName,
         assignments: assignments
     };
 }

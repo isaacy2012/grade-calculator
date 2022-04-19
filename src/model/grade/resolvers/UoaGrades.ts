@@ -1,9 +1,13 @@
 import {Grade, GradeResolver} from "../Grade";
 
 export class UoaGrades extends GradeResolver {
+    static INSTANCE = new UoaGrades();
 
     constructor() {
-        super([
+        super(
+            "University of Auckland",
+            false,
+            [
             new Grade("A+", 0.9),
             new Grade("A", 0.85),
             new Grade("A-", 0.8),
@@ -16,7 +20,7 @@ export class UoaGrades extends GradeResolver {
             new Grade("D+", 0.45),
             new Grade("D", 0.40),
             new Grade("D-", 0.0)
-        ], false);
+        ]);
     }
 
 }

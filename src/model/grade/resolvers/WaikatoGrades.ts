@@ -1,12 +1,12 @@
 import {Grade, GradeResolver} from "../Grade";
 
 
-export class OtagoGrades extends GradeResolver {
-    static INSTANCE = new OtagoGrades();
+export class WaikatoGrades extends GradeResolver {
+    static INSTANCE = new WaikatoGrades();
 
     private constructor() {
         super(
-            "University of Otago",
+            "University of Waikato",
             false,
             [
                 new Grade("A+", 0.9),

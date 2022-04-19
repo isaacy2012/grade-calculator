@@ -1,34 +1,33 @@
-import React, {Fragment, useMemo, useState} from "react";
+import React, {Fragment, useMemo} from "react";
 import {H3, H3First} from "./H3";
 import {Assignment} from "../../model/Assignment";
 import Select from 'react-select';
-import {GRADE_RESOLVERS} from "../../model/grade/GradeResolvers";
+import {GRADE_RESOLVERS, LabelToGradeResolver} from "../../model/grade/GradeResolvers";
 import AutosizeInput from "react-input-autosize";
 import {InputChangeEvent} from "../StyledInput";
-import {OkResult} from "../../model/PercentageResult";
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
-import {Display, Hi, Or, UtilityText} from "./TabComponents";
+import {Display, Hi, Or, State, UtilityText} from "./TabComponents";
 import {theme} from "../../theme/Theme";
 import {AlreadyFinalGradeResult, GradeResult} from "../../model/GradeResult";
-import {GradeResolver} from "../../model/grade/Grade";
+import {OkResult} from "../../model/Result";
 
 
-export default function GradeTab(props: {assignments: Assignment[]}) {
+export default function GradeTab(props: { assignments: Assignment[], threshState: State<string>, outOfState: State<string>, currentGradeResolverPairState: State<LabelToGradeResolver | null> }) {
     const assignments = props.assignments;
 
-    const [threshStr, setThreshStr] = useState("");
-    const [outOfStr, setOutOfStr] = useState("");
+    const [threshStr, setThreshStr] = props.threshState;
+    const [outOfStr, setOutOfStr] = props.outOfState;
+    const [currentGradeResolverPair, setCurrentGradeResolverPair] = props.currentGradeResolverPairState;
     const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
 
-    const [currentGradeResolver, setCurrentGradeResolver] = useState<GradeResolver | null>(null);
 
     const result = useMemo(() => {
-            if (currentGradeResolver != null) {
-                return GradeResult.create(currentGradeResolver, assignments, threshStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF)
+            if (currentGradeResolverPair != null) {
+                return GradeResult.create(currentGradeResolverPair.value, assignments, threshStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF)
             }
             return null
         },
-        [currentGradeResolver, assignments, threshStr, outOf]
+        [currentGradeResolverPair, assignments, threshStr, outOf]
     );
 
     if (result instanceof AlreadyFinalGradeResult) {
@@ -46,7 +45,8 @@ export default function GradeTab(props: {assignments: Assignment[]}) {
             <H3First>Your School</H3First>
             <Select
                 options={GRADE_RESOLVERS}
-                onChange={opt => setCurrentGradeResolver(opt != null ? opt.value : null)}
+                value={currentGradeResolverPair}
+                onChange={opt => setCurrentGradeResolverPair(opt)}
                 theme={(selectTheme) => ({
                     ...selectTheme,
                     colors: {
@@ -71,7 +71,7 @@ export default function GradeTab(props: {assignments: Assignment[]}) {
                                    }}
                                    placeholder="--"
                                    onChange={(event: InputChangeEvent) =>
-                                       setThreshStr(currentGradeResolver?.caseSensitive === false ?
+                                       setThreshStr(currentGradeResolverPair?.value?.caseSensitive === false ?
                                            event.target.value.trim().toUpperCase() :
                                            event.target.value.trim()
                                        )
