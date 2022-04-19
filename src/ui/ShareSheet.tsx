@@ -8,7 +8,7 @@ import {HiOutlineClipboardCopy} from "react-icons/hi";
 import {FixedIconButton} from "./IconButton";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {GradeResolver} from "../model/grade/Grade";
-import {writeJSON} from "../util/Deserializer";
+import {writeCompressedJSON} from "../util/Deserializer";
 
 const CopyInput = styled.input`
   flex: 1;
@@ -44,7 +44,7 @@ function shareUrl(
 ): string {
     let params = new URLSearchParams();
     params.append("saved", encode(
-        writeJSON(
+        writeCompressedJSON(
                 title,
                 gradeResolver !== undefined ? gradeResolver.name : null,
                 assignments

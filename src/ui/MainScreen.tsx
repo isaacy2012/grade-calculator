@@ -11,9 +11,8 @@ import Tabbed from "./Tabbed";
 import Tab from "./Tab";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
-import {encode, decode} from "base-64";
 import {useHistory, useLocation} from "react-router-dom";
-import {parseJSON, writeJSON} from "../util/Deserializer";
+import {parseCompressedJSON, writeCompressedJSON} from "../util/Deserializer";
 import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
@@ -82,17 +81,15 @@ export default function MainScreen() {
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
         let gradeResolverName = currentGradeResolverPair?.value?.name;
-        let encodedCurrent = encode(
-            writeJSON(
-                    title,
-                    gradeResolverName !== undefined ? gradeResolverName : null,
-                    assignments
-                        .filter(it => it instanceof SerializableAssignment)
-                        .map((it) => (it as SerializableAssignment).fullJSON())
-            )
-        );
+        let encodedCurrent = writeCompressedJSON(
+                title,
+                gradeResolverName !== undefined ? gradeResolverName : null,
+                assignments
+                    .filter(it => it instanceof SerializableAssignment)
+                    .map((it) => (it as SerializableAssignment).fullJSON())
+            );
         if (queryString && queryString !== encodedCurrent) {
-            let loadedData = parseJSON(decode(queryString));
+            let loadedData = parseCompressedJSON(queryString);
             if (loadedData !== null) {
                 setTitle(loadedData.title);
                 setAssignments([
@@ -123,15 +120,13 @@ export default function MainScreen() {
         }
 
         let gradeResolverName = currentGradeResolverPair?.value?.name;
-        let encodedCurrent = encode(
-            writeJSON(
+        let encodedCurrent = writeCompressedJSON(
                 title,
                 gradeResolverName !== undefined ? gradeResolverName : null,
                 assignments
                     .filter(it => it instanceof SerializableAssignment)
                     .map((it) => (it as SerializableAssignment).fullJSON())
-            )
-        );
+            );
 
         if (queryString !== encodedCurrent) {
             // refresh
