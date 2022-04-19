@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/grade-calculator.iml" filepath="$PROJECT_DIR$/.idea/grade-calculator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/reverse-grade-calculator.iml" filepath="$PROJECT_DIR$/.idea/reverse-grade-calculator.iml" />
     </modules>
   </component>
 </project>
