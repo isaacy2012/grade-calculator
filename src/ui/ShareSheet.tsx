@@ -1,13 +1,13 @@
 import {Assignment, SerializableAssignment} from "../model/Assignment";
 import styled from "styled-components";
 import {useMemo, useState} from "react";
-import {H3} from "./output/H3";
 import {CardContainer} from "./Card";
 import {HiOutlineClipboardCopy} from "react-icons/hi";
 import {FixedIconButton} from "./IconButton";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {GradeResolver} from "../model/grade/Grade";
 import {writeCompressedJSON} from "../util/Deserializer";
+import {H3} from "./helpers/Helpers";
 
 const CopyInput = styled.input`
   flex: 1;

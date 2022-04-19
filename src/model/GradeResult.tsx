@@ -7,7 +7,7 @@ import {GradeResolver} from "./grade/Grade";
 export abstract class GradeResult implements Result {
     readonly gradeResolver: GradeResolver;
 
-    constructor(gradeResolver: GradeResolver) {
+    protected constructor(gradeResolver: GradeResolver) {
         this.gradeResolver = gradeResolver;
     }
 

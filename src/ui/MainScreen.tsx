@@ -17,7 +17,7 @@ import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
 import {useIdleTimer} from "react-idle-timer";
-import {GRADE_RESOLVERS, LabelToGradeResolver} from "../model/grade/GradeResolvers";
+import {GRADE_RESOLVERS_MAP, LabelToGradeResolver} from "../model/grade/GradeResolvers";
 
 
 const TableHeader = styled(StyledInput)`
@@ -71,7 +71,6 @@ export default function MainScreen() {
     const [assignments, setAssignments] = useState<Assignment[]>([...defaultAssignments, Assignment.ofAdd()]);
     const [shareExpanded, setShareExpanded] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
-    const percentageThreshState = useState("");
     const outOfState = useState("");
     const currentGradeResolverPairState = useState<LabelToGradeResolver | null>(null);
     const [currentGradeResolverPair, setCurrentGradeResolverPair] = currentGradeResolverPairState;
@@ -90,21 +89,24 @@ export default function MainScreen() {
             );
         if (queryString && queryString !== encodedCurrent) {
             let loadedData = parseCompressedJSON(queryString);
-            if (loadedData !== null) {
+            if (loadedData == null) {
+                alert("Sorry, we were unable to load saved data.")
+            } else {
                 setTitle(loadedData.title);
                 setAssignments([
                     ...loadedData.assignments,
                     Assignment.ofAdd()
                 ]);
-                let loadedDataNotNull = loadedData;
-                let gradeResolver = GRADE_RESOLVERS.find((it) => it.value.id === loadedDataNotNull.gradeResolverId);
+                let gradeResolver = GRADE_RESOLVERS_MAP.get(loadedData.gradeResolverId);
                 if (gradeResolver !== undefined) {
                     setCurrentGradeResolverPair({label: gradeResolver.value.name, value: gradeResolver.value});
                 } else {
+                    let params = new URLSearchParams();
+                    history.replace({search: params.toString()});
                 }
             }
         }
-    }, [assignments, currentGradeResolverPair, queryString, setCurrentGradeResolverPair, title])
+    }, [assignments, currentGradeResolverPair, setCurrentGradeResolverPair, history, queryString, title])
 
     useEffect(() => {
         fillSavedAssignments();
@@ -211,14 +213,12 @@ export default function MainScreen() {
                     <Tab tabName="REACH_PERCENTAGE">
                         {/*remove the last empty assignment (the add button)*/}
                         <PercentageTab assignments={assignments.slice(0, -1)}
-                                       threshState={percentageThreshState}
                                        outOfState={outOfState}
                         />
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}
                         <GradeTab assignments={assignments.slice(0, -1)}
-                                  threshState={percentageThreshState}
                                   outOfState={outOfState}
                                   currentGradeResolverPairState={currentGradeResolverPairState}
                         />

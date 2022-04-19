@@ -18,7 +18,12 @@ export function parseCompressedJSON(json: string): {title: string, gradeResolver
     if (decompressed == null) {
         return null;
     }
-    let document = JSON.parse(decompressed);
+    let document
+    try {
+        document = JSON.parse(decompressed);
+    } catch (e) {
+        return null;
+    }
     let assignments: Assignment[] = [];
     let gradeResolverId = null;
     if (document.hasOwnProperty("gradeResolverId")) {
