@@ -42,7 +42,7 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
                                    border: "none",
                                }}
                                type="numeric"
-                               placeholder="--"
+                               placeholder="––"
                                onChange={(event: InputChangeEvent) =>
                                    setDesiredPercentageStr(event.target.value.trim())
                                }

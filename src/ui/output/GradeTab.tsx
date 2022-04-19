@@ -87,7 +87,7 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
                                        fontWeight: 500,
                                        border: "none",
                                    }}
-                                   placeholder="--"
+                                   placeholder="––"
                                    onChange={(event: InputChangeEvent) =>
                                        setDesiredGradeStr(currentGradeResolverPair?.value?.caseSensitive === false ?
                                            event.target.value.trim().toUpperCase() :
