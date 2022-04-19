@@ -80,10 +80,10 @@ export default function MainScreen() {
 
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
-        let gradeResolverName = currentGradeResolverPair?.value?.name;
+        let gradeResolverId = currentGradeResolverPair?.value?.id;
         let encodedCurrent = writeCompressedJSON(
                 title,
-                gradeResolverName !== undefined ? gradeResolverName : null,
+                gradeResolverId !== undefined ? gradeResolverId : null,
                 assignments
                     .filter(it => it instanceof SerializableAssignment)
                     .map((it) => (it as SerializableAssignment).fullJSON())
@@ -97,7 +97,7 @@ export default function MainScreen() {
                     Assignment.ofAdd()
                 ]);
                 let loadedDataNotNull = loadedData;
-                let gradeResolver = GRADE_RESOLVERS.find((it) => it.label === loadedDataNotNull.gradeResolverName);
+                let gradeResolver = GRADE_RESOLVERS.find((it) => it.value.id === loadedDataNotNull.gradeResolverId);
                 if (gradeResolver !== undefined) {
                     setCurrentGradeResolverPair({label: gradeResolver.value.name, value: gradeResolver.value});
                 } else {
@@ -119,10 +119,10 @@ export default function MainScreen() {
             return;
         }
 
-        let gradeResolverName = currentGradeResolverPair?.value?.name;
+        let gradeResolverId = currentGradeResolverPair?.value?.id;
         let encodedCurrent = writeCompressedJSON(
                 title,
-                gradeResolverName !== undefined ? gradeResolverName : null,
+                gradeResolverId !== undefined ? gradeResolverId : null,
                 assignments
                     .filter(it => it instanceof SerializableAssignment)
                     .map((it) => (it as SerializableAssignment).fullJSON())

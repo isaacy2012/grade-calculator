@@ -1,5 +1,4 @@
 import {Assignment, SerializableAssignment} from "../model/Assignment";
-import {encode} from "base-64";
 import styled from "styled-components";
 import {useMemo, useState} from "react";
 import {H3} from "./output/H3";
@@ -43,15 +42,14 @@ function shareUrl(
     deserializer: (assignment: SerializableAssignment) => any
 ): string {
     let params = new URLSearchParams();
-    params.append("saved", encode(
-        writeCompressedJSON(
-                title,
-                gradeResolver !== undefined ? gradeResolver.name : null,
-                assignments
-                    .filter(it => it instanceof SerializableAssignment)
-                    .map((it) => deserializer(it as SerializableAssignment))
-            )
-    ));
+    params.append("saved", writeCompressedJSON(
+            title,
+            gradeResolver !== undefined ? gradeResolver.id : null,
+            assignments
+                .filter(it => it instanceof SerializableAssignment)
+                .map((it) => deserializer(it as SerializableAssignment))
+        )
+    );
     return "https://" + window.location.host + process.env.PUBLIC_URL + "/?" + params.toString();
 }
 

@@ -3,26 +3,26 @@ import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 import {compressToBase64, decompressFromBase64} from "@amoutonbrady/lz-string"
 
-export function writeCompressedJSON(title: string, gradeResolverName: string | null, assignments: Assignment[]) {
+export function writeCompressedJSON(title: string, gradeResolverId: string | null, assignments: Assignment[]) {
     return compressToBase64(JSON.stringify(
         {
             title: title,
-            gradeResolverName: gradeResolverName,
+            gradeResolverId: gradeResolverId,
             assignments: assignments
         }
     ))
 }
 
-export function parseCompressedJSON(json: string): {title: string, gradeResolverName: string, assignments: Assignment[]} | null {
+export function parseCompressedJSON(json: string): {title: string, gradeResolverId: string, assignments: Assignment[]} | null {
     let decompressed = decompressFromBase64(json);
     if (decompressed == null) {
         return null;
     }
     let document = JSON.parse(decompressed);
     let assignments: Assignment[] = [];
-    let gradeResolverName = null;
-    if (document.hasOwnProperty("gradeResolverName")) {
-        gradeResolverName = document.gradeResolverName;
+    let gradeResolverId = null;
+    if (document.hasOwnProperty("gradeResolverId")) {
+        gradeResolverId = document.gradeResolverId;
     }
     let title: string = document.title ? document.title : "";
     if (!document.hasOwnProperty("assignments")) {
@@ -38,7 +38,7 @@ export function parseCompressedJSON(json: string): {title: string, gradeResolver
     }
     return {
         title: title,
-        gradeResolverName: gradeResolverName,
+        gradeResolverId: gradeResolverId,
         assignments: assignments
     };
 }

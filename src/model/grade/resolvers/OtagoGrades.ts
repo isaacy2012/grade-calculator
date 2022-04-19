@@ -6,6 +6,7 @@ export class OtagoGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "OTA",
             "University of Otago",
             false,
             [

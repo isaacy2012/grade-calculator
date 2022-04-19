@@ -5,6 +5,7 @@ export class VuwGrades extends GradeResolver {
 
     private constructor() {
         super(
+            "VUW",
             "Victoria University of Wellington",
             false,
             [
