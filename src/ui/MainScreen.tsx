@@ -8,7 +8,7 @@ import ContentRow from "./ContentRow";
 import {Container} from "./Container";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
-import Tab from "./Tab";
+import Tab, {TextTabIcon} from "./Tab";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
 import {useHistory, useLocation} from "react-router-dom";
@@ -211,8 +211,8 @@ export default function MainScreen() {
             <Container top="20px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
-                        headerElements={[<span>% Reach a <b>percentage</b></span>,
-                            <span>A+ Reach a <b>grade</b></span>]}>
+                        headerElements={[<span><TextTabIcon>%</TextTabIcon> Reach a <b>percentage</b></span>,
+                            <span><TextTabIcon>A+</TextTabIcon> Reach a <b>grade</b></span>]}>
                     <Tab tabName="REACH_PERCENTAGE">
                         {/*remove the last empty assignment (the add button)*/}
                         <PercentageTab assignments={assignments.slice(0, -1)}
