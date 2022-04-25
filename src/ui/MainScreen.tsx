@@ -68,6 +68,7 @@ function useQuery() {
 }
 
 export default function MainScreen() {
+    const [didLoad, setDidLoad] = useState<boolean>(false);
     const [assignments, setAssignments] = useState<Assignment[]>([...defaultAssignments, Assignment.ofAdd()]);
     const [shareExpanded, setShareExpanded] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
@@ -109,9 +110,11 @@ export default function MainScreen() {
     }, [assignments, currentGradeResolverPair, setCurrentGradeResolverPair, history, queryString, title])
 
     useEffect(() => {
-        fillSavedAssignments();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        if (!didLoad) {
+            fillSavedAssignments();
+            setDidLoad(true);
+        }
+    }, [didLoad, fillSavedAssignments]);
 
     function saveAndPushData() {
         // set to default url if no new data
