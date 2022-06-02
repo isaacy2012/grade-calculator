@@ -8,16 +8,16 @@ import ContentRow from "./ContentRow";
 import {Container} from "./Container";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
 import Tabbed from "./Tabbed";
-import Tab from "./Tab";
+import Tab, {TextTabIcon} from "./Tab";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
-import {encode, decode} from "base-64";
 import {useHistory, useLocation} from "react-router-dom";
-import {parseJSON} from "../util/Deserializer";
+import {parseCompressedJSON, writeCompressedJSON} from "../util/Deserializer";
 import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
 import {useIdleTimer} from "react-idle-timer";
+import {GRADE_RESOLVERS_MAP, LabelToGradeResolver} from "../model/grade/GradeResolvers";
 
 
 const TableHeader = styled(StyledInput)`
@@ -68,39 +68,53 @@ function useQuery() {
 }
 
 export default function MainScreen() {
+    const [didLoad, setDidLoad] = useState<boolean>(false);
     const [assignments, setAssignments] = useState<Assignment[]>([...defaultAssignments, Assignment.ofAdd()]);
     const [shareExpanded, setShareExpanded] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("");
-    const percentageThreshState = useState("");
     const outOfState = useState("");
+    const currentGradeResolverPairState = useState<LabelToGradeResolver | null>(null);
+    const [currentGradeResolverPair, setCurrentGradeResolverPair] = currentGradeResolverPairState;
 
     const history = useHistory();
 
     let queryString = useQuery().get("saved");
     let fillSavedAssignments = useCallback(() => {
-        let encodedCurrent = encode(
-            JSON.stringify(
-                {title: title, assignments: assignments
-                        .filter(it => it instanceof SerializableAssignment)
-                        .map((it) => (it as SerializableAssignment).fullJSON())}
-            )
-        );
+        let gradeResolverId = currentGradeResolverPair?.value?.id;
+        let encodedCurrent = writeCompressedJSON(
+                title,
+                gradeResolverId !== undefined ? gradeResolverId : null,
+                assignments
+                    .filter(it => it instanceof SerializableAssignment)
+                    .map((it) => (it as SerializableAssignment).fullJSON())
+            );
         if (queryString && queryString !== encodedCurrent) {
-            let loadedData = parseJSON(decode(queryString));
-            if (loadedData !== null) {
+            let loadedData = parseCompressedJSON(queryString);
+            if (loadedData == null) {
+                alert("Sorry, we were unable to load saved data.")
+            } else {
                 setTitle(loadedData.title);
                 setAssignments([
                     ...loadedData.assignments,
                     Assignment.ofAdd()
                 ]);
+                let gradeResolver = GRADE_RESOLVERS_MAP.get(loadedData.gradeResolverId);
+                if (gradeResolver !== undefined) {
+                    setCurrentGradeResolverPair({label: gradeResolver.value.name, value: gradeResolver.value});
+                } else {
+                    let params = new URLSearchParams();
+                    history.replace({search: params.toString()});
+                }
             }
         }
-    }, [assignments, queryString, title])
+    }, [assignments, currentGradeResolverPair, setCurrentGradeResolverPair, history, queryString, title])
 
     useEffect(() => {
-        fillSavedAssignments();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        if (!didLoad) {
+            fillSavedAssignments();
+            setDidLoad(true);
+        }
+    }, [didLoad, fillSavedAssignments]);
 
     function saveAndPushData() {
         // set to default url if no new data
@@ -110,20 +124,14 @@ export default function MainScreen() {
             return;
         }
 
-        let encodedCurrent = encode(
-            JSON.stringify(
-                {title: title, assignments: assignments
-                        .filter(it => it instanceof SerializableAssignment)
-                        .map((it) => (it as SerializableAssignment).fullJSON())}
-            )
-        );
-        // console.log("saved: " +
-        //     JSON.stringify(
-        //         {title: title, assignments: assignments
-        //                 .filter(it => it instanceof SerializableAssignment)
-        //                 .map((it) => (it as SerializableAssignment).fullJSON())}
-        //     )
-        // );
+        let gradeResolverId = currentGradeResolverPair?.value?.id;
+        let encodedCurrent = writeCompressedJSON(
+                title,
+                gradeResolverId !== undefined ? gradeResolverId : null,
+                assignments
+                    .filter(it => it instanceof SerializableAssignment)
+                    .map((it) => (it as SerializableAssignment).fullJSON())
+            );
 
         if (queryString !== encodedCurrent) {
             // refresh
@@ -180,7 +188,7 @@ export default function MainScreen() {
     return (
         <Fragment>
             <Container bottom="50px">
-                <InvisibleLink href={process.env.PUBLIC_URL}><Title>Grade Calculator</Title></InvisibleLink>
+                <InvisibleLink href={process.env.PUBLIC_URL}><Title>Reverse Grade Calculator</Title></InvisibleLink>
                 <Instruction>Enter your assignment information, then choose whether you want to reach
                     a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
@@ -203,18 +211,20 @@ export default function MainScreen() {
             <Container top="20px">
                 <Tabbed defaultActiveTabName="REACH_PERCENTAGE"
                         headerNames={["REACH_PERCENTAGE", "REACH_GRADE"]}
-                        headerElements={[<span>% Reach a <b>percentage</b></span>,
-                            <span>A+ Reach a <b>grade</b></span>]}>
+                        headerElements={[<span><TextTabIcon>%</TextTabIcon> Reach a <b>percentage</b></span>,
+                            <span><TextTabIcon>A+</TextTabIcon> Reach a <b>grade</b></span>]}>
                     <Tab tabName="REACH_PERCENTAGE">
                         {/*remove the last empty assignment (the add button)*/}
                         <PercentageTab assignments={assignments.slice(0, -1)}
-                                       threshState={percentageThreshState}
                                        outOfState={outOfState}
                         />
                     </Tab>
                     <Tab tabName="REACH_GRADE">
                         {/*remove the last empty assignment (the add button)*/}
-                        <GradeTab assignments={assignments.slice(0, -1)}/>
+                        <GradeTab assignments={assignments.slice(0, -1)}
+                                  outOfState={outOfState}
+                                  currentGradeResolverPairState={currentGradeResolverPairState}
+                        />
                     </Tab>
                 </Tabbed>
             </Container>
@@ -224,7 +234,7 @@ export default function MainScreen() {
                         <RiShareForward2Fill/> SHARE
                     </InvisibleButton>
                     {shareExpanded &&
-                    <ShareSheet title={title} assignments={assignments.slice(0, -1)}/>}
+                    <ShareSheet title={title} gradeResolver={currentGradeResolverPair?.value} assignments={assignments.slice(0, -1)}/>}
                 </NoPaddingCard>
             </Container>
             {/*{assignments.map((value, index) => <div key={index}><p>{value instanceof SerializableAssignment ? "true" + JSON.stringify(value.fullJSON()) : JSON.stringify(value)}</p></div>)}*/}

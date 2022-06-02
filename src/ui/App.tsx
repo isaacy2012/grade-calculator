@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import {theme} from '../theme/Theme';
 import MainScreen from "./MainScreen";
+import {GITHUB_NEW_ISSUE_URL} from "../Constants";
 
 
 const FooterChild = styled.p`
@@ -34,7 +35,9 @@ function App() {
                 </BrowserRouter>
                 <Footer>
                     <LeftFooterChild>
-                        <a href="https://github.com/isaacy2012/grade-calculator/issues/new">Report an Issue</a>
+                        <a
+                            rel="noreferrer" target="_blank"
+                            href={GITHUB_NEW_ISSUE_URL}>Report an Issue</a>
                     </LeftFooterChild>
                 <RightFooterChild>Made by <a href="https://isaacy.dev">Isaac Young</a></RightFooterChild>
                 </Footer>
