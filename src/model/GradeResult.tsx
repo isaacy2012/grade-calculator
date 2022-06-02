@@ -20,7 +20,7 @@ export abstract class GradeResult implements Result {
             outOf,
             (totalAchieved) => new AlreadyFinalGradeResult(gradeResolver, totalAchieved),
             () => new InvalidGradeResult(gradeResolver,
-                threshStr === "" ? <span>Enter your desired percentage above.</span> :
+                threshStr === "" ? <span>Enter your desired grade above.</span> :
                     <span>{HMM} the grade <b>{threshStr}</b> isn't valid.</span>
             ),
             (totalAchieved) => new AlreadyReachedGradeResult(gradeResolver, totalAchieved),
