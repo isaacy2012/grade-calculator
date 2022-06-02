@@ -55,6 +55,12 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LXPXWXCV8Z"></script>
     <script>
+      // EU DISABLE
+      const offset = new Date().getTimezoneOffset();
+      if (1 > offset && offset > -130 ){
+        window['ga-disable-G-LXPXWXCV8Z'] = true
+      }
+
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
