@@ -79,7 +79,7 @@ export default function ContentRow(
             <SpacerDiv>
                 {props.onClick === undefined &&
                 // ×
-                <IconButton fontSize="1.1em" onClick={props.onDuplicate}><IoDuplicateSharp/></IconButton>}
+                <IconButton fontSize="1.1em" onClick={props.onDuplicate} tabIndex={-1}><IoDuplicateSharp/></IconButton>}
             </SpacerDiv>
             <FlexChild6>
                 <ContentRowContainer onClick={props.onClick}>
@@ -88,6 +88,7 @@ export default function ContentRow(
                             value={nameStr}
                             placeholder={"Title"}
                             accepted={nameStr !== ""}
+                            onFocus={props.onClick}
                             empty={nameStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setNameStr(event.target.value)}
@@ -98,6 +99,7 @@ export default function ContentRow(
                             value={scoreStr}
                             placeholder={"Score Achieved"}
                             accepted={Score.fromString(scoreStr) !== null}
+                            onFocus={props.onClick}
                             empty={scoreStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
@@ -108,6 +110,7 @@ export default function ContentRow(
                             value={weightStr}
                             placeholder={"Overall Weight"}
                             accepted={numOrPercToStr(weightStr) <= 1}
+                            onFocus={props.onClick}
                             empty={weightStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
@@ -119,7 +122,7 @@ export default function ContentRow(
             <SpacerDiv>
                 {props.onClick === undefined &&
                 // ×
-                <IconButton onClick={props.onDelete}><IoCloseOutline/></IconButton>}
+                <IconButton onClick={props.onDelete} tabIndex={-1}><IoCloseOutline/></IconButton>}
             </SpacerDiv>
         </FlexDiv>
     );
