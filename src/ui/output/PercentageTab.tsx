@@ -5,7 +5,7 @@ import AutosizeInput from "react-input-autosize";
 import {AlreadyFinalPercentageResult, PercentageResult} from "../../model/PercentageResult";
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
 import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
-import {OkResult} from "../../model/Result";
+import {bd, OkResult} from "../../model/Result";
 
 
 export default function PercentageTab(props: { assignments: Assignment[], outOfState: State<string> }) {
@@ -14,10 +14,9 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
     const [desiredPercentageStr, setDesiredPercentageStr] = useState("");
     const [outOfStr, setOutOfStr] = props.outOfState;
 
-    const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
     const result = useMemo(() =>
-            PercentageResult.create(assignments, desiredPercentageStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF),
-        [assignments, desiredPercentageStr, outOf]
+            PercentageResult.create(assignments, desiredPercentageStr, bd(outOfStr)),
+        [assignments, desiredPercentageStr, outOfStr]
     );
 
     if (result instanceof AlreadyFinalPercentageResult) {

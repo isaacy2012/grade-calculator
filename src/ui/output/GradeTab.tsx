@@ -8,7 +8,7 @@ import {DEFAULT_OUT_OF} from "../../constant/Constants";
 import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
 import {theme} from "../../theme/Theme";
 import {AlreadyFinalGradeResult, GradeResult} from "../../model/GradeResult";
-import {OkResult} from "../../model/Result";
+import {bd, OkResult} from "../../model/Result";
 import {GITHUB_NEW_ISSUE_URL, GITHUB_URL} from "../../Constants";
 
 
@@ -18,16 +18,15 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
     const [desiredGradeStr, setDesiredGradeStr] = useState("");
     const [outOfStr, setOutOfStr] = props.outOfState;
     const [currentGradeResolverPair, setCurrentGradeResolverPair] = props.currentGradeResolverPairState;
-    const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
 
 
     const result = useMemo(() => {
             if (currentGradeResolverPair != null) {
-                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF)
+                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, bd(outOfStr))
             }
             return null
         },
-        [currentGradeResolverPair, assignments, desiredGradeStr, outOf]
+        [currentGradeResolverPair, assignments, desiredGradeStr, outOfStr]
     );
 
     function NoOptionsMessage(props: any): JSX.Element {
