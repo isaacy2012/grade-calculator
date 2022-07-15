@@ -14,7 +14,7 @@ export abstract class GradeResult implements Result {
 
     abstract message(): ReactNode
 
-    static create(gradeResolver: GradeResolver, assignments: Assignment[], threshStr: string, outOf: bigDecimal): Result {
+    static create(gradeResolver: GradeResolver, assignments: Assignment[], threshStr: string, outOf: bigDecimal | null): Result {
         return create(
             assignments,
             gradeResolver.gradeStrToNum(threshStr),

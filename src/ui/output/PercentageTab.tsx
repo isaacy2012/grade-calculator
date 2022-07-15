@@ -14,15 +14,15 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
 
     const [desiredPercentageStr, setDesiredPercentageStr] = useState("");
     const [outOfStr, setOutOfStr]: State<string> = props.outOfState;
-    const outOf: bigDecimal = useMemo(() => {
+    const outOf: bigDecimal | null = useMemo(() => {
         if (isNaN(parseFloat(outOfStr))) {
-            return DEFAULT_OUT_OF;
+            return null;
         }
         let converted = bd(parseFloat(outOfStr));
         if (converted != null) {
             return converted;
         }
-        return DEFAULT_OUT_OF;
+        return null;
     }, [outOfStr]);
 
     const result = useMemo(() =>
@@ -76,7 +76,7 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
                                        }}
                                        maxLength={5}
                                        type="numeric"
-                                       placeholder={DEFAULT_OUT_OF.getValue()}
+                                       placeholder={DEFAULT_OUT_OF}
                                        onChange={(event: InputChangeEvent) =>
                                            setOutOfStr(event.target.value.trim())
                                        }/>

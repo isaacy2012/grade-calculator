@@ -6,7 +6,7 @@ import bigDecimal from "js-big-decimal";
 export abstract class PercentageResult implements Result {
     abstract message(): ReactNode
 
-    static create(assignments: Assignment[], threshStr: string, outOf: bigDecimal): Result {
+    static create(assignments: Assignment[], threshStr: string, outOf: bigDecimal | null): Result {
         return create(
             assignments,
             numOrPercToBd(threshStr),

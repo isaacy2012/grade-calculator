@@ -1,6 +1,8 @@
 import React, {ReactNode} from "react";
 import {Assignment, ValidAssignment} from "./Assignment";
 import bigDecimal from "js-big-decimal";
+import {DEFAULT_OUT_OF} from "../constant/Constants";
+import {zeroRegex} from "./Regex";
 
 
 export const DIGITS = 2;
@@ -22,7 +24,26 @@ export function bdToPercStr(bdec: bigDecimal): string {
 }
 
 export function formatBd(bdec: bigDecimal): string {
-    return bdec.round(DIGITS).getValue();
+    // start off with two digits
+    let digits = 2
+    let formatted = formatBdWithPrecision(bdec, digits);
+    // if it's all zeroes, and not accurate, keep adding precision until it's not all zeros or it's accurate
+    while (zeroRegex.test(formatted) && bdec.compareTo(bdec.round(digits)) !== 0 && digits < 10) {
+        digits = digits + 1;
+        formatted = formatBdWithPrecision(bdec, digits);
+    }
+    // // add 1 more precision for 2sf
+    // formatted = formatBdWithPrecision(bdec, digits + 1);
+    // // remove the last character if it's a 0
+    // // there must be a '.' in it since the digits start at 2
+    // if (formatted.charAt(formatted.length - 1) === '0') {
+    //     formatted = formatBdWithPrecision(bdec, digits);
+    // }
+    return formatted;
+}
+
+function formatBdWithPrecision(bdec: bigDecimal, precision: number): string {
+    return bdec.round(precision).getValue();
 }
 
 
@@ -41,12 +62,12 @@ export const HUND = bd("100");
 export function create(
     assignments: Assignment[],
     threshNum: bigDecimal | null,
-    outOf: bigDecimal,
+    outOf: bigDecimal | null,
     alreadyFinalResultFactory: (totalAchieved: bigDecimal) => Result,
     invalidInputResultFactory: () => Result,
     alreadyReachedResultFactory: (totalAchieved: bigDecimal) => Result,
-    cantReachResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: bigDecimal, theoreticalMaximum: bigDecimal) => Result,
-    okResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: bigDecimal, totalWeightLeft: bigDecimal) => Result
+    cantReachResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: string, theoreticalMaximum: bigDecimal) => Result,
+    okResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: string, totalWeightLeft: bigDecimal) => Result
 ): Result {
     if (!assignments.every(it => it instanceof ValidAssignment)) {
         return new InvalidMessageResult(<span>You haven't filled in all the assignments.</span>);
@@ -71,7 +92,7 @@ export function create(
         let theoreticalMaximum = totalAchieved.add(totalWeightLeft);
         let requiredAmount = threshNum.subtract(totalAchieved);
         let requiredPercentage = requiredAmount.divide(totalWeightLeft, 10);
-        let requiredAchieved = requiredPercentage.multiply(outOf);
+        let requiredAchieved = outOf ? formatBd(requiredPercentage.multiply(outOf)) : DEFAULT_OUT_OF;
         if (requiredPercentage.compareTo(ZERO) <= 0) {
             return alreadyReachedResultFactory(totalAchieved)
         } else if (requiredPercentage.compareTo(ONE) > 0) {
@@ -97,10 +118,10 @@ export class InvalidMessageResult implements Result {
 
 export class OkResult implements Result {
     readonly requiredPercentage: bigDecimal;
-    readonly requiredAchieved: bigDecimal;
+    readonly requiredAchieved: string;
     readonly totalWeightLeft: bigDecimal;
 
-    constructor(requiredPercentage: bigDecimal, requiredAchieved: bigDecimal, totalWeightLeft: bigDecimal) {
+    constructor(requiredPercentage: bigDecimal, requiredAchieved: string, totalWeightLeft: bigDecimal) {
         this.totalWeightLeft = totalWeightLeft;
         this.requiredPercentage = requiredPercentage;
         this.requiredAchieved = requiredAchieved;
@@ -111,7 +132,7 @@ export class OkResult implements Result {
     }
 
     requiredAchievedStr(): string {
-        return formatBd(this.requiredAchieved);
+        return this.requiredAchieved
     }
 
     message(): ReactNode {
