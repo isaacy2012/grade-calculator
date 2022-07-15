@@ -5,18 +5,28 @@ import AutosizeInput from "react-input-autosize";
 import {AlreadyFinalPercentageResult, PercentageResult} from "../../model/PercentageResult";
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
 import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
-import {OkResult} from "../../model/Result";
+import {bd, OkResult} from "../../model/Result";
+import bigDecimal from "js-big-decimal";
 
 
 export default function PercentageTab(props: { assignments: Assignment[], outOfState: State<string> }) {
     const assignments = props.assignments;
 
     const [desiredPercentageStr, setDesiredPercentageStr] = useState("");
-    const [outOfStr, setOutOfStr] = props.outOfState;
+    const [outOfStr, setOutOfStr]: State<string> = props.outOfState;
+    const outOf: bigDecimal | null = useMemo(() => {
+        if (isNaN(parseFloat(outOfStr))) {
+            return null;
+        }
+        let converted = bd(parseFloat(outOfStr));
+        if (converted != null) {
+            return converted;
+        }
+        return null;
+    }, [outOfStr]);
 
-    const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
     const result = useMemo(() =>
-            PercentageResult.create(assignments, desiredPercentageStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF),
+            PercentageResult.create(assignments, desiredPercentageStr, outOf),
         [assignments, desiredPercentageStr, outOf]
     );
 
@@ -66,7 +76,7 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
                                        }}
                                        maxLength={5}
                                        type="numeric"
-                                       placeholder={DEFAULT_OUT_OF.toString()}
+                                       placeholder={DEFAULT_OUT_OF}
                                        onChange={(event: InputChangeEvent) =>
                                            setOutOfStr(event.target.value.trim())
                                        }/>

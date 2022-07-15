@@ -1,10 +1,11 @@
+import bigDecimal from "js-big-decimal";
 
 export class Grade {
     readonly str: string;
-    readonly minimumBoundary: number;
+    readonly minimumBoundary: bigDecimal;
 
 
-    constructor(str: string, minimumBoundary: number) {
+    constructor(str: string, minimumBoundary: bigDecimal) {
         this.str = str;
         this.minimumBoundary = minimumBoundary;
     }
@@ -23,22 +24,23 @@ export abstract class GradeResolver {
         this.grades = grades;
     }
 
-    numToGradeStr(num: number): string {
+    numToGradeStr(num: bigDecimal): string {
         for (let grade of this.grades) {
-            if (num >= grade.minimumBoundary) {
+            let compare = num.compareTo(grade.minimumBoundary);
+            if (compare > 0 || compare === 0) {
                 return grade.str;
             }
         }
         throw Error()
     }
 
-    gradeStrToNum(str: string): number {
+    gradeStrToNum(str: string): bigDecimal | null {
         for (let grade of this.grades) {
             if (this.caseSensitive ? str === grade.str : str.toUpperCase() === grade.str.toUpperCase()) {
                 return grade.minimumBoundary;
             }
         }
-        return NaN;
+        return null;
     }
 
 }

@@ -3,6 +3,7 @@ import {Assignment} from "./Assignment";
 import {create, HMM, OkResult, Result} from "./Result";
 import a from "indefinite";
 import {GradeResolver} from "./grade/Grade";
+import bigDecimal from "js-big-decimal";
 
 export abstract class GradeResult implements Result {
     readonly gradeResolver: GradeResolver;
@@ -13,7 +14,7 @@ export abstract class GradeResult implements Result {
 
     abstract message(): ReactNode
 
-    static create(gradeResolver: GradeResolver, assignments: Assignment[], threshStr: string, outOf: number): Result {
+    static create(gradeResolver: GradeResolver, assignments: Assignment[], threshStr: string, outOf: bigDecimal | null): Result {
         return create(
             assignments,
             gradeResolver.gradeStrToNum(threshStr),
@@ -49,9 +50,9 @@ class InvalidGradeResult extends GradeResult {
 
 
 export class AlreadyFinalGradeResult extends InvalidGradeResult {
-    readonly totalAchieved: number;
+    readonly totalAchieved: bigDecimal;
 
-    constructor(gradeResolver: GradeResolver, totalAchieved: number) {
+    constructor(gradeResolver: GradeResolver, totalAchieved: bigDecimal) {
         super(gradeResolver, null);
         this.totalAchieved = totalAchieved;
     }
@@ -66,9 +67,9 @@ export class AlreadyFinalGradeResult extends InvalidGradeResult {
 }
 
 class AlreadyReachedGradeResult extends InvalidGradeResult {
-    readonly totalAchieved: number;
+    readonly totalAchieved: bigDecimal;
 
-    constructor(gradeResolver: GradeResolver, totalAchieved: number) {
+    constructor(gradeResolver: GradeResolver, totalAchieved: bigDecimal) {
         super(gradeResolver, null);
         this.totalAchieved = totalAchieved;
     }
@@ -80,9 +81,9 @@ class AlreadyReachedGradeResult extends InvalidGradeResult {
 
 class CantReachGradeResult extends InvalidGradeResult {
     readonly threshStr: string;
-    readonly theoreticalMaximum: number;
+    readonly theoreticalMaximum: bigDecimal;
 
-    constructor(gradeResolver: GradeResolver, threshStr: string, theoreticalMaximum: number) {
+    constructor(gradeResolver: GradeResolver, threshStr: string, theoreticalMaximum: bigDecimal) {
         super(gradeResolver, null);
         this.threshStr = threshStr;
         this.theoreticalMaximum = theoreticalMaximum;

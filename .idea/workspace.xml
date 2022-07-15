@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="" />
+    <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Assignment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Assignment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Result.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Result.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Score.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Score.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +19,9 @@
         <option value="TypeScript File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -28,11 +36,11 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/src/model/grade/resolvers&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.maddyhome.idea.vim.ui.VimEmulationConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -83,11 +91,50 @@
       <workItem from="1650197241988" duration="38000" />
       <workItem from="1650197315745" duration="10509000" />
       <workItem from="1650345120819" duration="9265000" />
+      <workItem from="1650803024671" duration="2021000" />
+      <workItem from="1652772098310" duration="114000" />
+      <workItem from="1654157767568" duration="750000" />
+      <workItem from="1654175508293" duration="613000" />
+      <workItem from="1654499677107" duration="1723000" />
+      <workItem from="1654681445678" duration="46000" />
+      <workItem from="1657413388501" duration="2247000" />
+      <workItem from="1657705528335" duration="11000" />
+      <workItem from="1657781271229" duration="3020000" />
+      <workItem from="1657803831266" duration="2449000" />
+      <workItem from="1657886798409" duration="251000" />
+      <workItem from="1657887056974" duration="6318000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/ui/MainScreen.tsx</url>
+          <line>208</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/Result.tsx</url>
+          <line>84</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

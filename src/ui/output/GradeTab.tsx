@@ -8,8 +8,9 @@ import {DEFAULT_OUT_OF} from "../../constant/Constants";
 import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
 import {theme} from "../../theme/Theme";
 import {AlreadyFinalGradeResult, GradeResult} from "../../model/GradeResult";
-import {OkResult} from "../../model/Result";
+import {bd, OkResult} from "../../model/Result";
 import {GITHUB_NEW_ISSUE_URL, GITHUB_URL} from "../../Constants";
+import bigDecimal from "js-big-decimal";
 
 
 export default function GradeTab(props: { assignments: Assignment[], outOfState: State<string>, currentGradeResolverPairState: State<LabelToGradeResolver | null> }) {
@@ -18,14 +19,23 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
     const [desiredGradeStr, setDesiredGradeStr] = useState("");
     const [outOfStr, setOutOfStr] = props.outOfState;
     const [currentGradeResolverPair, setCurrentGradeResolverPair] = props.currentGradeResolverPairState;
-    const outOf = useMemo(() => parseFloat(outOfStr), [outOfStr]);
 
+    const outOf: bigDecimal | null = useMemo(() => {
+        if (isNaN(parseFloat(outOfStr))) {
+            return null;
+        }
+        let converted = bd(parseFloat(outOfStr));
+        if (converted != null) {
+            return converted;
+        }
+        return null;
+    }, [outOfStr]);
 
     const result = useMemo(() => {
             if (currentGradeResolverPair != null) {
-                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, !isNaN(outOf) ? outOf : DEFAULT_OUT_OF)
+                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, outOf);
             }
-            return null
+            return null;
         },
         [currentGradeResolverPair, assignments, desiredGradeStr, outOf]
     );
@@ -113,7 +123,7 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
                                }}
                                maxLength={5}
                                type="numeric"
-                               placeholder={DEFAULT_OUT_OF.toString()}
+                               placeholder={DEFAULT_OUT_OF}
                                onChange={(event: InputChangeEvent) =>
                                    setOutOfStr(event.target.value.trim())
                                }/>

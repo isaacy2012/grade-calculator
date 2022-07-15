@@ -1,4 +1,6 @@
 import {fractionRegex, numberRegex, percentageRegex} from "./Regex";
+import bigDecimal from "js-big-decimal";
+import {bd, formatBd, ONE_HUNDRED, PRECISION} from "./Result";
 
 export abstract class Score {
     readonly str: string;
@@ -15,7 +17,7 @@ export abstract class Score {
         }
     }
 
-    abstract calc(): number
+    abstract calc(): bigDecimal
 
     abstract toString(): string
 
@@ -30,11 +32,11 @@ export abstract class Score {
 }
 
 class FractionScore extends Score {
-    readonly achieved: number;
-    readonly outOf: number;
+    readonly achieved: bigDecimal;
+    readonly outOf: bigDecimal;
 
 
-    constructor(str: string, achieved: number, outOf: number) {
+    constructor(str: string, achieved: bigDecimal, outOf: bigDecimal) {
         super(str);
         this.achieved = achieved;
         this.outOf = outOf;
@@ -45,21 +47,20 @@ class FractionScore extends Score {
         if (splits.length !== 2) {
             throw new Error("Invalid FractionScore string");
         }
-        let achieved = parseFloat(splits[0]);
-        let outOf = parseFloat(splits[1]);
+        let achieved = bd(splits[0]);
+        let outOf = bd(splits[1]);
         return new FractionScore(str, achieved, outOf);
     }
 
-    calc(): number {
-        let result = this.achieved / this.outOf;
-        return isNaN(result) ? 0 : result;
+    calc(): bigDecimal {
+        return this.achieved.divide(this.outOf, PRECISION);
     }
 
     equals(other: Score | null): boolean {
         if (other instanceof FractionScore) {
             return super.equals(other)
-                && this.achieved === other.achieved
-                && this.outOf === other.outOf;
+                && this.achieved.compareTo(other.achieved) === 0
+                && this.outOf.compareTo(other.outOf) === 0;
         }
         return false;
     }
@@ -74,35 +75,35 @@ class FractionScore extends Score {
 }
 
 class PercentageScore extends Score {
-    readonly percentage: number;
+    readonly percentage: bigDecimal;
 
-    constructor(str: string, percentage: number) {
+    constructor(str: string, percentage: bigDecimal) {
         super(str);
         this.percentage = percentage;
     }
 
     static fromString(str: string): PercentageScore | null {
         if (numberRegex.test(str)) {
-            return new PercentageScore(str, parseFloat(str) / 100);
+            return new PercentageScore(str, bd(str).divide(ONE_HUNDRED, PRECISION));
         } else if (percentageRegex.test(str)) {
-            return new PercentageScore(str, parseFloat(str.substr(0, str.length - 1)) / 100);
+            return new PercentageScore(str, bd(str.substr(0, str.length - 1)).divide(ONE_HUNDRED, PRECISION));
         }
         return null;
     }
 
-    calc(): number {
+    calc(): bigDecimal {
         return this.percentage;
     }
 
     equals(other: Score | null): boolean {
         if (other instanceof PercentageScore) {
             return super.equals(other)
-                && this.percentage === other.percentage;
+                && this.percentage.compareTo(other.percentage) === 0;
         }
         return false;
     }
 
     toString(): string {
-        return (this.percentage * 100).toString();
+        return formatBd(this.percentage)
     }
 }

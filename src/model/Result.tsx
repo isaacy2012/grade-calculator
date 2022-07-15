@@ -1,7 +1,12 @@
 import React, {ReactNode} from "react";
 import {Assignment, ValidAssignment} from "./Assignment";
+import bigDecimal from "js-big-decimal";
+import {DEFAULT_OUT_OF} from "../constant/Constants";
+import {zeroRegex} from "./Regex";
+
 
 export const DIGITS = 2;
+export const PRECISION = 10;
 export const HMM = "Hmm... that doesn't seem right –";
 
 export function ceil2dp(num: number): string {
@@ -14,46 +19,83 @@ export function nToPercStr (num: number): string {
     return (Math.ceil(100 * num * base) / base).toFixed(DIGITS);
 }
 
+export function bdToPercStr(bdec: bigDecimal): string {
+    return formatBd(bdec.multiply(ONE_HUNDRED));
+}
+
+export function formatBd(bdec: bigDecimal): string {
+    // start off with two digits
+    let digits = 2
+    let formatted = formatBdWithPrecision(bdec, digits);
+    // if it's all zeroes, and not accurate, keep adding precision until it's not all zeros or it's accurate
+    while (zeroRegex.test(formatted) && bdec.compareTo(bdec.round(digits)) !== 0 && digits < 10) {
+        digits = digits + 1;
+        formatted = formatBdWithPrecision(bdec, digits);
+    }
+    // // add 1 more precision for 2sf
+    // formatted = formatBdWithPrecision(bdec, digits + 1);
+    // // remove the last character if it's a 0
+    // // there must be a '.' in it since the digits start at 2
+    // if (formatted.charAt(formatted.length - 1) === '0') {
+    //     formatted = formatBdWithPrecision(bdec, digits);
+    // }
+    return formatted;
+}
+
+function formatBdWithPrecision(bdec: bigDecimal, precision: number): string {
+    return bdec.round(precision).getValue();
+}
+
 
 export interface Result {
     message(): ReactNode
 }
 
+export function bd(str: string | number): bigDecimal {
+    return new bigDecimal(str);
+}
+
+export const ZERO = bd("0");
+export const ONE = bd("1");
+export const ONE_HUNDRED = bd("100");
+
 export function create(
     assignments: Assignment[],
-    threshNum: number,
-    outOf: number,
-    alreadyFinalResultFactory: (totalAchieved: number) => Result,
+    threshNum: bigDecimal | null,
+    outOf: bigDecimal | null,
+    alreadyFinalResultFactory: (totalAchieved: bigDecimal) => Result,
     invalidInputResultFactory: () => Result,
-    alreadyReachedResultFactory: (totalAchieved: number) => Result,
-    cantReachResultFactory: (requiredPercentage: number, requiredAchieved: number, theoreticalMaximum: number) => Result,
-    okResultFactory: (requiredPercentage: number, requiredAchieved: number, totalWeightLeft: number) => Result
+    alreadyReachedResultFactory: (totalAchieved: bigDecimal) => Result,
+    cantReachResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: string, theoreticalMaximum: bigDecimal) => Result,
+    okResultFactory: (requiredPercentage: bigDecimal, requiredAchieved: string, totalWeightLeft: bigDecimal) => Result
 ): Result {
     if (!assignments.every(it => it instanceof ValidAssignment)) {
         return new InvalidMessageResult(<span>You haven't filled in all the assignments.</span>);
     } else {
-        if (isNaN(threshNum)) {
-            return invalidInputResultFactory()
+        if (threshNum == null) {
+            return invalidInputResultFactory();
         }
-        let totalWeight = assignments.map((it: Assignment) => (it as ValidAssignment).weight!)
-            .reduce((prev: number, it: number) => prev + it, 0);
-        let totalAchieved = assignments.reduce((prev: number, it: Assignment) =>
-            prev + (it as ValidAssignment).score.calc() * (it as ValidAssignment).weight, 0
+        let totalWeight = assignments.map((it: Assignment) => ((it as ValidAssignment).getWeight()))
+            .reduce((prev: bigDecimal, it: bigDecimal) => prev.add(it), bd("0"));
+        let totalAchieved = assignments.reduce((prev: bigDecimal, it: Assignment) =>
+            prev.add((it as ValidAssignment).score.calc().multiply((it as ValidAssignment).getWeight())), bd("0")
         );
-        let totalWeightLeft = 1 - totalWeight;
-        if (totalWeightLeft < 0) {
+        let totalWeightLeft = bd("1").subtract(totalWeight);
+        if (totalWeightLeft.compareTo(ZERO) < 0) {
+            let percentage = formatBd((ONE_HUNDRED.subtract(totalWeightLeft.multiply(ONE_HUNDRED))));
             return new InvalidMessageResult(
-                <span>{HMM} it looks like you've already completed <b>{(100-(totalWeightLeft * 100)).toFixed(DIGITS)}%</b> of the course.</span>);
-        } else if (totalWeightLeft === 0) {
+                <span>{HMM} it looks like you've already completed <b>{percentage}%</b> of the course.</span>
+            );
+        } else if (totalWeightLeft.compareTo(ZERO) === 0) {
             return alreadyFinalResultFactory(totalAchieved)
         }
-        let theoreticalMaximum = totalAchieved + totalWeightLeft;
-        let requiredAmount = threshNum - totalAchieved;
-        let requiredPercentage = requiredAmount / totalWeightLeft;
-        let requiredAchieved = (requiredPercentage * outOf);
-        if (requiredPercentage <= 0) {
+        let theoreticalMaximum = totalAchieved.add(totalWeightLeft);
+        let requiredAmount = threshNum.subtract(totalAchieved);
+        let requiredPercentage = requiredAmount.divide(totalWeightLeft, PRECISION);
+        let requiredAchieved = outOf ? formatBd(requiredPercentage.multiply(outOf)) : DEFAULT_OUT_OF;
+        if (requiredPercentage.compareTo(ZERO) <= 0) {
             return alreadyReachedResultFactory(totalAchieved)
-        } else if (requiredPercentage > 1) {
+        } else if (requiredPercentage.compareTo(ONE) > 0) {
             return cantReachResultFactory(requiredPercentage, requiredAchieved, theoreticalMaximum)
         } else {
             return okResultFactory(requiredPercentage, requiredAchieved, totalWeightLeft)
@@ -75,26 +117,26 @@ export class InvalidMessageResult implements Result {
 
 
 export class OkResult implements Result {
-    readonly requiredPercentage: number;
-    readonly requiredAchieved: number;
-    readonly totalWeightLeft: number;
+    readonly requiredPercentage: bigDecimal;
+    readonly requiredAchieved: string;
+    readonly totalWeightLeft: bigDecimal;
 
-    constructor(requiredPercentage: number, requiredAchieved: number, totalWeightLeft: number) {
+    constructor(requiredPercentage: bigDecimal, requiredAchieved: string, totalWeightLeft: bigDecimal) {
         this.totalWeightLeft = totalWeightLeft;
         this.requiredPercentage = requiredPercentage;
         this.requiredAchieved = requiredAchieved;
     }
 
     requiredPercentageStr(): string {
-        return nToPercStr(this.requiredPercentage);
+        return bdToPercStr(this.requiredPercentage);
     }
 
     requiredAchievedStr(): string {
-        return ceil2dp(this.requiredAchieved);
+        return this.requiredAchieved
     }
 
     message(): ReactNode {
-        return <p>Over the remaining <b>{nToPercStr(this.totalWeightLeft)}%</b>, you need at least:</p>
+        return <p>Over the remaining <b>{bdToPercStr(this.totalWeightLeft)}%</b>, you need at least:</p>
     }
 
 }

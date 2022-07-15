@@ -1,14 +1,15 @@
 import React, {ReactNode} from "react";
-import {Assignment} from "./Assignment";
-import {create, HMM, nToPercStr, OkResult, Result} from "./Result";
+import {Assignment, numOrPercToBd} from "./Assignment";
+import {bdToPercStr, create, HMM, OkResult, Result} from "./Result";
+import bigDecimal from "js-big-decimal";
 
 export abstract class PercentageResult implements Result {
     abstract message(): ReactNode
 
-    static create(assignments: Assignment[], threshStr: string, outOf: number): Result {
+    static create(assignments: Assignment[], threshStr: string, outOf: bigDecimal | null): Result {
         return create(
             assignments,
-            parseFloat(threshStr) / 100.0,
+            numOrPercToBd(threshStr),
             outOf,
             (totalAchieved) => new AlreadyFinalPercentageResult(totalAchieved),
             () => new InvalidPercentageResult(
@@ -38,9 +39,9 @@ class InvalidPercentageResult extends PercentageResult {
 }
 
 export class AlreadyFinalPercentageResult extends InvalidPercentageResult {
-    readonly totalAchieved: number;
+    readonly totalAchieved: bigDecimal;
 
-    constructor(totalAchieved: number) {
+    constructor(totalAchieved: bigDecimal) {
         super(null);
         this.totalAchieved = totalAchieved;
     }
@@ -50,28 +51,28 @@ export class AlreadyFinalPercentageResult extends InvalidPercentageResult {
     }
 
     percentageStr(): string {
-        return nToPercStr(this.totalAchieved);
+        return bdToPercStr(this.totalAchieved);
     }
 }
 
 class AlreadyReachedPercentageResult extends InvalidPercentageResult {
-    readonly totalAchieved: number;
+    readonly totalAchieved: bigDecimal;
 
-    constructor(totalAchieved: number) {
+    constructor(totalAchieved: bigDecimal) {
         super(null);
         this.totalAchieved = totalAchieved;
     }
 
     message(): ReactNode {
-        return <p>Congratulations, you have already reached <b>{nToPercStr(this.totalAchieved)}%</b>!</p>;
+        return <p>Congratulations, you have already reached <b>{bdToPercStr(this.totalAchieved)}%</b>!</p>;
     }
 }
 
 class CantReachPercentageResult extends InvalidPercentageResult {
     readonly threshStr: string;
-    readonly theoreticalMaximum: number;
+    readonly theoreticalMaximum: bigDecimal;
 
-    constructor(threshStr: string, theoreticalMaximum: number) {
+    constructor(threshStr: string, theoreticalMaximum: bigDecimal) {
         super(null);
         this.threshStr = threshStr;
         this.theoreticalMaximum = theoreticalMaximum;
@@ -79,7 +80,7 @@ class CantReachPercentageResult extends InvalidPercentageResult {
 
     message(): ReactNode {
         return <p>Unfortunately, you can't reach {this.threshStr}%.<br/>The maximum percentage you can achieve
-            is <b>{nToPercStr(this.theoreticalMaximum)}%</b>.</p>;
+            is <b>{bdToPercStr(this.theoreticalMaximum)}%</b>.</p>;
     }
 }
 
