@@ -10,6 +10,7 @@ import {theme} from "../../theme/Theme";
 import {AlreadyFinalGradeResult, GradeResult} from "../../model/GradeResult";
 import {bd, OkResult} from "../../model/Result";
 import {GITHUB_NEW_ISSUE_URL, GITHUB_URL} from "../../Constants";
+import bigDecimal from "js-big-decimal";
 
 
 export default function GradeTab(props: { assignments: Assignment[], outOfState: State<string>, currentGradeResolverPairState: State<LabelToGradeResolver | null> }) {
@@ -19,14 +20,24 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
     const [outOfStr, setOutOfStr] = props.outOfState;
     const [currentGradeResolverPair, setCurrentGradeResolverPair] = props.currentGradeResolverPairState;
 
+    const outOf: bigDecimal = useMemo(() => {
+        if (isNaN(parseFloat(outOfStr))) {
+            return DEFAULT_OUT_OF;
+        }
+        let converted = bd(parseFloat(outOfStr));
+        if (converted != null) {
+            return converted;
+        }
+        return DEFAULT_OUT_OF;
+    }, [outOfStr]);
 
     const result = useMemo(() => {
             if (currentGradeResolverPair != null) {
-                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, bd(outOfStr))
+                return GradeResult.create(currentGradeResolverPair.value, assignments, desiredGradeStr, outOf);
             }
-            return null
+            return null;
         },
-        [currentGradeResolverPair, assignments, desiredGradeStr, outOfStr]
+        [currentGradeResolverPair, assignments, desiredGradeStr, outOf]
     );
 
     function NoOptionsMessage(props: any): JSX.Element {
@@ -112,7 +123,7 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
                                }}
                                maxLength={5}
                                type="numeric"
-                               placeholder={DEFAULT_OUT_OF.toString()}
+                               placeholder={DEFAULT_OUT_OF.getValue()}
                                onChange={(event: InputChangeEvent) =>
                                    setOutOfStr(event.target.value.trim())
                                }/>

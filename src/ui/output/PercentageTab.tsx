@@ -6,17 +6,28 @@ import {AlreadyFinalPercentageResult, PercentageResult} from "../../model/Percen
 import {DEFAULT_OUT_OF} from "../../constant/Constants";
 import {Display, H3, H3First, Hi, Or, State, UtilityText} from "../helpers/Helpers";
 import {bd, OkResult} from "../../model/Result";
+import bigDecimal from "js-big-decimal";
 
 
 export default function PercentageTab(props: { assignments: Assignment[], outOfState: State<string> }) {
     const assignments = props.assignments;
 
     const [desiredPercentageStr, setDesiredPercentageStr] = useState("");
-    const [outOfStr, setOutOfStr] = props.outOfState;
+    const [outOfStr, setOutOfStr]: State<string> = props.outOfState;
+    const outOf: bigDecimal = useMemo(() => {
+        if (isNaN(parseFloat(outOfStr))) {
+            return DEFAULT_OUT_OF;
+        }
+        let converted = bd(parseFloat(outOfStr));
+        if (converted != null) {
+            return converted;
+        }
+        return DEFAULT_OUT_OF;
+    }, [outOfStr]);
 
     const result = useMemo(() =>
-            PercentageResult.create(assignments, desiredPercentageStr, bd(outOfStr)),
-        [assignments, desiredPercentageStr, outOfStr]
+            PercentageResult.create(assignments, desiredPercentageStr, outOf),
+        [assignments, desiredPercentageStr, outOf]
     );
 
     if (result instanceof AlreadyFinalPercentageResult) {
@@ -65,7 +76,7 @@ export default function PercentageTab(props: { assignments: Assignment[], outOfS
                                        }}
                                        maxLength={5}
                                        type="numeric"
-                                       placeholder={DEFAULT_OUT_OF.toString()}
+                                       placeholder={DEFAULT_OUT_OF.getValue()}
                                        onChange={(event: InputChangeEvent) =>
                                            setOutOfStr(event.target.value.trim())
                                        }/>

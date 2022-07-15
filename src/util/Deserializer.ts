@@ -1,4 +1,4 @@
-import {Assignment, numOrPercToStr, StubAssignment, ValidAssignment} from "../model/Assignment";
+import {Assignment, numOrPercToBd, StubAssignment, ValidAssignment} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
 import {compressToBase64, decompressFromBase64} from "@amoutonbrady/lz-string"
@@ -56,10 +56,10 @@ function parseAssignment(thing: any): Assignment | null {
     switch (thing.clazz) {
         case "ValidAssignment":
             if (thing.hasOwnProperty("scoreStr")) {
-                let weight = numOrPercToStr(thing.weightStr);
+                let weight = numOrPercToBd(thing.weightStr);
                 let score: Score | null = Score.fromString(thing.scoreStr);
-                if (score && !isNaN(weight)) {
-                    return new ValidAssignment(uuidv4(), thing.name, score, weight, thing.weightStr);
+                if (score && weight != null) {
+                    return new ValidAssignment(uuidv4(), thing.name, score, thing.weightStr);
                 }
                 return new StubAssignment(uuidv4(), thing.name, thing.scoreStr, thing.weightStr);
             } else { // template

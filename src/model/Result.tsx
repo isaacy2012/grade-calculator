@@ -18,7 +18,7 @@ export function nToPercStr (num: number): string {
 }
 
 export function bdToPercStr(bdec: bigDecimal): string {
-    return formatBd(bdec.multiply(bd("10")));
+    return formatBd(bdec.multiply(HUND));
 }
 
 export function formatBd(bdec: bigDecimal): string {
@@ -30,15 +30,17 @@ export interface Result {
     message(): ReactNode
 }
 
-export function bd(str: string): bigDecimal {
-    return new bigDecimal(str)
+export function bd(str: string | number): bigDecimal {
+    return new bigDecimal(str);
 }
 
-const ZERO = bd("0")
+export const ZERO = bd("0");
+export const ONE = bd("1");
+export const HUND = bd("100");
 
 export function create(
     assignments: Assignment[],
-    threshNum: bigDecimal,
+    threshNum: bigDecimal | null,
     outOf: bigDecimal,
     alreadyFinalResultFactory: (totalAchieved: bigDecimal) => Result,
     invalidInputResultFactory: () => Result,
@@ -49,14 +51,19 @@ export function create(
     if (!assignments.every(it => it instanceof ValidAssignment)) {
         return new InvalidMessageResult(<span>You haven't filled in all the assignments.</span>);
     } else {
-        let totalWeight = assignments.map((it: Assignment) => (bd((it as ValidAssignment).weightStr!)))
+        if (threshNum == null) {
+            return invalidInputResultFactory();
+        }
+        let totalWeight = assignments.map((it: Assignment) => ((it as ValidAssignment).getWeight()))
             .reduce((prev: bigDecimal, it: bigDecimal) => prev.add(it), bd("0"));
+        console.log("total weight: " + totalWeight.getValue());
         let totalAchieved = assignments.reduce((prev: bigDecimal, it: Assignment) =>
-            prev.add((it as ValidAssignment).score.calc().multiply(bd((it as ValidAssignment).weightStr))), bd("0")
+            prev.add((it as ValidAssignment).score.calc().multiply((it as ValidAssignment).getWeight())), bd("0")
         );
+        console.log("total achieved: " + totalAchieved.getValue());
         let totalWeightLeft = bd("1").subtract(totalWeight);
         if (totalWeightLeft.compareTo(ZERO) < 0) {
-            let percentage = formatBd((bd("100").subtract(totalWeightLeft.multiply(bd("100")))));
+            let percentage = formatBd((HUND.subtract(totalWeightLeft.multiply(HUND))));
             return new InvalidMessageResult(
                 <span>{HMM} it looks like you've already completed <b>{percentage}%</b> of the course.</span>
             );
@@ -66,10 +73,11 @@ export function create(
         let theoreticalMaximum = totalAchieved.add(totalWeightLeft);
         let requiredAmount = threshNum.subtract(totalAchieved);
         let requiredPercentage = requiredAmount.divide(totalWeightLeft, 10);
+        console.log("required percentage: " + requiredPercentage.getValue() + " , out of " + outOf.getValue())
         let requiredAchieved = requiredPercentage.multiply(outOf);
         if (requiredPercentage.compareTo(ZERO) < 0) {
             return alreadyReachedResultFactory(totalAchieved)
-        } else if (requiredPercentage.compareTo(ZERO) > 0) {
+        } else if (requiredPercentage.compareTo(ONE) > 0) {
             return cantReachResultFactory(requiredPercentage, requiredAchieved, theoreticalMaximum)
         } else {
             return okResultFactory(requiredPercentage, requiredAchieved, totalWeightLeft)

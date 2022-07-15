@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
-import {Assignment} from "./Assignment";
-import {bd, bdToPercStr, create, HMM, OkResult, PRECISION, Result} from "./Result";
+import {Assignment, numOrPercToBd} from "./Assignment";
+import {bdToPercStr, create, HMM, OkResult, Result} from "./Result";
 import bigDecimal from "js-big-decimal";
 
 export abstract class PercentageResult implements Result {
@@ -9,7 +9,7 @@ export abstract class PercentageResult implements Result {
     static create(assignments: Assignment[], threshStr: string, outOf: bigDecimal): Result {
         return create(
             assignments,
-            bd(threshStr).divide(bd("100.0"), PRECISION),
+            numOrPercToBd(threshStr),
             outOf,
             (totalAchieved) => new AlreadyFinalPercentageResult(totalAchieved),
             () => new InvalidPercentageResult(

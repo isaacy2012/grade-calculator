@@ -1,6 +1,6 @@
 import {fractionRegex, numberRegex, percentageRegex} from "./Regex";
 import bigDecimal from "js-big-decimal";
-import {formatBd} from "./Result";
+import {bd, formatBd, HUND} from "./Result";
 
 export abstract class Score {
     readonly str: string;
@@ -47,8 +47,8 @@ class FractionScore extends Score {
         if (splits.length !== 2) {
             throw new Error("Invalid FractionScore string");
         }
-        let achieved = new bigDecimal(splits[0]);
-        let outOf = new bigDecimal(splits[1]);
+        let achieved = bd(splits[0]);
+        let outOf = bd(splits[1]);
         return new FractionScore(str, achieved, outOf);
     }
 
@@ -59,8 +59,8 @@ class FractionScore extends Score {
     equals(other: Score | null): boolean {
         if (other instanceof FractionScore) {
             return super.equals(other)
-                && this.achieved === other.achieved
-                && this.outOf === other.outOf;
+                && this.achieved.compareTo(other.achieved) === 0
+                && this.outOf.compareTo(other.outOf) === 0;
         }
         return false;
     }
@@ -84,9 +84,9 @@ class PercentageScore extends Score {
 
     static fromString(str: string): PercentageScore | null {
         if (numberRegex.test(str)) {
-            return new PercentageScore(str, new bigDecimal(str).divide(new bigDecimal("100"), 10));
+            return new PercentageScore(str, bd(str).divide(HUND, 10));
         } else if (percentageRegex.test(str)) {
-            return new PercentageScore(str, new bigDecimal(str.substr(0, str.length - 1)).divide(new bigDecimal("100"), 10));
+            return new PercentageScore(str, bd(str.substr(0, str.length - 1)).divide(HUND, 10));
         }
         return null;
     }
@@ -98,7 +98,7 @@ class PercentageScore extends Score {
     equals(other: Score | null): boolean {
         if (other instanceof PercentageScore) {
             return super.equals(other)
-                && this.percentage === other.percentage;
+                && this.percentage.compareTo(other.percentage) === 0;
         }
         return false;
     }

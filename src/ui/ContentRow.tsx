@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import React, {useEffect, useState} from "react";
-import {Assignment, numOrPercToStr} from "../model/Assignment";
+import {Assignment, numOrPercToBd} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {SpacerDiv} from "./SpacerDiv";
 import {FlexChild6, FlexDiv} from "./Flex";
 import {InputChangeEvent, StyledInput} from "./StyledInput";
 import { IconButton } from "./IconButton";
 import { IoCloseOutline, IoDuplicateSharp } from "react-icons/io5";
+import {bd} from "../model/Result";
 
 const FirstContentCol = styled.p`
   text-align: start;
@@ -74,6 +75,14 @@ export default function ContentRow(
         }
     }, [onClick, nameStr, scoreStr, weightStr, onChange, assignmentUUID])
 
+    function weightStrValid(): boolean {
+        let weight = numOrPercToBd(weightStr);
+        if (weight == null) {
+            return false;
+        }
+        return weight.compareTo(bd("1")) < 1
+    }
+
     return (
         <FlexDiv>
             <SpacerDiv>
@@ -96,6 +105,17 @@ export default function ContentRow(
                     </FirstContentCol>
                     <ContentCol>
                         <Input
+                            value={weightStr}
+                            placeholder={"Overall Weight"}
+                            accepted={weightStrValid()}
+                            onFocus={props.onClick}
+                            empty={weightStr.length === 0}
+                            shouldUnderline={props.onClick === undefined}
+                            onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
+                        />
+                    </ContentCol>
+                    <LastContentCol>
+                        <RightInput
                             value={scoreStr}
                             placeholder={"Score Achieved"}
                             accepted={Score.fromString(scoreStr) !== null}
@@ -103,17 +123,6 @@ export default function ContentRow(
                             empty={scoreStr.length === 0}
                             shouldUnderline={props.onClick === undefined}
                             onChange={(event: InputChangeEvent) => setScoreStr(event.target.value.trim())}
-                        />
-                    </ContentCol>
-                    <LastContentCol>
-                        <RightInput
-                            value={weightStr}
-                            placeholder={"Overall Weight"}
-                            accepted={numOrPercToStr(weightStr) <= 1}
-                            onFocus={props.onClick}
-                            empty={weightStr.length === 0}
-                            shouldUnderline={props.onClick === undefined}
-                            onChange={(event: InputChangeEvent) => setWeightStr(event.target.value.trim())}
                         />
                     </LastContentCol>
                 </ContentRowContainer>

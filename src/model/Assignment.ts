@@ -1,16 +1,17 @@
 import {Score} from "./Score";
 import {v4 as uuidv4} from "uuid";
 import {numberRegex, percentageRegex} from "./Regex";
+import bigDecimal from "js-big-decimal";
+import {bd, HUND, PRECISION} from "./Result";
 
 
-export function numOrPercToStr(str: string): number {
+export function numOrPercToBd(str: string): bigDecimal | null {
     if (percentageRegex.test(str)) {
-        return parseFloat(str.substr(0, str.length - 1)) / 100;
+        return bd(str.substr(0, str.length - 1)).divide(HUND, PRECISION);
     } else if (numberRegex.test(str)) {
-        return parseFloat(str) / 100;
-    } else {
-        return NaN;
+        return bd(str).divide(HUND, PRECISION);
     }
+    return null;
 }
 
 export function numToStr(num: number): string {
@@ -37,9 +38,9 @@ export abstract class Assignment {
 
     static fromStrings(nameStr: string, scoreStr: string, weightStr: string, uuid: string): Assignment {
         let score = Score.fromString(scoreStr)
-        let weight = numOrPercToStr(weightStr);
-        if (nameStr.trim().length !== 0 && score && !isNaN(weight)) {
-            return new ValidAssignment(uuid, nameStr, score, weight, weightStr);
+        let weight = numOrPercToBd(weightStr);
+        if (nameStr.trim().length !== 0 && score && weight != null) {
+            return new ValidAssignment(uuid, nameStr, score, weightStr);
         }
         return new StubAssignment(uuid, nameStr, scoreStr, weightStr);
     }
@@ -60,7 +61,7 @@ export abstract class SerializableAssignment extends Assignment {
 export class ValidAssignment extends SerializableAssignment {
     readonly name: string;
     readonly score: Score;
-    readonly weight: number;
+    readonly weight: bigDecimal;
     readonly weightStr: string;
 
     getNameStr(): string {
@@ -75,11 +76,15 @@ export class ValidAssignment extends SerializableAssignment {
         return this.weightStr;
     }
 
-    constructor(uuid: string, name: string, score: Score, weight: number, weightStr: string) {
+    getWeight(): bigDecimal {
+        return this.weight;
+    }
+
+    constructor(uuid: string, name: string, score: Score, weightStr: string) {
         super(uuid);
         this.name = name;
         this.score = score;
-        this.weight = weight;
+        this.weight = numOrPercToBd(weightStr)!;
         this.weightStr = weightStr;
     }
 
@@ -87,17 +92,17 @@ export class ValidAssignment extends SerializableAssignment {
         if (other instanceof ValidAssignment) {
             return this.name === other.name
                 && this.score.equals(other.score)
-                && this.weight === other.weight;
+                && this.weightStr === other.weightStr;
         }
         return false;
     }
 
     clone(): Assignment {
-        return new ValidAssignment(uuidv4(), this.name, this.score, this.weight, this.weightStr);
+        return new ValidAssignment(uuidv4(), this.name, this.score, this.weightStr);
     }
 
     toString(): string {
-        return "name: " + this.name + ", score: " + this.score + ", weight: " + this.weight;
+        return "name: " + this.name + ", score: " + this.score + ", weight: " + this.weightStr;
     }
 
     fullJSON(): any {

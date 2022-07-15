@@ -34,13 +34,13 @@ export abstract class GradeResolver {
         throw Error()
     }
 
-    gradeStrToNum(str: string): bigDecimal {
+    gradeStrToNum(str: string): bigDecimal | null {
         for (let grade of this.grades) {
             if (this.caseSensitive ? str === grade.str : str.toUpperCase() === grade.str.toUpperCase()) {
                 return grade.minimumBoundary;
             }
         }
-        throw new Error("No grade matches " + str + "!");
+        return null;
     }
 
 }
