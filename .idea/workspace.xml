@@ -3,13 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constant/Constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constant/Constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/GradeResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GradeResult.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/PercentageResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PercentageResult.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Regex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Regex.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Assignment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Assignment.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Result.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Result.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/output/PercentageTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/output/PercentageTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Score.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Score.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +102,7 @@
       <workItem from="1657781271229" duration="3020000" />
       <workItem from="1657803831266" duration="2449000" />
       <workItem from="1657886798409" duration="251000" />
-      <workItem from="1657887056974" duration="5883000" />
+      <workItem from="1657887056974" duration="6318000" />
     </task>
     <servers />
   </component>

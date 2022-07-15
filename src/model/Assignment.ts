@@ -2,14 +2,14 @@ import {Score} from "./Score";
 import {v4 as uuidv4} from "uuid";
 import {numberRegex, percentageRegex} from "./Regex";
 import bigDecimal from "js-big-decimal";
-import {bd, HUND, PRECISION} from "./Result";
+import {bd, ONE_HUNDRED, PRECISION} from "./Result";
 
 
 export function numOrPercToBd(str: string): bigDecimal | null {
     if (percentageRegex.test(str)) {
-        return bd(str.substr(0, str.length - 1)).divide(HUND, PRECISION);
+        return bd(str.substr(0, str.length - 1)).divide(ONE_HUNDRED, PRECISION);
     } else if (numberRegex.test(str)) {
-        return bd(str).divide(HUND, PRECISION);
+        return bd(str).divide(ONE_HUNDRED, PRECISION);
     }
     return null;
 }

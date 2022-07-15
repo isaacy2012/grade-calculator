@@ -1,6 +1,6 @@
 import {fractionRegex, numberRegex, percentageRegex} from "./Regex";
 import bigDecimal from "js-big-decimal";
-import {bd, formatBd, HUND} from "./Result";
+import {bd, formatBd, ONE_HUNDRED, PRECISION} from "./Result";
 
 export abstract class Score {
     readonly str: string;
@@ -53,7 +53,7 @@ class FractionScore extends Score {
     }
 
     calc(): bigDecimal {
-        return this.achieved.divide(this.outOf, 10);
+        return this.achieved.divide(this.outOf, PRECISION);
     }
 
     equals(other: Score | null): boolean {
@@ -84,9 +84,9 @@ class PercentageScore extends Score {
 
     static fromString(str: string): PercentageScore | null {
         if (numberRegex.test(str)) {
-            return new PercentageScore(str, bd(str).divide(HUND, 10));
+            return new PercentageScore(str, bd(str).divide(ONE_HUNDRED, PRECISION));
         } else if (percentageRegex.test(str)) {
-            return new PercentageScore(str, bd(str.substr(0, str.length - 1)).divide(HUND, 10));
+            return new PercentageScore(str, bd(str.substr(0, str.length - 1)).divide(ONE_HUNDRED, PRECISION));
         }
         return null;
     }

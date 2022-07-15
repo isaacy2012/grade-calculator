@@ -20,7 +20,7 @@ export function nToPercStr (num: number): string {
 }
 
 export function bdToPercStr(bdec: bigDecimal): string {
-    return formatBd(bdec.multiply(HUND));
+    return formatBd(bdec.multiply(ONE_HUNDRED));
 }
 
 export function formatBd(bdec: bigDecimal): string {
@@ -57,7 +57,7 @@ export function bd(str: string | number): bigDecimal {
 
 export const ZERO = bd("0");
 export const ONE = bd("1");
-export const HUND = bd("100");
+export const ONE_HUNDRED = bd("100");
 
 export function create(
     assignments: Assignment[],
@@ -82,7 +82,7 @@ export function create(
         );
         let totalWeightLeft = bd("1").subtract(totalWeight);
         if (totalWeightLeft.compareTo(ZERO) < 0) {
-            let percentage = formatBd((HUND.subtract(totalWeightLeft.multiply(HUND))));
+            let percentage = formatBd((ONE_HUNDRED.subtract(totalWeightLeft.multiply(ONE_HUNDRED))));
             return new InvalidMessageResult(
                 <span>{HMM} it looks like you've already completed <b>{percentage}%</b> of the course.</span>
             );
@@ -91,7 +91,7 @@ export function create(
         }
         let theoreticalMaximum = totalAchieved.add(totalWeightLeft);
         let requiredAmount = threshNum.subtract(totalAchieved);
-        let requiredPercentage = requiredAmount.divide(totalWeightLeft, 10);
+        let requiredPercentage = requiredAmount.divide(totalWeightLeft, PRECISION);
         let requiredAchieved = outOf ? formatBd(requiredPercentage.multiply(outOf)) : DEFAULT_OUT_OF;
         if (requiredPercentage.compareTo(ZERO) <= 0) {
             return alreadyReachedResultFactory(totalAchieved)
