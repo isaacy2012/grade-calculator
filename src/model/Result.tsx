@@ -56,11 +56,9 @@ export function create(
         }
         let totalWeight = assignments.map((it: Assignment) => ((it as ValidAssignment).getWeight()))
             .reduce((prev: bigDecimal, it: bigDecimal) => prev.add(it), bd("0"));
-        console.log("total weight: " + totalWeight.getValue());
         let totalAchieved = assignments.reduce((prev: bigDecimal, it: Assignment) =>
             prev.add((it as ValidAssignment).score.calc().multiply((it as ValidAssignment).getWeight())), bd("0")
         );
-        console.log("total achieved: " + totalAchieved.getValue());
         let totalWeightLeft = bd("1").subtract(totalWeight);
         if (totalWeightLeft.compareTo(ZERO) < 0) {
             let percentage = formatBd((HUND.subtract(totalWeightLeft.multiply(HUND))));
@@ -73,9 +71,8 @@ export function create(
         let theoreticalMaximum = totalAchieved.add(totalWeightLeft);
         let requiredAmount = threshNum.subtract(totalAchieved);
         let requiredPercentage = requiredAmount.divide(totalWeightLeft, 10);
-        console.log("required percentage: " + requiredPercentage.getValue() + " , out of " + outOf.getValue())
         let requiredAchieved = requiredPercentage.multiply(outOf);
-        if (requiredPercentage.compareTo(ZERO) < 0) {
+        if (requiredPercentage.compareTo(ZERO) <= 0) {
             return alreadyReachedResultFactory(totalAchieved)
         } else if (requiredPercentage.compareTo(ONE) > 0) {
             return cantReachResultFactory(requiredPercentage, requiredAchieved, theoreticalMaximum)
