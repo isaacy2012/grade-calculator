@@ -1,16 +1,37 @@
 import {Assignment, numOrPercToBd, StubAssignment, ValidAssignment} from "../model/Assignment";
 import {Score} from "../model/Score";
 import {v4 as uuidv4} from "uuid";
-import {compressToBase64, decompressFromBase64} from "@amoutonbrady/lz-string"
+import { compressToBase64, decompressFromBase64 } from "@amoutonbrady/lz-string"
+
+
+/**
+ * Trim the end of a string of a given character
+ * @param {string} str - The string to trim.
+ * @param {string} ch - The character to trim from the end of the string.
+ * @returns the string with the trailing characters removed.
+ */
+function trimEnd(str: string, ch: string): string {
+    let end = str.length;
+    while(end > 0 && str[end - 1] === ch)
+        --end;
+
+    return (end < str.length) ? str.substring(0, end) : str;
+}
 
 export function writeCompressedJSON(title: string, gradeResolverId: string | null, assignments: Assignment[]) {
-    return compressToBase64(JSON.stringify(
+    let compressed = compressToBase64(JSON.stringify(
         {
             title: title,
             gradeResolverId: gradeResolverId,
             assignments: assignments
         }
-    ))
+    ));
+    // compressToBase64 adds some number of '=' at the end of the string, which is not stylish for URLs, so we remove it.
+    // Decompression without the '=' works fine.
+    if (compressed.endsWith("=")) {
+        compressed = trimEnd(compressed, "=");
+    }
+    return compressed;
 }
 
 export function parseCompressedJSON(json: string): {title: string, gradeResolverId: string, assignments: Assignment[]} | null {
