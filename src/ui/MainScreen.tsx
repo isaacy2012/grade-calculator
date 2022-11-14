@@ -188,7 +188,7 @@ export default function MainScreen() {
     return (
         <Fragment>
             <Container bottom="50px">
-                <InvisibleLink href={process.env.PUBLIC_URL}><Title>Reverse Grade Calculator</Title></InvisibleLink>
+                <InvisibleLink href="/"><Title>Reverse Grade Calculator</Title></InvisibleLink>
                 <Instruction>Enter your assignment information, then choose whether you want to reach
                     a <b>percentage</b> or <b>grade</b>.</Instruction>
             </Container>
