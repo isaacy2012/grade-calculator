@@ -3,7 +3,8 @@ import {v4 as uuidv4} from "uuid";
 import {numberRegex, percentageRegex} from "./Regex";
 import bigDecimal from "js-big-decimal";
 import {bd, ONE_HUNDRED, PRECISION} from "./Result";
-
+import { JsonFieldResolver } from "../util/JsonFields";
+import { JsonObject, shallowPrune } from "../util/Deserializer";
 
 export function numOrPercToBd(str: string): bigDecimal | null {
     if (percentageRegex.test(str)) {
@@ -53,19 +54,19 @@ export abstract class Assignment {
 
 export abstract class SerializableAssignment extends Assignment {
 
-    abstract fullJSON(): any
+    abstract fullJSON(fieldResolver: JsonFieldResolver): JsonObject
 
-    abstract templateJSON(): any
+    abstract templateJSON(fieldResolver: JsonFieldResolver): JsonObject
 }
 
 export class ValidAssignment extends SerializableAssignment {
-    readonly name: string;
+    readonly nameStr: string;
     readonly score: Score;
     readonly weight: bigDecimal;
     readonly weightStr: string;
 
     getNameStr(): string {
-        return this.name;
+        return this.nameStr;
     }
 
     getScoreStr(): string {
@@ -82,7 +83,7 @@ export class ValidAssignment extends SerializableAssignment {
 
     constructor(uuid: string, name: string, score: Score, weightStr: string) {
         super(uuid);
-        this.name = name;
+        this.nameStr = name;
         this.score = score;
         this.weight = numOrPercToBd(weightStr)!;
         this.weightStr = weightStr;
@@ -90,7 +91,7 @@ export class ValidAssignment extends SerializableAssignment {
 
     equals(other: Assignment): boolean {
         if (other instanceof ValidAssignment) {
-            return this.name === other.name
+            return this.nameStr === other.nameStr
                 && this.score.equals(other.score)
                 && this.weightStr === other.weightStr;
         }
@@ -98,28 +99,28 @@ export class ValidAssignment extends SerializableAssignment {
     }
 
     clone(): Assignment {
-        return new ValidAssignment(uuidv4(), this.name, this.score, this.weightStr);
+        return new ValidAssignment(uuidv4(), this.nameStr, this.score, this.weightStr);
     }
 
     toString(): string {
-        return "name: " + this.name + ", score: " + this.score + ", weight: " + this.weightStr;
+        return "name: " + this.nameStr + ", score: " + this.score + ", weight: " + this.weightStr;
     }
 
-    fullJSON(): any {
-        return {
-            clazz: "ValidAssignment",
-            name: this.name,
-            scoreStr: this.score.str,
-            weightStr: this.weightStr,
-        };
+    fullJSON(fieldResolver: JsonFieldResolver): JsonObject {
+        return shallowPrune({
+            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("ValidAssignment"),
+            [fieldResolver.keyFor("Name")]: this.nameStr,
+            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
+            [fieldResolver.keyFor("ScoreStr")]: this.score.str,
+        });
     }
 
-    templateJSON(): any {
-        return {
-            clazz: "ValidAssignment",
-            name: this.name,
-            weightStr: this.weightStr,
-        };
+    templateJSON(fieldResolver: JsonFieldResolver): JsonObject {
+        return shallowPrune({
+            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("ValidAssignment"),
+            [fieldResolver.keyFor("Name")]: this.nameStr,
+            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
+        });
     }
 
 }
@@ -162,21 +163,21 @@ export class StubAssignment extends SerializableAssignment {
         return false;
     }
 
-    fullJSON(): any {
-        return {
-            clazz: "StubAssignment",
-            nameStr: this.nameStr,
-            scoreStr: this.scoreStr,
-            weightStr: this.weightStr,
-        };
+    fullJSON(fieldResolver: JsonFieldResolver): JsonObject {
+        return shallowPrune({
+            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("StubAssignment"),
+            [fieldResolver.keyFor("NameStr")]: this.nameStr,
+            [fieldResolver.keyFor("ScoreStr")]: this.scoreStr,
+            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
+        });
     }
 
-    templateJSON(): any {
-        return {
-            clazz: "StubAssignment",
-            nameStr: this.nameStr,
-            weightStr: this.weightStr,
-        };
+    templateJSON(fieldResolver: JsonFieldResolver): JsonObject {
+        return shallowPrune({
+            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("StubAssignment"),
+            [fieldResolver.keyFor("NameStr")]: this.nameStr,
+            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
+        });
     }
 }
 

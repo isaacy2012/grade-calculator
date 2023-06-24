@@ -12,12 +12,13 @@ import Tab, {TextTabIcon} from "./Tab";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
 import {useHistory, useLocation} from "react-router-dom";
-import {parseCompressedJSON, writeCompressedJSON} from "../util/Deserializer";
+import { parseCompressedJSON, writeCompressedJSON } from "../util/Deserializer";
 import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
 import {useIdleTimer} from "react-idle-timer";
 import {GRADE_RESOLVERS_MAP, LabelToGradeResolver} from "../model/grade/GradeResolvers";
+import { getSavedQueryStringAndResolver } from "../util/JsonFields";
 
 
 const TableHeader = styled(StyledInput)`
@@ -78,18 +79,19 @@ export default function MainScreen() {
 
     const history = useHistory();
 
-    let queryString = useQuery().get("saved");
+    const [queryString, jsonFieldResolver] = getSavedQueryStringAndResolver(useQuery());
     let fillSavedAssignments = useCallback(() => {
-        let gradeResolverId = currentGradeResolverPair?.value?.id;
-        let encodedCurrent = writeCompressedJSON(
-                title,
-                gradeResolverId !== undefined ? gradeResolverId : null,
-                assignments
-                    .filter(it => it instanceof SerializableAssignment)
-                    .map((it) => (it as SerializableAssignment).fullJSON())
-            );
+        const gradeResolverId = currentGradeResolverPair?.value?.id;
+        const encodedCurrent = writeCompressedJSON(
+            title,
+            gradeResolverId !== undefined ? gradeResolverId : null,
+            assignments
+                .filter(it => it instanceof SerializableAssignment)
+                .map((it) => (it as SerializableAssignment).fullJSON(jsonFieldResolver)),
+            jsonFieldResolver
+        );
         if (queryString && queryString !== encodedCurrent) {
-            let loadedData = parseCompressedJSON(queryString);
+            const loadedData = parseCompressedJSON(queryString, jsonFieldResolver);
             if (loadedData == null) {
                 alert("Sorry, we were unable to load saved data.")
             } else {
@@ -107,7 +109,7 @@ export default function MainScreen() {
                 }
             }
         }
-    }, [assignments, currentGradeResolverPair, setCurrentGradeResolverPair, history, queryString, title])
+    }, [currentGradeResolverPair?.value?.id, title, assignments, jsonFieldResolver, queryString, setCurrentGradeResolverPair, history])
 
     useEffect(() => {
         if (!didLoad) {
@@ -126,17 +128,18 @@ export default function MainScreen() {
 
         let gradeResolverId = currentGradeResolverPair?.value?.id;
         let encodedCurrent = writeCompressedJSON(
-                title,
-                gradeResolverId !== undefined ? gradeResolverId : null,
-                assignments
-                    .filter(it => it instanceof SerializableAssignment)
-                    .map((it) => (it as SerializableAssignment).fullJSON())
-            );
+            title,
+            gradeResolverId !== undefined ? gradeResolverId : null,
+            assignments
+                .filter(it => it instanceof SerializableAssignment)
+                .map((it) => (it as SerializableAssignment).fullJSON(jsonFieldResolver)),
+            jsonFieldResolver
+        );
 
         if (queryString !== encodedCurrent) {
             // refresh
             let params = new URLSearchParams();
-            params.append("saved", encodedCurrent);
+            params.append("s", encodedCurrent);
             history.replace({search: params.toString()});
         }
     }
@@ -234,7 +237,7 @@ export default function MainScreen() {
                         <RiShareForward2Fill/> SHARE
                     </InvisibleButton>
                     {shareExpanded &&
-                    <ShareSheet title={title} gradeResolver={currentGradeResolverPair?.value} assignments={assignments.slice(0, -1)}/>}
+                    <ShareSheet title={title} gradeResolver={currentGradeResolverPair?.value} assignments={assignments.slice(0, -1)} jsonFieldResolver={jsonFieldResolver}/>}
                 </NoPaddingCard>
             </Container>
             {/*{assignments.map((value, index) => <div key={index}><p>{value instanceof SerializableAssignment ? "true" + JSON.stringify(value.fullJSON()) : JSON.stringify(value)}</p></div>)}*/}
