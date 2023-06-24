@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import {Assignment} from "../../model/Assignment";
 import Select, { components, createFilter } from 'react-select';
 import {GRADE_RESOLVERS, LabelToGradeResolver} from "../../model/grade/GradeResolvers";
@@ -19,8 +19,6 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
     const [desiredGradeStr, setDesiredGradeStr] = useState("");
     const [outOfStr, setOutOfStr] = props.outOfState;
     const [currentGradeResolverPair, setCurrentGradeResolverPair] = props.currentGradeResolverPairState;
-
-    const defaultFilter = createFilter({});
 
     const outOf: bigDecimal | null = useMemo(() => {
         if (isNaN(parseFloat(outOfStr))) {
