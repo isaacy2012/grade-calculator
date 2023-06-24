@@ -8,6 +8,7 @@ export class UoaGrades extends GradeResolver {
         super(
             "UOA",
             "University of Auckland",
+            ["uoa"],
             false,
             [
             new Grade("A+", bd("0.9")),

@@ -9,6 +9,7 @@ export class WaikatoGrades extends GradeResolver {
         super(
             "WAI",
             "University of Waikato",
+            ["wai", "uow"],
             false,
             [
                 new Grade("A+", bd("0.9")),

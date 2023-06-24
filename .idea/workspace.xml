@@ -3,9 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Assignment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Assignment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Result.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Result.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Score.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Score.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/Grade.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/Grade.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/AutGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/AutGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/MasseyGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/MasseyGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/OtagoGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/OtagoGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/UcGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/UcGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/UoaGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/UoaGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/VuwGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/VuwGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/grade/resolvers/WaikatoGrades.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/grade/resolvers/WaikatoGrades.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
