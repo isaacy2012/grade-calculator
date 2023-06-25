@@ -1,10 +1,18 @@
-type JsonField = "Title" | "GradeResolverId" | "Assignments" | "Clazz" | "NameStr" | "Name" | "WeightStr" | "ScoreStr"
+import { Parser } from "./parser/Parser";
+import { V2Parser } from "./parser/V2Parser";
+import { V1Parser } from "./parser/V1Parser";
+
+export enum JsonIntCode {
+    NoField = 0
+}
+export type JsonOptStr = string | JsonIntCode.NoField;
+export type JsonOptCompressed = string | number;
+
+type JsonField = "Title" | "GradeResolverId" | "Assignments" | "Clazz" | "NameStr" | "Name" | "WeightStr" | "ScoreStr" | "Clazzes"
 type ClazzKey = "ValidAssignment" | "StubAssignment"
 
 export interface JsonFieldResolver {
-    keyFor(key: JsonField): string
-    isValidClazz(clazzName: string): clazzName is ClazzKey
-    clazzFor(clazzName: ClazzKey): string | number
+    keyFor(key: JsonField): string | number
 }
 
 enum JsonFieldV1Enum {
@@ -20,15 +28,13 @@ enum JsonFieldV1Enum {
 }
 
 enum JsonFieldV2Enum {
-    Title = "",
-    GradeResolverId = "g",
-    Assignments = "a",
+    Title = 0,
+    GradeResolverId = 1,
+    Assignments = 2,
     // Inside Assignment
-    Clazz = "",
-    NameStr = "n",
-    Name = "n", // NameStr and Name are actually the same, but V1 differentiated them in Stub and Valid for no particular reason
-    WeightStr = "w",
-    ScoreStr = "s",
+    NameStr = 0,
+    WeightStr = 1,
+    ScoreStr = 2,
 }
 
 enum ClazzMappingsV1Enum {
@@ -36,53 +42,37 @@ enum ClazzMappingsV1Enum {
     StubAssignment = "StubAssignment",
 }
 
-enum ClazzMappingsV2Enum {
-    ValidAssignment = 1,
-    StubAssignment = 2,
-}
+export class JsonFieldV1Resolver implements JsonFieldResolver {
 
-const JsonFieldV1Resolver: JsonFieldResolver = {
-    keyFor(key: JsonField): string {
+    keyFor(key: keyof typeof JsonFieldV1Enum): string {
         return JsonFieldV1Enum[key];
-    },
-
-    isValidClazz(clazzName: string): clazzName is ClazzKey {
-        return clazzName in ClazzMappingsV1Enum
-    },
+    }
 
     clazzFor(clazzName: ClazzKey): string {
         return ClazzMappingsV1Enum[clazzName]
     }
 }
 
-const JsonFieldV2Resolver: JsonFieldResolver = {
-    keyFor(key: JsonField): string {
+export class JsonFieldV2Resolver implements JsonFieldResolver {
+
+    keyFor(key: keyof typeof JsonFieldV2Enum): number {
         return JsonFieldV2Enum[key];
-    },
-
-    isValidClazz(clazzName: string): clazzName is ClazzKey {
-        return clazzName in ClazzMappingsV2Enum
-    },
-
-    clazzFor(clazzName: ClazzKey): string | number {
-        return ClazzMappingsV2Enum[clazzName];
     }
+
 }
 
-const JsonFieldLatestResolver = JsonFieldV2Resolver;
-
-export function getSavedQueryStringAndResolver(urlSearchParams: URLSearchParams): [string | null, JsonFieldResolver] {
+export function getSavedQueryStringAndParser(urlSearchParams: URLSearchParams): [string | null, Parser] {
     const v2Params = urlSearchParams.get("s");
     if (v2Params != null) {
         console.log("returned v2")
-        return [v2Params, JsonFieldV2Resolver];
+        return [v2Params, V2Parser.getInstance()];
     }
 
     const v1Params = urlSearchParams.get("saved");
     if (v1Params != null) {
         console.log("returned v1")
-        return [v1Params, JsonFieldV1Resolver];
+        return [v1Params, V1Parser.getInstance()];
     }
 
-    return [null, JsonFieldLatestResolver];
+    return [null, V2Parser.getInstance()];
 }

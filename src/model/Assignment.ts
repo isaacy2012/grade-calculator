@@ -3,8 +3,8 @@ import {v4 as uuidv4} from "uuid";
 import {numberRegex, percentageRegex} from "./Regex";
 import bigDecimal from "js-big-decimal";
 import {bd, ONE_HUNDRED, PRECISION} from "./Result";
-import { JsonFieldResolver } from "../util/JsonFields";
-import { JsonObject, shallowPrune } from "../util/Deserializer";
+import { JsonIntCode, JsonOptStr} from "../util/JsonFields";
+import { orNoField } from "../util/Serializer";
 
 export function numOrPercToBd(str: string): bigDecimal | null {
     if (percentageRegex.test(str)) {
@@ -54,9 +54,9 @@ export abstract class Assignment {
 
 export abstract class SerializableAssignment extends Assignment {
 
-    abstract fullJSON(fieldResolver: JsonFieldResolver): JsonObject
+    abstract fullJSON(): [JsonOptStr, JsonOptStr, JsonOptStr]
 
-    abstract templateJSON(fieldResolver: JsonFieldResolver): JsonObject
+    abstract templateJSON(): [JsonOptStr, JsonOptStr, JsonIntCode.NoField]
 }
 
 export class ValidAssignment extends SerializableAssignment {
@@ -106,21 +106,20 @@ export class ValidAssignment extends SerializableAssignment {
         return "name: " + this.nameStr + ", score: " + this.score + ", weight: " + this.weightStr;
     }
 
-    fullJSON(fieldResolver: JsonFieldResolver): JsonObject {
-        return shallowPrune({
-            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("ValidAssignment"),
-            [fieldResolver.keyFor("Name")]: this.nameStr,
-            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
-            [fieldResolver.keyFor("ScoreStr")]: this.score.str,
-        });
+    fullJSON(): [JsonOptStr, JsonOptStr, JsonOptStr] {
+        return [
+            orNoField(this.nameStr),
+            orNoField(this.weightStr),
+            orNoField(this.score.str),
+        ];
     }
 
-    templateJSON(fieldResolver: JsonFieldResolver): JsonObject {
-        return shallowPrune({
-            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("ValidAssignment"),
-            [fieldResolver.keyFor("Name")]: this.nameStr,
-            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
-        });
+    templateJSON(): [JsonOptStr, JsonOptStr, JsonIntCode.NoField] {
+        return [
+            orNoField(this.nameStr),
+            orNoField(this.weightStr),
+            JsonIntCode.NoField
+        ];
     }
 
 }
@@ -163,21 +162,20 @@ export class StubAssignment extends SerializableAssignment {
         return false;
     }
 
-    fullJSON(fieldResolver: JsonFieldResolver): JsonObject {
-        return shallowPrune({
-            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("StubAssignment"),
-            [fieldResolver.keyFor("NameStr")]: this.nameStr,
-            [fieldResolver.keyFor("ScoreStr")]: this.scoreStr,
-            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
-        });
+    fullJSON(): [JsonOptStr, JsonOptStr, JsonOptStr] {
+        return [
+            orNoField(this.nameStr),
+            orNoField(this.weightStr),
+            orNoField(this.scoreStr),
+        ];
     }
 
-    templateJSON(fieldResolver: JsonFieldResolver): JsonObject {
-        return shallowPrune({
-            [fieldResolver.keyFor("Clazz")]: fieldResolver.clazzFor("StubAssignment"),
-            [fieldResolver.keyFor("NameStr")]: this.nameStr,
-            [fieldResolver.keyFor("WeightStr")]: this.weightStr,
-        });
+    templateJSON(): [JsonOptStr, JsonOptStr, JsonIntCode.NoField] {
+        return [
+            orNoField(this.nameStr),
+            orNoField(this.weightStr),
+            JsonIntCode.NoField
+        ];
     }
 }
 
