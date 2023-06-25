@@ -1,4 +1,4 @@
-import { Parser } from "./parser/Parser";
+import { getLatestParser, Parser } from "./parser/Parser";
 import { V2Parser } from "./parser/V2Parser";
 import { V1Parser } from "./parser/V1Parser";
 
@@ -64,15 +64,13 @@ export class JsonFieldV2Resolver implements JsonFieldResolver {
 export function getSavedQueryStringAndParser(urlSearchParams: URLSearchParams): [string | null, Parser] {
     const v2Params = urlSearchParams.get("s");
     if (v2Params != null) {
-        console.log("returned v2")
         return [v2Params, V2Parser.getInstance()];
     }
 
     const v1Params = urlSearchParams.get("saved");
     if (v1Params != null) {
-        console.log("returned v1")
         return [v1Params, V1Parser.getInstance()];
     }
 
-    return [null, V2Parser.getInstance()];
+    return [null, getLatestParser()];
 }

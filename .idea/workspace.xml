@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tests/parser.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tests/serializer.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/Serializer.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/parser/Parser.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/parser/V1Parser.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/parser/V2Parser.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Assignment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Assignment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/MainScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ShareSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ShareSheet.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Deserializer.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/JsonFields.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonFields.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Serializer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Serializer.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,21 +29,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/isaacyoung/SourceTree/reverse-grade-calculator/src/tests",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs.jest.jest_package": "/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/react-scripts",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/src/tests&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/react-scripts&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/tests" />

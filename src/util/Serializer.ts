@@ -2,21 +2,6 @@ import { SerializableAssignment } from "../model/Assignment";
 import { compressToBase64 } from "@amoutonbrady/lz-string"
 import { JsonIntCode, JsonOptCompressed, JsonOptStr } from "./JsonFields";
 
-type JsonValue = string | boolean | number | null | JsonValue[] | { [key: string]: JsonValue };
-export type JsonObject = Record<string, JsonValue> | JsonObject[];
-
-export function shallowPrune(obj: JsonObject): JsonObject {
-    if (Array.isArray(obj)) return obj;
-
-    const copy = { ...obj };
-    for (const key in copy) {
-        if (copy[key] === "" || copy[key] == null || copy[key] === []) {
-            delete copy[key];
-        }
-    }
-    return copy;
-}
-
 export function orNoField<T>(t: T | null): T | JsonIntCode.NoField {
     if (typeof t == "string" && t === "") return JsonIntCode.NoField;
     if (t == null) return JsonIntCode.NoField;
