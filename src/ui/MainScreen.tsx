@@ -12,12 +12,13 @@ import Tab, {TextTabIcon} from "./Tab";
 import PercentageTab from "./output/PercentageTab";
 import GradeTab from "./output/GradeTab";
 import {useHistory, useLocation} from "react-router-dom";
-import {parseCompressedJSON, writeCompressedJSON} from "../util/Deserializer";
+import { writeCompressedJSON } from "../util/Serializer";
 import {NoPaddingCard} from "./Card";
 import {RiShareForward2Fill} from "react-icons/ri";
 import ShareSheet from "./ShareSheet";
 import {useIdleTimer} from "react-idle-timer";
 import {GRADE_RESOLVERS_MAP, LabelToGradeResolver} from "../model/grade/GradeResolvers";
+import { getSavedQueryStringAndParser } from "../util/JsonFields";
 
 
 const TableHeader = styled(StyledInput)`
@@ -78,18 +79,19 @@ export default function MainScreen() {
 
     const history = useHistory();
 
-    let queryString = useQuery().get("saved");
+    const [queryString, parser] = getSavedQueryStringAndParser(useQuery());
     let fillSavedAssignments = useCallback(() => {
-        let gradeResolverId = currentGradeResolverPair?.value?.id;
-        let encodedCurrent = writeCompressedJSON(
-                title,
-                gradeResolverId !== undefined ? gradeResolverId : null,
-                assignments
-                    .filter(it => it instanceof SerializableAssignment)
-                    .map((it) => (it as SerializableAssignment).fullJSON())
-            );
+        const gradeResolverId = currentGradeResolverPair?.value?.id;
+        const encodedCurrent = writeCompressedJSON(
+            title,
+            gradeResolverId !== undefined ? gradeResolverId : null,
+            assignments
+                .filter(it => it instanceof SerializableAssignment)
+                .map((it) => (it as SerializableAssignment)),
+            it => it.fullJSON()
+        );
         if (queryString && queryString !== encodedCurrent) {
-            let loadedData = parseCompressedJSON(queryString);
+            const loadedData = parser.parseCompressedJSON(queryString);
             if (loadedData == null) {
                 alert("Sorry, we were unable to load saved data.")
             } else {
@@ -98,16 +100,19 @@ export default function MainScreen() {
                     ...loadedData.assignments,
                     Assignment.ofAdd()
                 ]);
-                let gradeResolver = GRADE_RESOLVERS_MAP.get(loadedData.gradeResolverId);
-                if (gradeResolver !== undefined) {
-                    setCurrentGradeResolverPair({label: gradeResolver.value.name, value: gradeResolver.value});
-                } else {
-                    let params = new URLSearchParams();
-                    history.replace({search: params.toString()});
+                const gradeResolverId = loadedData.gradeResolverId;
+                if (gradeResolverId != null) {
+                    let gradeResolver = GRADE_RESOLVERS_MAP.get(gradeResolverId);
+                    if (gradeResolver != null) {
+                        setCurrentGradeResolverPair({ label: gradeResolver.value.name, value: gradeResolver.value });
+                        return;
+                    }
                 }
+                let params = new URLSearchParams();
+                history.replace({search: params.toString()});
             }
         }
-    }, [assignments, currentGradeResolverPair, setCurrentGradeResolverPair, history, queryString, title])
+    }, [currentGradeResolverPair?.value?.id, title, assignments, parser, queryString, setCurrentGradeResolverPair, history])
 
     useEffect(() => {
         if (!didLoad) {
@@ -126,17 +131,18 @@ export default function MainScreen() {
 
         let gradeResolverId = currentGradeResolverPair?.value?.id;
         let encodedCurrent = writeCompressedJSON(
-                title,
-                gradeResolverId !== undefined ? gradeResolverId : null,
-                assignments
-                    .filter(it => it instanceof SerializableAssignment)
-                    .map((it) => (it as SerializableAssignment).fullJSON())
-            );
+            title,
+            gradeResolverId !== undefined ? gradeResolverId : null,
+            assignments
+                .filter(it => it instanceof SerializableAssignment)
+                .map((it) => (it as SerializableAssignment)),
+            it => it.fullJSON()
+        );
 
         if (queryString !== encodedCurrent) {
             // refresh
             let params = new URLSearchParams();
-            params.append("saved", encodedCurrent);
+            params.append("s", encodedCurrent);
             history.replace({search: params.toString()});
         }
     }

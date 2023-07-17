@@ -6,8 +6,9 @@ import {HiOutlineClipboardCopy} from "react-icons/hi";
 import {FixedIconButton} from "./IconButton";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {GradeResolver} from "../model/grade/Grade";
-import {writeCompressedJSON} from "../util/Deserializer";
+import { writeCompressedJSON } from "../util/Serializer";
 import {H3} from "./helpers/Helpers";
+import { JsonIntCode, JsonOptStr } from "../util/JsonFields";
 
 const CopyInput = styled.input`
   flex: 1;
@@ -39,29 +40,36 @@ function shareUrl(
     title: string,
     gradeResolver: GradeResolver | undefined,
     assignments: Assignment[],
-    deserializer: (assignment: SerializableAssignment) => any
+    serializer: (a: SerializableAssignment) => [JsonOptStr, JsonOptStr, JsonOptStr] | [JsonOptStr, JsonOptStr, JsonIntCode.NoField]
 ): string {
     let params = new URLSearchParams();
-    params.append("saved", writeCompressedJSON(
+    params.append("s", writeCompressedJSON(
             title,
             gradeResolver !== undefined ? gradeResolver.id : null,
             assignments
                 .filter(it => it instanceof SerializableAssignment)
-                .map((it) => deserializer(it as SerializableAssignment))
+                .map((it) => it as SerializableAssignment),
+            serializer
         )
     );
     return "https://" + window.location.host + process.env.PUBLIC_URL + "/?" + params.toString();
 }
 
 
-export default function ShareSheet(props: { title: string, gradeResolver: GradeResolver | undefined, assignments: Assignment[] }) {
-    let {title, gradeResolver, assignments} = props;
+export default function ShareSheet(
+    props: {
+        title: string,
+        gradeResolver: GradeResolver | undefined,
+        assignments: Assignment[]
+    }
+) {
+    let { title, gradeResolver, assignments } = props;
     const shareFullUrl = useMemo(() =>
-            shareUrl(title, gradeResolver, assignments, (it) => it.fullJSON()),
+            shareUrl(title, gradeResolver, assignments, it => it.fullJSON()),
         [title, gradeResolver, assignments]
     )
     const shareTemplateUrl = useMemo(() =>
-            shareUrl(title, gradeResolver, assignments, (it) => it.templateJSON()),
+            shareUrl(title, gradeResolver, assignments, it => it.templateJSON()),
         [title, gradeResolver, assignments]
     )
     const [copied, setCopied] = useState<string | null>(null);
