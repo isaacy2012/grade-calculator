@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/output/GradeTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Serializer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Serializer.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,9 +34,10 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/src/tests&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/react-scripts&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/isaacyoung/SourceTree/reverse-grade-calculator/node_modules/typescript/lib&quot;,
@@ -44,10 +46,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/tests" />
+      <recent name="$PROJECT_DIR$/src/util/parser" />
       <recent name="$PROJECT_DIR$/src/model/grade/resolvers" />
       <recent name="C:\Users\Isaac Young\Documents\GitHub\grade-calculator\src\ui" />
       <recent name="C:\Users\Isaac Young\Documents\GitHub\grade-boundary-calculator\src\ui" />
-      <recent name="C:\Users\Isaac Young\Documents\GitHub\grade-boundary-calculator\src\theme" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/ui/helpers" />
@@ -55,6 +58,45 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.npm start">
+    <configuration name="collapseNoFields works correctly" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/tests/serializer.test.ts" />
+      <test-names>
+        <test-name value="collapseNoFields works correctly" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="serializer (1)" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/tests/parser.test.ts" />
+      <test-names>
+        <test-name value="serializer" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="serializer" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/tests/serializer.test.ts" />
+      <test-names>
+        <test-name value="serializer" />
+      </test-names>
+      <method v="2" />
+    </configuration>
     <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
       <method v="2" />
     </configuration>
@@ -68,6 +110,13 @@
       <envs />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.serializer (1)" />
+        <item itemvalue="Jest.serializer" />
+        <item itemvalue="Jest.collapseNoFields works correctly" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -100,6 +149,7 @@
       <workItem from="1657803831266" duration="2449000" />
       <workItem from="1657886798409" duration="251000" />
       <workItem from="1657887056974" duration="6318000" />
+      <workItem from="1687534377629" duration="7807000" />
     </task>
     <servers />
   </component>
@@ -122,7 +172,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/MainScreen.tsx</url>
-          <line>208</line>
+          <line>214</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
