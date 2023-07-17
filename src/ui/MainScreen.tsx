@@ -94,22 +94,31 @@ export default function MainScreen() {
             const loadedData = parser.parseCompressedJSON(queryString);
             if (loadedData == null) {
                 alert("Sorry, we were unable to load saved data.")
-            } else {
-                setTitle(loadedData.title);
-                setAssignments([
-                    ...loadedData.assignments,
-                    Assignment.ofAdd()
-                ]);
-                const gradeResolverId = loadedData.gradeResolverId;
-                if (gradeResolverId != null) {
-                    let gradeResolver = GRADE_RESOLVERS_MAP.get(gradeResolverId);
-                    if (gradeResolver != null) {
-                        setCurrentGradeResolverPair({ label: gradeResolver.value.name, value: gradeResolver.value });
-                        return;
-                    }
+                return;
+            }
+            setTitle(loadedData.title);
+            setAssignments([
+                ...loadedData.assignments,
+                Assignment.ofAdd()
+            ]);
+            const gradeResolverId = loadedData.gradeResolverId;
+            if (gradeResolverId != null) {
+                let gradeResolver = GRADE_RESOLVERS_MAP.get(gradeResolverId);
+                if (gradeResolver != null) {
+                    setCurrentGradeResolverPair({ label: gradeResolver.value.name, value: gradeResolver.value });
+                } else {
+                    let withoutGradeResolver = writeCompressedJSON(
+                        title,
+                        null,
+                        assignments
+                            .filter(it => it instanceof SerializableAssignment)
+                            .map((it) => (it as SerializableAssignment)),
+                        it => it.fullJSON()
+                    );
+                    let params = new URLSearchParams();
+                    params.append("s", withoutGradeResolver);
+                    history.replace({search: params.toString()});
                 }
-                let params = new URLSearchParams();
-                history.replace({search: params.toString()});
             }
         }
     }, [currentGradeResolverPair?.value?.id, title, assignments, parser, queryString, setCurrentGradeResolverPair, history])
