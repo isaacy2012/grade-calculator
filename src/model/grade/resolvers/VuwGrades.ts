@@ -8,6 +8,7 @@ export class VuwGrades extends GradeResolver {
         super(
             "VUW",
             "Victoria University of Wellington",
+            ["vic", "vuw"],
             false,
             [
                 new Grade("A+", bd("0.9")),

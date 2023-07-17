@@ -8,6 +8,7 @@ export class AutGrades extends GradeResolver {
         super(
             "AUT",
             "Auckland University of Technology",
+            ["aut"],
             false,
             [
                 new Grade("A+", bd("0.895")),
