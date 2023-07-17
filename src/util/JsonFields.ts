@@ -8,55 +8,54 @@ export enum JsonIntCode {
 export type JsonOptStr = string | JsonIntCode.NoField;
 export type JsonOptCompressed = string | number;
 
-type JsonField = "Title" | "GradeResolverId" | "Assignments" | "Clazz" | "NameStr" | "Name" | "WeightStr" | "ScoreStr" | "Clazzes"
-type ClazzKey = "ValidAssignment" | "StubAssignment"
+type JsonField = keyof typeof JsonFieldV1 | keyof typeof JsonFieldV2;
 
 export interface JsonFieldResolver {
     keyFor(key: JsonField): string | number
 }
 
-enum JsonFieldV1Enum {
-    Title = "title",
-    GradeResolverId = "gradeResolverId",
-    Assignments = "assignments",
+const JsonFieldV1 = {
+    Title: "title",
+    GradeResolverId: "gradeResolverId",
+    Assignments: "assignments",
     // Inside Assignment
-    Clazz = "clazz",
-    NameStr = "nameStr",
-    Name = "name",
-    WeightStr = "weightStr",
-    ScoreStr = "scoreStr",
+    Clazz: "clazz",
+    NameStr: "nameStr",
+    Name: "name",
+    WeightStr: "weightStr",
+    ScoreStr: "scoreStr",
 }
 
-enum JsonFieldV2Enum {
-    Title = 0,
-    GradeResolverId = 1,
-    Assignments = 2,
+const JsonFieldV2 = {
+    Title: 0,
+    GradeResolverId: 1,
+    Assignments: 2,
     // Inside Assignment
-    NameStr = 0,
-    WeightStr = 1,
-    ScoreStr = 2,
+    NameStr: 0,
+    WeightStr: 1,
+    ScoreStr: 2,
 }
 
-enum ClazzMappingsV1Enum {
-    ValidAssignment = "ValidAssignment",
-    StubAssignment = "StubAssignment",
+const ClazzMappingsV1 = {
+    ValidAssignment: "ValidAssignment",
+    StubAssignment: "StubAssignment",
 }
 
 export class JsonFieldV1Resolver implements JsonFieldResolver {
 
-    keyFor(key: keyof typeof JsonFieldV1Enum): string {
-        return JsonFieldV1Enum[key];
+    keyFor(key: keyof typeof JsonFieldV1): string {
+        return JsonFieldV1[key];
     }
 
-    clazzFor(clazzName: ClazzKey): string {
-        return ClazzMappingsV1Enum[clazzName]
+    clazzFor(clazzName: keyof typeof ClazzMappingsV1): string {
+        return ClazzMappingsV1[clazzName]
     }
 }
 
 export class JsonFieldV2Resolver implements JsonFieldResolver {
 
-    keyFor(key: keyof typeof JsonFieldV2Enum): number {
-        return JsonFieldV2Enum[key];
+    keyFor(key: keyof typeof JsonFieldV2): number {
+        return JsonFieldV2[key];
     }
 
 }

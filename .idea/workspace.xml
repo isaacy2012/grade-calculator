@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e13e1424-f03d-465c-b953-0b5c7c9cb338" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Serializer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Serializer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MainScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/JsonFields.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonFields.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,6 +151,7 @@
       <workItem from="1657886798409" duration="251000" />
       <workItem from="1657887056974" duration="6318000" />
       <workItem from="1687534377629" duration="7807000" />
+      <workItem from="1689574089193" duration="581000" />
     </task>
     <servers />
   </component>
@@ -172,7 +174,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/MainScreen.tsx</url>
-          <line>214</line>
+          <line>213</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
