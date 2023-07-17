@@ -9,6 +9,7 @@ export class MasseyGrades extends GradeResolver {
         super(
             "MAS",
             "Massey University",
+            [],
             false,
             [
                 new Grade("A+", bd("0.9")),

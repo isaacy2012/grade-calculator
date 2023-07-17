@@ -9,6 +9,7 @@ export class OtagoGrades extends GradeResolver {
         super(
             "OTA",
             "University of Otago",
+            [],
             false,
             [
                 new Grade("A+", bd("0.9")),

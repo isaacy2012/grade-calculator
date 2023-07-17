@@ -1,6 +1,6 @@
-import React, {Fragment, useMemo, useState} from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import {Assignment} from "../../model/Assignment";
-import Select, { components } from 'react-select';
+import Select, { components, createFilter } from 'react-select';
 import {GRADE_RESOLVERS, LabelToGradeResolver} from "../../model/grade/GradeResolvers";
 import AutosizeInput from "react-input-autosize";
 import {InputChangeEvent} from "../StyledInput";
@@ -72,6 +72,9 @@ export default function GradeTab(props: { assignments: Assignment[], outOfState:
             <H3First>Your School</H3First>
             <Select
                 components={{ NoOptionsMessage }}
+                filterOption={createFilter({
+                    stringify: option => `${option.label} ${option.data.value.nicknames.join("")}`
+                })}
                 options={GRADE_RESOLVERS}
                 value={currentGradeResolverPair}
                 onChange={opt => setCurrentGradeResolverPair(opt)}

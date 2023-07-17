@@ -9,6 +9,7 @@ export class UcGrades extends GradeResolver {
         super(
             "UC",
             "University of Canterbury",
+            ["uc"],
             false,
             [
                 new Grade("A+", bd("0.9")),
